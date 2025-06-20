@@ -1,0 +1,10 @@
+Package: quartose
+Title: Syntactic Sugar for Quarto
+Version: 0.0.0.9000
+Authors@R: 
+    person("Danielle", "Navarro", , "djnavarro@protonmail.com", role = c("aut", "cre"))
+Description: Provides helper functions to work programmatically within a quarto document.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
