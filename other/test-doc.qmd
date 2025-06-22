@@ -1,0 +1,71 @@
+---
+title: "Test document"
+format: html
+---
+
+## Manual tabs
+
+::: {.panel-tabset}
+
+### hello baby
+
+```{r}
+1:100
+```
+
+### it is cold
+
+```{r}
+"le sigh"
+```
+
+### ur outside
+
+```{r}
+20 / 2
+```
+
+:::
+
+## Tabs contain text only
+
+```{r}
+txt1 <- "this is some text"
+txt2 <- "this is also text"
+
+quartose::tabs(
+  "hello baby" = txt1, 
+  "it is cold" = txt2, 
+  "ur outside" = "le siiiiiiigh"
+)
+```
+
+## Tabs contain objects that print to text
+
+
+```{r}
+obj1 <- 1:100
+obj2 <- list(x = "abc", y = TRUE)
+obj3 <- lm(hwy ~ displ, ggplot2::mpg)
+
+quartose::tabs(
+  "hello baby" = obj1, 
+  "it is cold" = obj2, 
+  "ur outside" = obj3
+)
+```
+
+
+### Tabs contain images
+
+```{r}
+txt <- "this is some text"
+pic <- ggplot2::ggplot(ggplot2::mpg, ggplot2::aes(displ, hwy)) + ggplot2::geom_point()
+mod <- lm(hwy ~ displ, ggplot2::mpg)
+
+quartose::tabs(
+  "hello baby" = txt, 
+  "it is cold" = pic, 
+  "ur outside" = mod
+)
+```
