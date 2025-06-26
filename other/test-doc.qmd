@@ -1,34 +1,10 @@
 ---
 title: "Test document"
-format: html
+format:
+  html:
+    toc: true
+    toc-location: left
 ---
-
-## Manual tabs
-
-::: {.panel-tabset}
-
-### hello baby
-
-```{r}
-#| label: manual-1
-1:100
-```
-
-### it is cold
-
-```{r}
-#| label: manual-2
-"le sigh"
-```
-
-### ur outside
-
-```{r}
-#| label: manual-3
-20 / 2
-```
-
-:::
 
 
 ```{r}
@@ -37,71 +13,10 @@ library(quartose)
 library(ggplot2)
 ```
 
-## The old way, sort of
+## Example 1: Writing tabs
 
 ```{r}
-#| label: old-style
-#| results: asis
-
-open_tabs()
-
-section_header("hello baby", level = 3)
-open_output()
-print(1:100)
-close_output()
-
-section_header("it is cold", level = 3)
-open_output()
-print(list(x = "abc", y = TRUE))
-close_output()
-
-section_header("ur outside", level = 3)
-open_output()
-print(lm(hwy ~ displ, mpg))
-close_output()
-
-close_tabs()
-```
-
-
-
-## Tabs contain text only
-
-```{r}
-#| label: tabs-1
-#| results: asis
-txt1 <- "this is some text"
-txt2 <- "this is also text"
-
-tabs(
-  "hello baby" = txt1, 
-  "it is cold" = txt2, 
-  "ur outside" = "le siiiiiiigh"
-)
-```
-
-
-### Tabs contain objects
-
-```{r}
-#| label: tabs-2
-#| results: asis
-obj1 <- 1:100
-obj2 <- list(x = "abc", y = TRUE)
-obj3 <- lm(hwy ~ displ, mpg)
-
-tabs(
-  "hello baby" = obj1, 
-  "it is cold" = obj2, 
-  "ur outside" = obj3
-)
-```
-
-
-### Tabs contain images
-
-```{r}
-#| label: tabs-3
+#| label: basic
 #| results: asis
 txt <- "this is some text"
 pic <- ggplot(mpg, aes(displ, hwy)) + geom_point()
@@ -115,19 +30,23 @@ tabs(
 ```
 
 
-### Tabs displaying the code
+## Example 2: Programming tabs and headers
 
 ```{r}
-#| label: tabs-4
+#| label: programmatic
 #| results: asis
-txt <- "this is some text"
-pic <- ggplot(mpg, aes(displ, hwy)) + geom_point()
-mod <- lm(hwy ~ displ, mpg)
+for(m in month.name[1:3]) {
+  header(.title = m, .level = 3)
 
-tabs(
-  "hello baby" = txt, 
-  "it is cold" = pic, 
-  "ur outside" = mod, 
-  .show_code = TRUE
-)
+  df <- tibble::tibble(
+    x = rnorm(100),
+    y = rnorm(100)
+  )
+
+  knitr::knit_print(tabs(
+    "Data" = df,
+    "Plot" = ggplot(df, aes(x, y)) + geom_point(),
+    .level = 4
+  ))
+}
 ```
