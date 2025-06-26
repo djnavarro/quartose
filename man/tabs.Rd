@@ -2,9 +2,15 @@
 % Please edit documentation in R/tabs.R
 \name{tabs}
 \alias{tabs}
+\alias{open_tabs}
+\alias{close_tabs}
 \title{Insert tabbed sections}
 \usage{
-tabs(...)
+open_tabs()
+
+close_tabs()
+
+tabs(..., .show_code = FALSE, .level = 3L)
 }
 \description{
 Opens and closes a tabs section in a quarto document

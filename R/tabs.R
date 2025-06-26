@@ -5,12 +5,16 @@
 #' @name tabs
 NULL
 
+#' @export
+#' @rdname tabs
 open_tabs <- function() {
-  knitr::asis_output("\n\n::: {.panel-tabset}\n\n")
+  cat("\n\n::: {.panel-tabset}\n\n")
 }
 
+#' @export
+#' @rdname tabs
 close_tabs <- function() {
-  knitr::asis_output("\n\n::: \n\n")
+  cat("\n\n::: \n\n")
 }
 
 #' @rdname tabs
@@ -29,70 +33,38 @@ tabs <- function(..., .show_code = FALSE, .level = 3L) {
 #' @exportS3Method knitr::knit_print
 knit_print.quartose_tabs <- function(x, ...) {
 
-  n <- length(x$content)
-  hashes <- paste(rep("#", x$level), collapse = "")
-  headers <- paste0("\n\n", hashes, " ", x$title, "\n\n")
+  # open tabset
+  cat("\n\n::: {.panel-tabset}\n\n")
+  for(i in seq_along(x$content)) {
 
-  out_list <- list()
-  ind <- 1L
+    # create tab with section header
+    hashes <- paste(rep("#", x$level), collapse = "")
+    header <- paste0("\n\n", hashes, " ", x$title[i], "\n\n")
+    cat(header)
 
-  # open tabs
-  out_list[[ind]] <- literal("\n\n::: {.panel-tabset}\n\n")
-  ind <- ind + 1L
-
-  for(tab in 1:n) {
-    
-    # add header
-    out_list[[ind]] <- literal(headers[tab])
-    ind <- ind + 1L
-    
-    # experimental, do not use...
+    # show code if asked; experimental, do not use...
     if (x$show_code) {
-
       code_block <- paste0(
         '<div class="sourceCode cell-code"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span>',
-        rlang::as_label(x$code[[tab]]),
+        rlang::as_label(x$code[[i]]),
         '</span></pre></code></div>'
       )
-      out_list[[ind]] <- literal(code_block)
-      ind <- ind + 1L
-
+      cat(code_block)
     }
 
-    # open <pre> tag for output
-    out_list[[ind]] <- literal("<pre>")
-    ind <- ind + 1L
-
-    # the output content
-    out_list[[ind]] <- x$content[[tab]] 
-    ind <- ind + 1L
-
-    # close </pre> tag for output
-    out_list[[ind]] <- literal("</pre>")
-    ind <- ind + 1L
+    # output
+    if (ggplot2::is_ggplot(x$content[[i]])) {
+      knitr::knit_print(x$content[[i]])
+    } else {
+      cat("<pre>")
+      knitr::knit_print(x$content[[i]])
+      cat("</pre>")
+    }
 
   }
 
-  # close tabs
-  out_list[[ind]] <- literal("\n\n::: \n\n")
-
-  out <- purrr::map_chr(
-    out_list,
-    \(x) {
-      paste(capture.output(
-        if (inherits(x, "quartose_literal")) {
-          cat(x, "\n", sep = "") 
-        } else {
-          knitr::knit_print(x)
-        }
-      ), collapse = "\n")
-    }
-  )
-  knitr::asis_output(out)
+  # close tabset
+  cat("\n\n::: \n\n")
 }
 
 
-literal <- function(x) {
-  class(x) <- "quartose_literal"
-  x
-}

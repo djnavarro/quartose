@@ -8,5 +8,6 @@
 #' @export
 section_header <- function(title, level) {
   hashes <- paste(rep("#", level), collapse = "")
-  knitr::asis_output(paste0("\n\n", hashes, " ", title, "\n\n"))
+  header <- paste0("\n\n", hashes, " ", title, "\n\n")
+  cat(header)
 }
