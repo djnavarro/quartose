@@ -2,15 +2,14 @@
 % Please edit documentation in R/tabs.R
 \name{tabs}
 \alias{tabs}
-\alias{open_tabs}
-\alias{close_tabs}
-\title{Insert tabbed sections}
+\title{Insert a tabset}
 \usage{
-open_tabs()
+tabs(..., .level = 3L)
+}
+\arguments{
+\item{..., }{Contents of each tab as name-value pairs}
 
-close_tabs()
-
-tabs(..., .show_code = FALSE, .level = 3L)
+\item{.level, }{Depth level for the implied section headers}
 }
 \description{
 Opens and closes a tabs section in a quarto document
