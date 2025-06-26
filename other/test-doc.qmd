@@ -10,45 +10,87 @@ format: html
 ### hello baby
 
 ```{r}
+#| label: manual-1
 1:100
 ```
 
 ### it is cold
 
 ```{r}
+#| label: manual-2
 "le sigh"
 ```
 
 ### ur outside
 
 ```{r}
+#| label: manual-3
 20 / 2
 ```
 
 :::
 
+
+```{r}
+#| label: packages
+library(quartose)
+library(ggplot2)
+```
+
+## The old way, sort of
+
+```{r}
+#| label: old-style
+#| results: asis
+
+open_tabs()
+
+section_header("hello baby", level = 3)
+open_output()
+print(1:100)
+close_output()
+
+section_header("it is cold", level = 3)
+open_output()
+print(list(x = "abc", y = TRUE))
+close_output()
+
+section_header("ur outside", level = 3)
+open_output()
+print(lm(hwy ~ displ, mpg))
+close_output()
+
+close_tabs()
+```
+
+
+
 ## Tabs contain text only
 
 ```{r}
+#| label: tabs-1
+#| results: asis
 txt1 <- "this is some text"
 txt2 <- "this is also text"
 
-quartose::tabs(
+tabs(
   "hello baby" = txt1, 
   "it is cold" = txt2, 
   "ur outside" = "le siiiiiiigh"
 )
 ```
 
-## Tabs contain objects that print to text
 
+### Tabs contain objects
 
 ```{r}
+#| label: tabs-2
+#| results: asis
 obj1 <- 1:100
 obj2 <- list(x = "abc", y = TRUE)
-obj3 <- lm(hwy ~ displ, ggplot2::mpg)
+obj3 <- lm(hwy ~ displ, mpg)
 
-quartose::tabs(
+tabs(
   "hello baby" = obj1, 
   "it is cold" = obj2, 
   "ur outside" = obj3
@@ -59,13 +101,33 @@ quartose::tabs(
 ### Tabs contain images
 
 ```{r}
+#| label: tabs-3
+#| results: asis
 txt <- "this is some text"
-pic <- ggplot2::ggplot(ggplot2::mpg, ggplot2::aes(displ, hwy)) + ggplot2::geom_point()
-mod <- lm(hwy ~ displ, ggplot2::mpg)
+pic <- ggplot(mpg, aes(displ, hwy)) + geom_point()
+mod <- lm(hwy ~ displ, mpg)
 
-quartose::tabs(
+tabs(
   "hello baby" = txt, 
   "it is cold" = pic, 
   "ur outside" = mod
+)
+```
+
+
+### Tabs displaying the code
+
+```{r}
+#| label: tabs-4
+#| results: asis
+txt <- "this is some text"
+pic <- ggplot(mpg, aes(displ, hwy)) + geom_point()
+mod <- lm(hwy ~ displ, mpg)
+
+tabs(
+  "hello baby" = txt, 
+  "it is cold" = pic, 
+  "ur outside" = mod, 
+  .show_code = TRUE
 )
 ```
