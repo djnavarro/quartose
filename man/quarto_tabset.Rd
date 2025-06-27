@@ -4,10 +4,10 @@
 \alias{quarto_tabset}
 \title{Quarto tabset}
 \usage{
-quarto_tabset(..., .level = 3L)
+quarto_tabset(.content, .level = 3L)
 }
 \arguments{
-\item{..., }{Tab title and content as name-value pairs}
+\item{.content, }{Tab title and content as a named list}
 
 \item{.level, }{Header level associated with the tabs}
 }

@@ -38,7 +38,7 @@ knit_print.quarto_tabset <- function(x, ...) {
 #' @exportS3Method knitr::knit_print
 knit_print.quarto_tabsec <- function(x, ...) {
   knitr::knit_print(quarto_section(.title = x$title, .level = x$level))
-  knitr::knit_print(quarto_tabset(!!!x$content, .level = x$level + 1))
+  knitr::knit_print(quarto_tabset(.content = x$content, .level = x$level + 1))
 }
 
 # groups of output -------------------------------------------

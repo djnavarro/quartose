@@ -16,11 +16,10 @@ quarto_section <- function(.title, .level) {
 }
 
 #' @title Quarto tabset
-#' @param ..., Tab title and content as name-value pairs
+#' @param .content, Tab title and content as a named list
 #' @param .level, Header level associated with the tabs
 #' @export
-quarto_tabset <- function(..., .level = 3L) {
-  .content <- rlang::list2(...)
+quarto_tabset <- function(.content , .level = 3L) {
   structure(
     rlang::list2(
       content = .content,
@@ -51,11 +50,11 @@ quarto_tabsec <- function(.content, .title, .level = 3L) {
 # groups of output -------------------------------------------
 
 #' @title Quarto groups
-#' @param ..., Content
+#' @param ..., Objects to be rendered as a group
 #' @param .sep, Separator
-#' @name groups
+#' @name quarto_group
 
-#' @rdname groups
+#' @rdname quarto_group
 #' @export
 quarto_output <- function(...) {
   structure(
@@ -66,7 +65,7 @@ quarto_output <- function(...) {
   )
 }
 
-#' @rdname groups
+#' @rdname quarto_group
 #' @export
 quarto_markdown <- function(..., .sep = "") {
   structure(
@@ -78,7 +77,7 @@ quarto_markdown <- function(..., .sep = "") {
   )
 }
 
-#' @rdname groups
+#' @rdname quarto_group
 #' @export
 quarto_paragraph <- function(..., .sep = "") {
   structure(
@@ -92,15 +91,18 @@ quarto_paragraph <- function(..., .sep = "") {
 
 # divs and spans -------------------------------------------
 
-#' @title Quarto divs
-#' @param ..., Content to be contained in the div
-#' @param .class, CSS class (or vector of classes) for the div
-#' @param .sep, Separator
+#' @title Quarto divs and spans
+#' @param .content, Content to be contained in the div/span
+#' @param .class, CSS class (or vector of classes) for the div/span
+#' @param .sep, Separator used when merging content
+#' @name quarto_div
+
+#' @rdname quarto_div
 #' @export
-quarto_div <- function(..., .class, .sep = "") {
+quarto_div <- function(.content, .class = NULL, .sep = "") {
   structure(
     rlang::list2(
-      content = rlang::list2(...),
+      content = .content,
       class = .class,
       sep = .sep,
     ),
@@ -108,15 +110,14 @@ quarto_div <- function(..., .class, .sep = "") {
   )
 }
 
-#' @title Quarto span
-#' @param .content, Content to be contained in the span
-#' @param .class, CSS class (or vector of classes) for the span
+#' @rdname quarto_div
 #' @export
-quarto_span <- function(.content, .class = NULL) {
+quarto_span <- function(.content, .class = NULL, .sep = "") {
   structure(
     rlang::list2(
       content = .content,
-      class = .class
+      class = .class,
+      sep = .sep,
     ),
     class = "quarto_span"
   )

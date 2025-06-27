@@ -2,17 +2,20 @@
 % Please edit documentation in R/class.R
 \name{quarto_div}
 \alias{quarto_div}
-\title{Quarto divs}
+\alias{quarto_span}
+\title{Quarto divs and spans}
 \usage{
-quarto_div(..., .class, .sep = "")
+quarto_div(.content, .class = NULL, .sep = "")
+
+quarto_span(.content, .class = NULL, .sep = "")
 }
 \arguments{
-\item{..., }{Content to be contained in the div}
+\item{.content, }{Content to be contained in the div/span}
 
-\item{.class, }{CSS class (or vector of classes) for the div}
+\item{.class, }{CSS class (or vector of classes) for the div/span}
 
-\item{.sep, }{Separator}
+\item{.sep, }{Separator used when merging content}
 }
 \description{
-Quarto divs
+Quarto divs and spans
 }
