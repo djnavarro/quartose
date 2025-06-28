@@ -1,4 +1,27 @@
 
+# notes:
+#
+# - it is assumed that the code chunk is "results: asis"
+#
+# - cat() passes the output directly to the document; the output
+#   bypasses knitr formatting, but will be visible to the quarto 
+#   parser, so if you pass a quarto directive with cat(), it will
+#   convert to html
+#
+# - knit_print() applies knitr formatting to the output before 
+#   passing it to the document; this will happen even though the
+#   surrounding code chunk is "results: asis"; in effect it 
+#   produces the "knitr formatted string". whether quarto parses
+#   this result depends entirely on what the specific knit_print
+#   method returns. in the usual case, quarto parsing doesn't 
+#   happen. in the special case where knitr returns a protected
+#   string via asis_output(), it behaves more like cat() because
+#   the string is passed directly to the document and can be
+#   parsed as markdown. however, this is fragile due to the 
+#   limitations of asis_output(); it only works when it is 
+#   invoked at the top level
+
+
 # tabs and sections -------------------------------------------
 
 #' @exportS3Method knitr::knit_print
@@ -17,7 +40,7 @@ knit_print.quarto_tabset <- function(x, ...) {
 
     # create tab with section header
     hashes <- paste(rep("#", x$level), collapse = "")
-    header <- paste0("\n\n", hashes, " ", x$title[i], "\n\n")
+    header <- paste("\n\n", hashes, " ", x$title[i], "\n\n", sep = "")
     cat(header)
 
     # output
@@ -77,8 +100,8 @@ knit_print.quarto_markdown <- function(x, ...) {
 
 #' @exportS3Method knitr::knit_print
 knit_print.quarto_paragraph <- function(x, ...) {
-  str <- purrr::map_chr(x$content, \(c) {
-    unclass(c(knitr::knit_print(c)))
+  str <- purrr::map_chr(x$content, \(cc) {
+    unclass(c(knitr::knit_print(cc)))
   })
   cat(str, sep = x$sep)
 }
@@ -87,23 +110,37 @@ knit_print.quarto_paragraph <- function(x, ...) {
 
 #' @exportS3Method knitr::knit_print
 knit_print.quarto_div <- function(x, ...) {
-  classes <- paste(".", x$class, sep = "", collapse = " ")
-  open_div <- paste0("\n\n::: {", classes, "}\n\n")
-  close_div <- "\n\n:::\n\n"
-  content <- paste(unlist(x$content), collapse = x$sep)
-  str <- paste(open_div, content, close_div, sep = "\n")
-  knitr::asis_output(str)
+
+  div_body <- purrr::map_chr(x$content, \(cc) {
+    paste(
+      strip_asis(knitr::knit_print(cc)), 
+      collapse = x$sep
+    )
+  })
+  div_body <- paste(div_body, collapse = x$sep)
+  
+  if (is.null(x$class)) {
+    div_open <- "\n\n:::\n\n"
+  } else {
+    css_info <- paste(".", x$class, sep = "", collapse = " ")
+    div_open <- paste("\n\n::: {", css_info, "}\n\n", sep = "", collapse = " ")
+  }
+  div_shut <- "\n\n:::\n\n"
+  div <- paste(div_open, div_body, div_shut)
+
+  knitr::asis_output(div)
 }
 
 #' @exportS3Method knitr::knit_print
 knit_print.quarto_span <- function(x, ...) {
-  if (is.null(x$class)) {
-    str <- x$content
-  } else {
-    classes <- paste(".", x$class, sep = "", collapse = " ")
-    str <- paste0("[", x$content, "]{", classes, "}")
+
+  span <- paste(unlist(x$content), sep = x$sep, collapse = x$sep)
+  if (!is.null(x$class)) {
+    css_info <- paste(".", x$class, sep = "", collapse = " ")
+    span <- paste("[", span, "]{", css_info, "}", sep = "")
   }
-  knitr::asis_output(str)
+
+  knitr::asis_output(span)
 }
 
 # treat print the same as knit_print --------------------------
@@ -132,3 +169,4 @@ print.quarto_div <- knit_print.quarto_div
 #' @exportS3Method base::print
 print.quarto_span <- knit_print.quarto_span
 
+  

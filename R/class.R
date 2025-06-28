@@ -11,7 +11,7 @@ quarto_section <- function(.title, .level) {
       title = .title,
       level = .level
     ),
-    class = "quarto_section"
+    class = c("quarto_section", "quarto_object")
   )
 }
 
@@ -26,7 +26,7 @@ quarto_tabset <- function(.content , .level = 3L) {
       title = names(.content),
       level = .level
     ),
-    class = "quarto_tabset"
+    class = c("quarto_tabset", "quarto_object")
   )
 }
 
@@ -43,7 +43,7 @@ quarto_tabsec <- function(.content, .title, .level = 3L) {
       subtitle = names(.content),
       level = .level
     ),
-    class = "quarto_tabsec"
+    class = c("quarto_tabsec", "quarto_object")
   )
 }
 
@@ -61,7 +61,7 @@ quarto_output <- function(...) {
     rlang::list2(
       content = rlang::list2(...)
     ),
-    class = "quarto_output"
+    class = c("quarto_output", "quarto_object")
   )
 }
 
@@ -73,7 +73,7 @@ quarto_markdown <- function(..., .sep = "") {
       content = rlang::list2(...),
       sep = .sep,
     ),
-    class = "quarto_markdown"
+    class = c("quarto_markdown", "quarto_object")
   )
 }
 
@@ -85,7 +85,7 @@ quarto_paragraph <- function(..., .sep = "") {
       content = rlang::list2(...),
       sep = .sep,
     ),
-    class = "quarto_paragraph"
+    class = c("quarto_paragraph", "quarto_object")
   )
 }
 
@@ -106,7 +106,7 @@ quarto_div <- function(.content, .class = NULL, .sep = "") {
       class = .class,
       sep = .sep,
     ),
-    class = "quarto_div"
+    class = c("quarto_div", "quarto_object")
   )
 }
 
@@ -119,6 +119,6 @@ quarto_span <- function(.content, .class = NULL, .sep = "") {
       class = .class,
       sep = .sep,
     ),
-    class = "quarto_span"
+    class = c("quarto_span", "quarto_object")
   )
 }
