@@ -16,16 +16,18 @@ quarto_section <- function(.title, .level) {
 }
 
 #' @title Quarto tabset with section header
-#' @param .content, Tab titles and content as named list
+#' @param .content, Tab content as a list
 #' @param .level, Header level
 #' @param .title, Section title (optional)
+#' @param .names, Names for tabs (defaults to names(.content))
 #' @export
-quarto_tabset <- function(.content, .level, .title = NULL) {
+quarto_tabset <- function(.content, .level, .title = NULL, .names = NULL) {
+  if (is.null(.names)) .names <- names(.content)
   structure(
     rlang::list2(
       content = .content,
       title = .title,
-      subtitle = names(.content),
+      names = .names,
       level = .level
     ),
     class = c("quarto_tabset", "quarto_object")

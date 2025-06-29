@@ -4,14 +4,16 @@
 \alias{quarto_tabset}
 \title{Quarto tabset with section header}
 \usage{
-quarto_tabset(.content, .level, .title = NULL)
+quarto_tabset(.content, .level, .title = NULL, .names = NULL)
 }
 \arguments{
-\item{.content, }{Tab titles and content as named list}
+\item{.content, }{Tab content as a list}
 
 \item{.level, }{Header level}
 
 \item{.title, }{Section title (optional)}
+
+\item{.names, }{Names for tabs (defaults to names(.content))}
 }
 \description{
 Quarto tabset with section header

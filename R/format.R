@@ -55,8 +55,8 @@ format.quarto_tabset <- function(x, ...) {
     title <- character(0L)
   }
 
-  # tab (sub)titles
-  subtitle <- purrr::map_chr(x$subtitle, \(tt) {
+  # tab names
+  tabname <- purrr::map_chr(x$names, \(tt) {
     format(quarto_section(tt, x$level))
   })
 
@@ -75,7 +75,7 @@ format.quarto_tabset <- function(x, ...) {
   out <- c(out, tabset_open)
   for(i in seq_along(x$content)) {
 
-    out <- c(out, subtitle[i])
+    out <- c(out, tabname[i])
 
     # for plot objects, we do no formatting at this stage. all we do
     # is wrap them safely within a quarto_* class, so that later on
