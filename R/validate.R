@@ -27,7 +27,7 @@ check_args_div <- function(.content, .class, .sep) {
 }
 
 check_args_span <- function(.content, .class, .sep) {
-  if (!rlang::is_character(.content, n = 1)) rlang::abort(".content must be a single character string")
+  if (!rlang::is_character(.content)) rlang::abort(".content must be a character vector")
   if (!rlang::is_character(.sep, n = 1)) rlang::abort(".sep must be a single character string") 
   if (!rlang::is_null(.class)) {
     if (!rlang::is_character(.class)) rlang::abort(".class must be a character vector") 
