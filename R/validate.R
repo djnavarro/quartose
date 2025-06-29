@@ -3,11 +3,13 @@
 
 check_args_section <- function(.title, .level) {
   if (!rlang::is_integerish(.level, n = 1)) rlang::abort(".level must be a single integer")
-  if (!rlang::is_character(.title, n = 1)) rlang::abort(".title must be a single character string") 
+  if (!rlang::is_character(.title, n = 1)) rlang::abort(".title must be a single character string")
+  if (.level < 1L | .level > 6L) rlang::abort(".level must be an integer between 1 and 6")
 }
 
 check_args_tabset <- function(.content, .level, .title, .names) { 
   if (!rlang::is_integerish(.level, n = 1)) rlang::abort(".level must be a single integer")
+  if (.level < 1L | .level > 6L) rlang::abort(".level must be an integer between 1 and 6")
   if (!rlang::is_null(.title)) {
     if (!rlang::is_character(.title, n = 1)) rlang::abort(".title must be a single character string") 
   }
