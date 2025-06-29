@@ -1,13 +1,4 @@
 
-format_elements <- function(x, ...) {
-  purrr::map(x, \(cc) format(cc, ...))
-}
-
-
-is_ggplot <- function(x) {
-  inherits(x, "ggplot")  # TODO: maybe use the ggplot2 version
-}
-
 #' @exportS3Method base::format
 format.quarto_section <- function(x, ...) {
 
