@@ -2,15 +2,17 @@
 % Please edit documentation in R/class.R
 \name{quarto_tabset}
 \alias{quarto_tabset}
-\title{Quarto tabset}
+\title{Quarto tabset with section header}
 \usage{
-quarto_tabset(.content, .level = 3L)
+quarto_tabset(.content, .level, .title = NULL)
 }
 \arguments{
-\item{.content, }{Tab title and content as a named list}
+\item{.content, }{Tab titles and content as named list}
 
-\item{.level, }{Header level associated with the tabs}
+\item{.level, }{Header level}
+
+\item{.title, }{Section title (optional)}
 }
 \description{
-Quarto tabset
+Quarto tabset with section header
 }

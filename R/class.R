@@ -15,27 +15,12 @@ quarto_section <- function(.title, .level) {
   )
 }
 
-#' @title Quarto tabset
-#' @param .content, Tab title and content as a named list
-#' @param .level, Header level associated with the tabs
-#' @export
-quarto_tabset <- function(.content , .level = 3L) {
-  structure(
-    rlang::list2(
-      content = .content,
-      title = names(.content),
-      level = .level
-    ),
-    class = c("quarto_tabset", "quarto_object")
-  )
-}
-
 #' @title Quarto tabset with section header
-#' @param .content, Tab title and content as named list
-#' @param .title, Section title
-#' @param .level, Header level associated with the section header
+#' @param .content, Tab titles and content as named list
+#' @param .level, Header level
+#' @param .title, Section title (optional)
 #' @export
-quarto_tabsec <- function(.content, .title, .level = 3L) {
+quarto_tabset <- function(.content, .level, .title = NULL) {
   structure(
     rlang::list2(
       content = .content,
@@ -43,7 +28,7 @@ quarto_tabsec <- function(.content, .title, .level = 3L) {
       subtitle = names(.content),
       level = .level
     ),
-    class = c("quarto_tabsec", "quarto_object")
+    class = c("quarto_tabset", "quarto_object")
   )
 }
 
@@ -120,5 +105,17 @@ quarto_span <- function(.content, .class = NULL, .sep = "") {
       sep = .sep,
     ),
     class = c("quarto_span", "quarto_object")
+  )
+}
+
+
+# plots -------------------------------------------------------
+
+quarto_plot <- function(.content) {
+  structure(
+    rlang::list2(
+      content = .content,
+    ),
+    class = c("quarto_plot", "quarto_object")
   )
 }
