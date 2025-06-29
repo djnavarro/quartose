@@ -4,6 +4,8 @@
 # quartose
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/djnavarro/quartose/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/djnavarro/quartose/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of quartose is to …
