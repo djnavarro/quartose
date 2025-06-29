@@ -2,11 +2,10 @@
 % Please edit documentation in R/class.R
 \name{quarto_group}
 \alias{quarto_group}
-\alias{quarto_output}
 \alias{quarto_markdown}
 \title{Quarto groups}
 \usage{
-quarto_output(...)
+quarto_group(...)
 
 quarto_markdown(..., .sep = "")
 }

@@ -49,6 +49,7 @@ quarto_tabset <- function(.content, .level, .title = NULL, .names = NULL) {
 #' @rdname quarto_div
 #' @export
 quarto_div <- function(.content, .class = NULL, .sep = "") {
+  if (!rlang::is_bare_list(.content)) .content = list(.content)
   check_args_div(.content, .class, .sep)
   structure(
     rlang::list2(
@@ -83,13 +84,13 @@ quarto_span <- function(.content, .class = NULL, .sep = "") {
 
 #' @rdname quarto_group
 #' @export
-quarto_output <- function(...) {
-  check_args_output(...)
+quarto_group <- function(...) {
+  check_args_group(...)
   structure(
     rlang::list2(
       content = rlang::list2(...)
     ),
-    class = c("quarto_output", "quarto_object")
+    class = c("quarto_group", "quarto_object")
   )
 }
 

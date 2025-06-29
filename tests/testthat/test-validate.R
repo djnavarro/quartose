@@ -5,7 +5,7 @@ q_section <- quarto_section(.title = "title", .level = 2)
 q_tabset <- quarto_tabset(.content = list("content"), .level = 2, .names = "name")
 q_div <- quarto_div(.content = list("content"), .class = "column-margin", .sep = "")
 q_span <- quarto_span(.content = "text", .class = "underline", .sep = "")
-q_output <- quarto_output(quarto_section(.title = "title", .level = 2))
+q_group <- quarto_group(quarto_section(.title = "title", .level = 2))
 q_markdown <- quarto_markdown("- this is a", "- markdown list")
 
 valid_titles <- list("cat", "", "<^&3 dsc")
@@ -131,16 +131,16 @@ test_that("valid quarto_span arguments are permitted", {
   
 })
 
-test_that("valid quarto_output arguments are permitted", {
+test_that("valid quarto_group arguments are permitted", {
 
-  expect_no_error(check_args_output(q_div))
-  expect_no_error(quarto_output(q_div))
+  expect_no_error(check_args_group(q_div))
+  expect_no_error(quarto_group(q_div))
 
-  expect_no_error(check_args_output(q_tabset))
-  expect_no_error(quarto_output(q_tabset))
+  expect_no_error(check_args_group(q_tabset))
+  expect_no_error(quarto_group(q_tabset))
 
-  expect_no_error(check_args_output(q_div, q_tabset))
-  expect_no_error(quarto_output(q_div, q_tabset))
+  expect_no_error(check_args_group(q_div, q_tabset))
+  expect_no_error(quarto_group(q_div, q_tabset))
 
 })
 
@@ -173,7 +173,7 @@ test_that("quarto objects are detected by is_quarto", {
     q_tabset = quarto_tabset(.content = list("content"), .level = 2, .names = "name"),
     q_div = quarto_div(.content = list("content"), .class = "column-margin", .sep = ""),
     q_span = quarto_span(.content = "text", .class = "underline", .sep = ""),
-    q_output = quarto_output(quarto_section(.title = "title", .level = 2)),
+    q_group = quarto_group(quarto_section(.title = "title", .level = 2)),
     q_markdown = quarto_markdown("text")
   )
   for (q in obj) expect_true(is_quarto(q))
@@ -257,5 +257,124 @@ test_that("invalid quarto_tabset .title arguments throw errors", {
 
   expect_error(quarto_tabset(.content = cc, .names = nn, .title = c("too", "long"), .level = ll))
   expect_error(quarto_tabset(.content = cc, .names = nn, .title = character(0L), .level = ll)) # too short
+
+})
+
+# check that invalid quarto_div and quarto_span inputs are rejected -----------------------------------
+
+cc_div  <- valid_content_div[[1]]
+cc_span <- valid_content_span[[1]]
+ss <- valid_sep[[1]]
+cl <- valid_classes[[1]]
+
+test_that("invalid quarto_div .class arguments throw errors", {
+
+  # lists, numbers, etc are not valid css class names
+  expect_error(quarto_div(.content = cc_div, .class = 2L, .sep = ss))
+  expect_error(quarto_div(.content = cc_div, .class = list("no lists"), .sep = ss))
+
+  # char(0)/NULL/"" are edge cases that are coerced to a "null" class
+  expect_no_error(quarto_div(.content = cc_div, .class = NULL, .sep = ss))
+  expect_no_error(quarto_div(.content = cc_div, .class = character(0L), .sep = ss))
+
+  # missing values or empty strings produce warnings
+  expect_warning(quarto_div(.content = cc_div, .class = "", .sep = ss))
+  expect_warning(quarto_div(.content = cc_div, .class = c("eek", ""), .sep = ss))
+  expect_warning(quarto_div(.content = cc_div, .class = NA_character_, .sep = ss))
+  expect_warning(quarto_div(.content = cc_div, .class = c("eek", NA_character_), .sep = ss))
+
+})
+
+test_that("invalid quarto_span .class arguments throw errors", {
+
+  # lists, numbers, etc are not valid css class names
+  expect_error(quarto_span(.content = cc_span, .class = 2L, .sep = ss))
+  expect_error(quarto_span(.content = cc_span, .class = list("no lists"), .sep = ss))
+
+  # char(0)/NULL/"" are edge cases that are coerced to a "null" class
+  expect_no_error(quarto_span(.content = cc_span, .class = NULL, .sep = ss))
+  expect_no_error(quarto_span(.content = cc_span, .class = character(0L), .sep = ss))
+
+  # missing values or empty strings produce warnings
+  expect_warning(quarto_span(.content = cc_span, .class = "", .sep = ss))
+  expect_warning(quarto_span(.content = cc_span, .class = c("eek", ""), .sep = ss))
+  expect_warning(quarto_span(.content = cc_span, .class = NA_character_, .sep = ss))
+  expect_warning(quarto_span(.content = cc_span, .class = c("eek", NA_character_), .sep = ss))
+    
+})
+
+test_that("invalid quarto_div .sep arguments throw errors", {
+
+  expect_error(quarto_div(.content = cc_div, .class = cl, .sep = list("wrong type")))
+  expect_error(quarto_div(.content = cc_div, .class = cl, .sep = 2L))
+  expect_error(quarto_div(.content = cc_div, .class = cl, .sep = c("wrong", "length")))
+  expect_error(quarto_div(.content = cc_div, .class = cl, .sep = character(0L)))
+
+})
+
+test_that("invalid quarto_span .sep arguments throw errors", {
+
+  expect_error(quarto_span(.content = cc_span, .class = cl, .sep = list("wrong type")))
+  expect_error(quarto_span(.content = cc_span, .class = cl, .sep = 2L))
+  expect_error(quarto_span(.content = cc_span, .class = cl, .sep = c("wrong", "length")))
+  expect_error(quarto_span(.content = cc_span, .class = cl, .sep = character(0L)))
+  
+})
+
+test_that("invalid quarto_div .content arguments throw errors", {
+
+  # divs can be pretty flexible actually, e.g.,
+  expect_no_error(quarto_div(.content = NULL, .class = cl, .sep = ss))
+
+})
+
+
+test_that("invalid quarto_span .content arguments throw errors", {
+
+  # spans are supposed to take character vectors only
+  expect_error(quarto_span(.content = NULL, .class = cl, .sep = ss))
+  expect_error(quarto_span(.content = list(), .class = cl, .sep = ss))
+  expect_error(quarto_span(.content = 0L, .class = cl, .sep = ss))
+
+})
+
+# check that invalid quarto_group and quarto_markdown inputs are rejected -----------------------------------
+
+test_that("invalid quarto_group arguments are rejected", {
+
+  # basic idea: 
+  expect_no_error(
+    quarto_group(
+      quarto_section("quarto_groups only accept", 1L),
+      quarto_section("quarto objects as input", 1L)
+    )
+  )
+
+  # none of these should work:
+  expect_error(quarto_group("quarto groups only accept quarto objects"))
+  expect_error(quarto_group(list("quarto groups don't accept lists")))
+  expect_error(quarto_group(NULL))
+  expect_error(quarto_group(
+    "quarto groups only accept quarto objects",
+    quarto_section("all args must be quarto objects", 1L)
+  ))
+
+})
+
+test_that("invalid quarto_markdown arguments are rejected", {
+
+  # basic idea:
+  expect_no_error(
+    quarto_markdown(
+      "All inputs are expected to be strings",
+      c("or character", "vectors")
+    )
+  )
+
+  # none of these should work:
+  expect_error(quarto_markdown(list("no lists")))
+  expect_error(quarto_markdown(quarto_section("no quarto objects", 1L)))
+  expect_error(quarto_markdown("all inputs must be text", list()))
+  expect_error(quarto_markdown("all inputs must be text", 23.123))
 
 })

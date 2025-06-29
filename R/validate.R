@@ -21,24 +21,29 @@ check_args_tabset <- function(.content, .level, .title, .names) {
 # divs and spans -------------------------------------------
 
 check_args_div <- function(.content, .class, .sep) {
-  if (!rlang::is_list(.content)) rlang::abort(".content must be a list")
   if (!rlang::is_character(.sep, n = 1)) rlang::abort(".sep must be a single character string") 
-  if (!rlang::is_null(.class)) {
-    if (!rlang::is_character(.class)) rlang::abort(".class must be a character vector") 
+    if (!rlang::is_null(.class)) {
+      if (!rlang::is_character(.class)) rlang::abort(".class must be a character vector")
+      if (any(rlang::are_na(.class) | nchar(.class) == 0)) {
+        rlang::warn(".class contains missing values or empty strings")
+      }
+    }
   }
-}
 
 check_args_span <- function(.content, .class, .sep) {
   if (!rlang::is_character(.content)) rlang::abort(".content must be a character vector")
   if (!rlang::is_character(.sep, n = 1)) rlang::abort(".sep must be a single character string") 
   if (!rlang::is_null(.class)) {
-    if (!rlang::is_character(.class)) rlang::abort(".class must be a character vector") 
+    if (!rlang::is_character(.class)) rlang::abort(".class must be a character vector")
+    if (any(rlang::are_na(.class) | nchar(.class) == 0)) {
+      rlang::warn(".class contains missing values or empty strings")
+    }
   }
 }
 
 # groups of output -------------------------------------------
 
-check_args_output <- function(...) {
+check_args_group <- function(...) {
   args <- rlang::list2(...)
   is_q <- purrr::map_lgl(args, is_quarto)
   if (!all(is_q)) rlang::abort("objects passed by ... must all be quarto objects")
