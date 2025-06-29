@@ -14,7 +14,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 
 When analysing data sets in R, it is often convenient to wrap the
 analysis within a quarto document for reporting purposes: containing all
-the analysis components within a single easy to navigate HTML component
+the analysis components within a single easy-to-navigate HTML document
 is generally a kindness for the reader. One consequence of this,
 however, is that sometimes you find yourself wanting to write code
 *within* an R code chunk that will generate parts of the quarto document
