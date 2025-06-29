@@ -1,4 +1,6 @@
 
+# tabs and sections -------------------------------------------
+
 #' @exportS3Method base::format
 format.quarto_section <- function(x, ...) {
 
@@ -6,42 +8,6 @@ format.quarto_section <- function(x, ...) {
   header <- paste0("\n\n", hashes, " ", x$title, "\n\n")
 
   return(header)
-}
-
-#' @exportS3Method base::format
-format.quarto_div <- function(x, ...) {
-
-  div_body <- format_elements(x$content)
-  div_body <- paste(unlist(div_body), collapse = x$sep)
-  
-  if (is.null(x$class)) x$class <- "quarto_null"
-  css_info <- paste(".", x$class, sep = "", collapse = " ")
-  div_open <- paste("\n\n::: {", css_info, "}\n\n", sep = "", collapse = " ")
-  div_shut <- "\n\n:::\n\n"
-
-  div <- paste(div_open, div_body, div_shut)
-  return(div)
-}
-
-#' @exportS3Method base::format
-format.quarto_span <- function(x, ...) {
-
-  span <- paste(unlist(x$content), sep = x$sep, collapse = x$sep)
-  if (!is.null(x$class)) {
-    css_info <- paste(".", x$class, sep = "", collapse = " ")
-    span <- paste("[", span, "]{", css_info, "}", sep = "")
-  }
-
-  return(span)
-}
-
-#' @exportS3Method base::format
-format.quarto_markdown <- function(x, ...) {
-
-  md <- format_elements(x$content)
-  md <- paste(unlist(md), collapse = x$sep)
-
-  return(md)
 }
 
 #' @exportS3Method base::format
@@ -98,11 +64,54 @@ format.quarto_tabset <- function(x, ...) {
   return(out)
 }
 
+# divs and spans -------------------------------------------
+
+#' @exportS3Method base::format
+format.quarto_div <- function(x, ...) {
+
+  div_body <- format_elements(x$content)
+  div_body <- paste(unlist(div_body), collapse = x$sep)
+  
+  if (is.null(x$class)) x$class <- "quarto_null"
+  css_info <- paste(".", x$class, sep = "", collapse = " ")
+  div_open <- paste("\n\n::: {", css_info, "}\n\n", sep = "", collapse = " ")
+  div_shut <- "\n\n:::\n\n"
+
+  div <- paste(div_open, div_body, div_shut)
+  return(div)
+}
+
+#' @exportS3Method base::format
+format.quarto_span <- function(x, ...) {
+
+  span <- paste(unlist(x$content), sep = x$sep, collapse = x$sep)
+  if (!is.null(x$class)) {
+    css_info <- paste(".", x$class, sep = "", collapse = " ")
+    span <- paste("[", span, "]{", css_info, "}", sep = "")
+  }
+
+  return(span)
+}
+
+# groups of output -------------------------------------------
+
+#' @exportS3Method base::format
+format.quarto_markdown <- function(x, ...) {
+  md <- format_elements(x$content)
+  md <- paste(unlist(md), collapse = x$sep)
+  return(md)
+}
 
 #' @exportS3Method base::format
 format.quarto_output <- function(x, ...) {
-  out <- purrr::map(x$content, format)
+  out <- format_elements(x$content)
   out <- purrr::flatten(out)
   return(out)
 } 
+
+# formatting helpers -----------------------------------------
+
+format_elements <- function(x, ...) {
+  purrr::map(x, \(cc) format(cc, ...))
+}
 

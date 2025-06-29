@@ -4,14 +4,11 @@
 \alias{quarto_group}
 \alias{quarto_output}
 \alias{quarto_markdown}
-\alias{quarto_paragraph}
 \title{Quarto groups}
 \usage{
 quarto_output(...)
 
 quarto_markdown(..., .sep = "")
-
-quarto_paragraph(..., .sep = "")
 }
 \arguments{
 \item{..., }{Objects to be rendered as a group}
