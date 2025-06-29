@@ -45,7 +45,7 @@ check_args_output <- function(...) {
 check_args_markdown <- function(..., .sep) {
   args <- rlang::list2(...)
   is_c <- purrr::map_lgl(args, rlang::is_character)
-  if (!all(is_q)) rlang::abort("objects passed by ... must all be character vectors")
+  if (!all(is_c)) rlang::abort("objects passed by ... must all be character vectors")
     if (!rlang::is_character(.sep, n = 1)) rlang::abort(".sep must be a single character string") 
 }
 
