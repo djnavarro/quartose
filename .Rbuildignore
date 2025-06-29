@@ -2,3 +2,5 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^other$
+^README\.Rmd$
+^README\.html$
