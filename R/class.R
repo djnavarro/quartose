@@ -96,7 +96,7 @@ quarto_output <- function(...) {
 #' @rdname quarto_group
 #' @export
 quarto_markdown <- function(..., .sep = "") {
-  check_args_markdown(..., .sep)
+  check_args_markdown(..., .sep = .sep)
   structure(
     rlang::list2(
       content = rlang::list2(...),
