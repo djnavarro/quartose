@@ -4,4 +4,4 @@ template:
 
 project:
   render: ['*.qmd']
-  
+
