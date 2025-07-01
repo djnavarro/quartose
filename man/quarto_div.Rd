@@ -20,7 +20,10 @@ quarto_span(content, class = NULL, sep = "")
 Quarto divs and spans
 }
 \examples{
-quarto_span("This is underlined", class = "underline")
-quarto_div("This is a callout note", class = "callout-note")
+spn <- quarto_span("This is underlined", class = "underline")
+div <- quarto_div("This is a callout note", class = "callout-note")
+
+knitr::knit_print(spn)
+knitr::knit_print(div)
 
 }

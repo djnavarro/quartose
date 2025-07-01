@@ -17,10 +17,7 @@ Quarto section header
 \examples{
 sec_2 <- quarto_section("A level-two header", level = 2L)
 sec_3 <- quarto_section("A level-three header", level = 3L)
-
-print(sec_2)
-print(sec_3)
-
+ 
 knitr::knit_print(sec_2)
 knitr::knit_print(sec_3)
 

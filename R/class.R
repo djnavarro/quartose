@@ -8,10 +8,7 @@
 #' @examples
 #' sec_2 <- quarto_section("A level-two header", level = 2L)
 #' sec_3 <- quarto_section("A level-three header", level = 3L)
-#' 
-#' print(sec_2)
-#' print(sec_3)
-#' 
+#'  
 #' knitr::knit_print(sec_2)
 #' knitr::knit_print(sec_3)
 #' 
@@ -34,7 +31,8 @@ quarto_section <- function(title, level) {
 #' @param names, Names for tabs (defaults to names(content))
 #' 
 #' @examples
-#' quarto_tabset(list(tab1 = 1:10, tab2 = "hello"), level = 3L) 
+#' tabs <- quarto_tabset(list(tab1 = 1:10, tab2 = "hello"), level = 3L)
+#' knitr::knit_print(tabs)
 #' 
 #' @export
 quarto_tabset <- function(content, level, title = NULL, names = NULL) {
@@ -62,8 +60,11 @@ quarto_tabset <- function(content, level, title = NULL, names = NULL) {
 #' @name quarto_div
 #' 
 #' @examples
-#' quarto_span("This is underlined", class = "underline")
-#' quarto_div("This is a callout note", class = "callout-note")
+#' spn <- quarto_span("This is underlined", class = "underline")
+#' div <- quarto_div("This is a callout note", class = "callout-note")
+#' 
+#' knitr::knit_print(spn)
+#' knitr::knit_print(div)
 #' 
 NULL
 
@@ -103,12 +104,14 @@ quarto_span <- function(content, class = NULL, sep = "") {
 #' @param sep, Separator
 #' @name quarto_group
 #' @examples
-#' quarto_markdown(list("- a markdown", "- list"), sep = "\n")
-#' quarto_group(list(
+#' mkd <- quarto_markdown(list("- a markdown", "- list"), sep = "\n")
+#' grp <- quarto_group(list(
 #'   quarto_div("This is a callout note", class = "callout-note"),
 #'   quarto_div("This is a callout tip", class = "callout-tip")
 #' ))
-
+#' 
+#' knitr::knit_print(mkd)
+#' knitr::knit_print(grp)
 
 #' @rdname quarto_group
 #' @export

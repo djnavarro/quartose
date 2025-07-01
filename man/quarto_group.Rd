@@ -18,9 +18,12 @@ quarto_markdown(content, sep = "")
 Quarto groups
 }
 \examples{
-quarto_markdown(list("- a markdown", "- list"), sep = "\n")
-quarto_group(list(
+mkd <- quarto_markdown(list("- a markdown", "- list"), sep = "\n")
+grp <- quarto_group(list(
   quarto_div("This is a callout note", class = "callout-note"),
   quarto_div("This is a callout tip", class = "callout-tip")
 ))
+
+knitr::knit_print(mkd)
+knitr::knit_print(grp)
 }
