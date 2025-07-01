@@ -61,6 +61,17 @@ test_tabsets <- list(
   )
 )
 
+test_groups <- list(
+  quarto_group(list(
+    quarto_tabset(.content = list("text", "text"), .names = c("name", "name"), .level = 2L),
+    quarto_tabset(.content = list("text", "text"), .title = "title", .names = c("name", "name"), .level = 2L)  
+  )),
+  quarto_group(list(
+    quarto_tabset(.content = list("text", "text"), .names = c("name", "name"), .level = 6L),
+    quarto_tabset(.content = list("text", "text", "text"), .names = c("name", "name", "name"), .level = 6L),
+    quarto_tabset(.content = list(x = "text", y = "text"), .level = 6L)
+  ))
+)
 
 test_that("quarto_section objects can be formatted", {
   for(ss in test_sections) {
@@ -92,12 +103,18 @@ test_that("quarto_tabset objects can be formatted", {
   }
 })
 
+test_that("quarto_group objects can be formatted", {
+  for(gg in test_groups) {
+    expect_no_error(format(gg))
+  }
+})
 
 formatted_sections <- purrr::map(test_sections, format)
 formatted_spans <- purrr::map(test_spans, format)
 formatted_divs <- purrr::map(test_divs, format)
 formatted_markdown <- purrr::map(test_markdown, format)
 formatted_tabsets <- purrr::map(test_tabsets, format)
+formatted_groups <- purrr::map(test_groups, format)
 
 # sections ---------------------------------------------------------
 
@@ -251,5 +268,25 @@ test_that("formatted quarto_tabsets include section/tab titles", {
   }
 })
 
-
 # groups -----------------------------------------------------------
+
+test_that("formatted quarto_groups are lists", {
+  for(i in seq_along(test_groups)) {
+    gg <- test_groups[[i]]
+    ff <- formatted_groups[[i]]
+    expect_true(rlang::is_list(ff))
+  }
+})
+
+test_that("formatted quarto_groups concatenate their formatted constituents", {
+  for(i in seq_along(test_groups)) {
+    gg <- test_groups[[i]]
+    ff <- formatted_groups[[i]]
+    ll <- list()
+    for(cc in gg$content) {
+      ll <- c(ll, format(cc))
+    }
+    expect_equal(length(ff), length(ll)) # same length
+    expect_identical(ff, ll) # actually the same
+  }
+})
