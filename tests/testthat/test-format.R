@@ -2,74 +2,74 @@
 # basic checks ------------------------------------------------------------
 
 test_sections <- list(
-  quarto_section(.title = "Hello", .level = 2L),
-  quarto_section(.title = "", .level = 6L)
+  quarto_section(title = "Hello", level = 2L),
+  quarto_section(title = "", level = 6L)
 )
 
 test_spans <- list(
-  quarto_span(.content = "Hello", .class = "underline"),
-  quarto_span(.content = "Hello", .class = c("underline", "mark")),
-  quarto_span(.content = "Hello", .class = NULL),
-  quarto_span(.content = c("Hello", "world"), .class = "underline", .sep = " "),
-  quarto_span(.content = c("Hello", "world"), .class = "underline", .sep = "\n")
+  quarto_span(content = "Hello", class = "underline"),
+  quarto_span(content = "Hello", class = c("underline", "mark")),
+  quarto_span(content = "Hello", class = NULL),
+  quarto_span(content = c("Hello", "world"), class = "underline", sep = " "),
+  quarto_span(content = c("Hello", "world"), class = "underline", sep = "\n")
 )
 
 test_divs <- list(
-  quarto_div(.content = "Hello", .class = "column-margin"),
-  quarto_div(.content = "Hello", .class = c("column-margin", "callout-tip")),
-  quarto_div(.content = "Hello", .class = NULL),
-  quarto_div(.content = c("Hello", "world"), .class = "column-margin", .sep = " "),
-  quarto_div(.content = c("Hello", "world"), .class = "column-margin", .sep = "\n"),
-  quarto_div(.content = list("Hello", "world"), .class = "column-margin", .sep = " "),
+  quarto_div(content = "Hello", class = "column-margin"),
+  quarto_div(content = "Hello", class = c("column-margin", "callout-tip")),
+  quarto_div(content = "Hello", class = NULL),
+  quarto_div(content = c("Hello", "world"), class = "column-margin", sep = " "),
+  quarto_div(content = c("Hello", "world"), class = "column-margin", sep = "\n"),
+  quarto_div(content = list("Hello", "world"), class = "column-margin", sep = " "),
   quarto_div(
-    .content = list(
-      quarto_span(.content = "this is plain text"),
-      quarto_span(.content = "this is highlighted", .class = "mark"),
-      quarto_span(.content = "this is underlined", .class = "underline")
+    content = list(
+      quarto_span(content = "this is plain text"),
+      quarto_span(content = "this is highlighted", class = "mark"),
+      quarto_span(content = "this is underlined", class = "underline")
     ),
-    .sep = ", "
+    sep = ", "
   )
 )
 
 test_markdown <- list(
-  quarto_markdown(.content = list("item", "item"), .sep = " "),
-  quarto_markdown(.content = c("item", "item"), .sep = " "),
-  quarto_markdown(.content = c("item", "item"), .sep = "\n")
+  quarto_markdown(content = list("item", "item"), sep = " "),
+  quarto_markdown(content = c("item", "item"), sep = " "),
+  quarto_markdown(content = c("item", "item"), sep = "\n")
 )
 
 test_tabsets <- list(
-  quarto_tabset(.content = list("text", "text"), .names = c("name", "name"), .level = 2L),
-  quarto_tabset(.content = list("text", "text"), .title = "title", .names = c("name", "name"), .level = 2L),
-  quarto_tabset(.content = list("text", "text"), .names = c("name", "name"), .level = 6L),
-  quarto_tabset(.content = list("text", "text", "text"), .names = c("name", "name", "name"), .level = 6L),
-  quarto_tabset(.content = list(x = "text", y = "text"), .level = 6L),
-  quarto_tabset(.content = list(a = 1:10, b = LETTERS, c = list(1:2, 3:4)), .level = 2L),
+  quarto_tabset(content = list("text", "text"), names = c("name", "name"), level = 2L),
+  quarto_tabset(content = list("text", "text"), title = "title", names = c("name", "name"), level = 2L),
+  quarto_tabset(content = list("text", "text"), names = c("name", "name"), level = 6L),
+  quarto_tabset(content = list("text", "text", "text"), names = c("name", "name", "name"), level = 6L),
+  quarto_tabset(content = list(x = "text", y = "text"), level = 6L),
+  quarto_tabset(content = list(a = 1:10, b = LETTERS, c = list(1:2, 3:4)), level = 2L),
   quarto_tabset(
-    .content = list(
+    content = list(
       a = lm(Sepal.Width ~ Sepal.Length, iris),
       b = LETTERS, 
       c = list(1:2, 3:4)
     ), 
-    .level = 2L
+    level = 2L
   ),
   quarto_tabset(
-    .content = list(
+    content = list(
       a = ggplot2::ggplot(),
       b = lm(Sepal.Width ~ Sepal.Length, iris)
     ), 
-    .level = 2L
+    level = 2L
   )
 )
 
 test_groups <- list(
   quarto_group(list(
-    quarto_tabset(.content = list("text", "text"), .names = c("name", "name"), .level = 2L),
-    quarto_tabset(.content = list("text", "text"), .title = "title", .names = c("name", "name"), .level = 2L)  
+    quarto_tabset(content = list("text", "text"), names = c("name", "name"), level = 2L),
+    quarto_tabset(content = list("text", "text"), title = "title", names = c("name", "name"), level = 2L)  
   )),
   quarto_group(list(
-    quarto_tabset(.content = list("text", "text"), .names = c("name", "name"), .level = 6L),
-    quarto_tabset(.content = list("text", "text", "text"), .names = c("name", "name", "name"), .level = 6L),
-    quarto_tabset(.content = list(x = "text", y = "text"), .level = 6L)
+    quarto_tabset(content = list("text", "text"), names = c("name", "name"), level = 6L),
+    quarto_tabset(content = list("text", "text", "text"), names = c("name", "name", "name"), level = 6L),
+    quarto_tabset(content = list(x = "text", y = "text"), level = 6L)
   ))
 )
 

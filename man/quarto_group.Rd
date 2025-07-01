@@ -5,14 +5,14 @@
 \alias{quarto_markdown}
 \title{Quarto groups}
 \usage{
-quarto_group(.content, .sep = "")
+quarto_group(content, sep = "")
 
-quarto_markdown(.content, .sep = "")
+quarto_markdown(content, sep = "")
 }
 \arguments{
-\item{.content, }{A list of objects}
+\item{content, }{A list of objects}
 
-\item{.sep, }{Separator}
+\item{sep, }{Separator}
 }
 \description{
 Quarto groups

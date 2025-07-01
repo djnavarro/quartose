@@ -4,12 +4,12 @@
 \alias{quarto_section}
 \title{Quarto section header}
 \usage{
-quarto_section(.title, .level)
+quarto_section(title, level)
 }
 \arguments{
-\item{.title, }{Section title}
+\item{title, }{Section title}
 
-\item{.level, }{Header level}
+\item{level, }{Header level}
 }
 \description{
 Quarto section header

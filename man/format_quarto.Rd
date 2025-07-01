@@ -49,9 +49,9 @@ readable.
 }
 \examples{
 # formatted sections, spans and divs
-sec <- quarto_section("Header", .level = 2L)
-spn <- quarto_span("Content", .class = "underline")
-div <- quarto_div("Content", .class = "content-margin")
+sec <- quarto_section("Header", level = 2L)
+spn <- quarto_span("Content", class = "underline")
+div <- quarto_div("Content", class = "content-margin")
 
 format(sec)
 format(spn)
@@ -59,16 +59,16 @@ format(div)
 
 # formatted tabsets
 tbs <- quarto_tabset(
-  .content = list(tab1 = 1:10, tab2 = "hello"),
-  .title = "Header",
-  .level = 2L
+  content = list(tab1 = 1:10, tab2 = "hello"),
+  title = "Header",
+  level = 2L
 )
 
 format(tbs)
 
 # formatted groups and markdown
 
-mkd <- quarto_markdown(list("- this is a", "- markdown list"), .sep = "\n")
+mkd <- quarto_markdown(list("- this is a", "- markdown list"), sep = "\n")
 gps <- quarto_group(list(div, mkd))
 
 format(mkd)

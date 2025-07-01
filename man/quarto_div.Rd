@@ -5,16 +5,16 @@
 \alias{quarto_span}
 \title{Quarto divs and spans}
 \usage{
-quarto_div(.content, .class = NULL, .sep = "")
+quarto_div(content, class = NULL, sep = "")
 
-quarto_span(.content, .class = NULL, .sep = "")
+quarto_span(content, class = NULL, sep = "")
 }
 \arguments{
-\item{.content, }{Content to be contained in the div/span}
+\item{content, }{Content to be contained in the div/span}
 
-\item{.class, }{CSS class (or vector of classes) for the div/span}
+\item{class, }{CSS class (or vector of classes) for the div/span}
 
-\item{.sep, }{Separator used when merging content}
+\item{sep, }{Separator used when merging content}
 }
 \description{
 Quarto divs and spans
