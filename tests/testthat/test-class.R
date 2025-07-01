@@ -4,7 +4,7 @@ test_that("quarto objects can be defined", {
   expect_no_error(quarto_div(.content = list("content"), .class = "column-margin", .sep = ""))
   expect_no_error(quarto_span(.content = "text", .class = "underline", .sep = ""))
   expect_no_error(quarto_group(.content = list(quarto_section(.title = "title", .level = 2))))
-  expect_no_error(quarto_markdown("- this is a", "- markdown list")
+  expect_no_error(quarto_markdown(.content = list("- this is a", "- markdown list"))
 )
 })
 
@@ -13,7 +13,7 @@ q_tabset <- quarto_tabset(.content = list("content"), .level = 2, .names = "name
 q_div <- quarto_div(.content = list("content"), .class = "column-margin", .sep = "")
 q_span <- quarto_span(.content = "text", .class = "underline", .sep = "")
 q_group <- quarto_group(.content = list(quarto_section(.title = "title", .level = 2)))
-q_markdown <- quarto_markdown("- this is a", "- markdown list")
+q_markdown <- quarto_markdown(.content = list("- this is a", "- markdown list"))
 
 test_that("quarto objects have correct S3 class", {
 

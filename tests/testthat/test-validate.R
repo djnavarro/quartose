@@ -6,7 +6,7 @@ q_tabset <- quarto_tabset(.content = list("content"), .level = 2, .names = "name
 q_div <- quarto_div(.content = list("content"), .class = "column-margin", .sep = "")
 q_span <- quarto_span(.content = "text", .class = "underline", .sep = "")
 q_group <- quarto_group(.content = list(quarto_section(.title = "title", .level = 2)))
-q_markdown <- quarto_markdown("- this is a", "- markdown list")
+q_markdown <- quarto_markdown(.content = list("- this is a", "- markdown list"))
 
 valid_titles <- list("cat", "", "<^&3 dsc")
 valid_levels <- list(1L, 1.0, 1, 6L, 6.0, 6)
@@ -148,17 +148,20 @@ test_that("valid quarto_markdown arguments are permitted", {
 
   for (ss in valid_sep) {
 
-    expect_no_error(check_args_markdown("just one string", .sep = ss))
-    expect_no_error(quarto_markdown("just one string", .sep = ss))
+    expect_no_error(check_args_markdown(.content = list("just one string"), .sep = ss))
+    expect_no_error(quarto_markdown(.content = list("just one string"), .sep = ss))
 
-    expect_no_error(check_args_markdown("- each list item", "- is a string", .sep = ss))
-    expect_no_error(quarto_markdown("- each list item", "- is a string", .sep = ss))
+    expect_no_error(check_args_markdown(.content = list("- each list item", "- is a string"), .sep = ss))
+    expect_no_error(quarto_markdown(.content = list("- each list item", "- is a string"), .sep = ss))
 
-    expect_no_error(check_args_markdown(c("- one character vector", "- with **bold**"), .sep = ss))
-    expect_no_error(quarto_markdown(c("- one character vector", "- with **bold**"), .sep = ss))
+    expect_no_error(check_args_markdown(.content = list("- one character vector", "- with **bold**"), .sep = ss))
+    expect_no_error(quarto_markdown(.content = list("- one character vector", "- with **bold**"), .sep = ss))
 
-    expect_no_error(check_args_markdown("two character vectors", c("of different", "lengths"), .sep = ss))
-    expect_no_error(quarto_markdown("two character vectors", c("of different", "lengths"), .sep = ss))
+    expect_no_error(check_args_markdown(.content = list("two character vectors", c("of different", "lengths")), .sep = ss))
+    expect_no_error(quarto_markdown(.content = list("two character vectors", c("of different", "lengths")), .sep = ss))
+
+    expect_no_error(check_args_markdown(.content = c("- one character vector", "- with **bold**"), .sep = ss))
+    expect_no_error(quarto_markdown(.content = c("- one character vector", "- with **bold**"), .sep = ss))
 
   }
 
@@ -365,13 +368,15 @@ test_that("invalid quarto_markdown arguments are rejected", {
   # basic idea:
   expect_no_error(
     quarto_markdown(
-      "All inputs are expected to be strings",
-      c("or character", "vectors")
+      list(
+        "All inputs are expected to be strings",
+        c("or character", "vectors")
+      )
     )
   )
 
   # none of these should work:
-  expect_error(quarto_markdown(list("no lists")))
+  expect_error(quarto_markdown(list(list("no lists of lists"))))
   expect_error(quarto_markdown(quarto_section("no quarto objects", 1L)))
   expect_error(quarto_markdown("all inputs must be text", list()))
   expect_error(quarto_markdown("all inputs must be text", 23.123))

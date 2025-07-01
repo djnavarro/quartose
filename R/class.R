@@ -78,7 +78,7 @@ quarto_span <- function(.content, .class = NULL, .sep = "") {
 # groups of output -------------------------------------------
 
 #' @title Quarto groups
-#' @param .content, A list of quarto objects
+#' @param .content, A list of objects
 #' @param .sep, Separator
 #' @name quarto_group
 
@@ -97,11 +97,11 @@ quarto_group <- function(.content, .sep = "") {
 
 #' @rdname quarto_group
 #' @export
-quarto_markdown <- function(..., .sep = "") {
-  check_args_markdown(..., .sep = .sep)
+quarto_markdown <- function(.content, .sep = "") {
+  check_args_markdown(.content, .sep = .sep)
   structure(
     rlang::list2(
-      content = rlang::list2(...),
+      content = .content,
       sep = .sep,
     ),
     class = c("quarto_markdown", "quarto_object")

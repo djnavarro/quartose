@@ -46,13 +46,13 @@ check_args_span <- function(.content, .class, .sep) {
 check_args_group <- function(.content, .sep) {
   is_q <- purrr::map_lgl(.content, is_quarto)
   if (!all(is_q)) rlang::abort("all elements of .content must all be quarto objects")
+  if (!rlang::is_character(.sep, n = 1)) rlang::abort(".sep must be a single character string")
 }
 
-check_args_markdown <- function(..., .sep) {
-  args <- rlang::list2(...)
-  is_c <- purrr::map_lgl(args, rlang::is_character)
-  if (!all(is_c)) rlang::abort("objects passed by ... must all be character vectors")
-  if (!rlang::is_character(.sep, n = 1)) rlang::abort(".sep must be a single character string") 
+check_args_markdown <- function(.content, .sep) {
+  is_c <- purrr::map_lgl(.content, rlang::is_character)
+  if (!all(is_c)) rlang::abort("all elements of .content must all be character vectors")
+  if (!rlang::is_character(.sep, n = 1)) rlang::abort(".sep must be a single character string")
 }
 
 # class checkers ---------------------------------------------
