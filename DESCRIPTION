@@ -16,8 +16,11 @@ Imports:
     rlang,
     utils
 Suggests: 
+    dplyr,
     ggplot2,
     quarto,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Config/Needs/website: rmarkdown
+VignetteBuilder: quarto
