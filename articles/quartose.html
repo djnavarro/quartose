@@ -347,7 +347,7 @@
 </section></section><section class="level3"><h3 id="printing-as-a-group">Printing as a group<a class="anchor" aria-label="anchor" href="#printing-as-a-group"></a>
 </h3>
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">isl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Torgetsen"</span>, <span class="st">"Biscoe"</span>, <span class="st">"Dream"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">isl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Torgersen"</span>, <span class="st">"Biscoe"</span>, <span class="st">"Dream"</span><span class="op">)</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">isl</span>, \<span class="op">(</span><span class="va">ii</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="va">island</span> <span class="op">==</span> <span class="va">ii</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">pic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">dat</span>, \<span class="op">(</span><span class="va">dd</span><span class="op">)</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">dd</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">bill_len</span>, <span class="va">bill_dep</span>, color <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/quarto_group.html">quarto_group</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -358,11 +358,13 @@
 </h4>
 <div class="panel-tabset">
 <ul id="tabset-3" class="panel-tabset-tabby">
-<li><a data-tabby-default="" href="#tabset-3-1">Torgetsen</a></li>
+<li><a data-tabby-default="" href="#tabset-3-1">Torgersen</a></li>
 <li><a href="#tabset-3-2">Biscoe</a></li>
 <li><a href="#tabset-3-3">Dream</a></li>
 </ul>
 <ul class="nav nav-tabs" id="NA" role="tablist"><li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#NA" id="NA-tab" type="button" role="tab" aria-controls="NA" aria-selected="true" class="active nav-link">
+<pre><code><span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_point()`).</span></span></code></pre>
 <p><img src="quartose_files/figure-html/tabs-and-headers-2-1.png" width="672"></p>
 </button></li></ul>
 <div class="tab-content"><div class="active  tab-pane" id="NA" role="tabpanel" aria-labelledby="NA-tab">
@@ -381,16 +383,66 @@
 </h4>
 <div class="panel-tabset">
 <ul id="tabset-4" class="panel-tabset-tabby">
-<li><a data-tabby-default="" href="#tabset-4-1">Torgetsen</a></li>
+<li><a data-tabby-default="" href="#tabset-4-1">Torgersen</a></li>
 <li><a href="#tabset-4-2">Biscoe</a></li>
 <li><a href="#tabset-4-3">Dream</a></li>
 </ul>
 <ul class="nav nav-tabs" id="NA" role="tablist"><li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#NA" id="NA-tab" type="button" role="tab" aria-controls="NA" aria-selected="true" class="active nav-link">
 <pre>
-[1] species     island      bill_len    bill_dep    flipper_len body_mass
-[7] sex         year
-&lt;0 rows&gt; (or 0-length row.names)
-</pre>
+   species    island bill_len bill_dep flipper_len body_mass    sex year
+1   Adelie Torgersen     39.1     18.7         181      3750   male 2007
+2   Adelie Torgersen     39.5     17.4         186      3800 female 2007
+3   Adelie Torgersen     40.3     18.0         195      3250 female 2007
+4   Adelie Torgersen       NA       NA          NA        NA   <na> 2007
+5   Adelie Torgersen     36.7     19.3         193      3450 female 2007
+6   Adelie Torgersen     39.3     20.6         190      3650   male 2007
+7   Adelie Torgersen     38.9     17.8         181      3625 female 2007
+8   Adelie Torgersen     39.2     19.6         195      4675   male 2007
+9   Adelie Torgersen     34.1     18.1         193      3475   <na> 2007
+10  Adelie Torgersen     42.0     20.2         190      4250   <na> 2007
+11  Adelie Torgersen     37.8     17.1         186      3300   <na> 2007
+12  Adelie Torgersen     37.8     17.3         180      3700   <na> 2007
+13  Adelie Torgersen     41.1     17.6         182      3200 female 2007
+14  Adelie Torgersen     38.6     21.2         191      3800   male 2007
+15  Adelie Torgersen     34.6     21.1         198      4400   male 2007
+16  Adelie Torgersen     36.6     17.8         185      3700 female 2007
+17  Adelie Torgersen     38.7     19.0         195      3450 female 2007
+18  Adelie Torgersen     42.5     20.7         197      4500   male 2007
+19  Adelie Torgersen     34.4     18.4         184      3325 female 2007
+20  Adelie Torgersen     46.0     21.5         194      4200   male 2007
+21  Adelie Torgersen     35.9     16.6         190      3050 female 2008
+22  Adelie Torgersen     41.8     19.4         198      4450   male 2008
+23  Adelie Torgersen     33.5     19.0         190      3600 female 2008
+24  Adelie Torgersen     39.7     18.4         190      3900   male 2008
+25  Adelie Torgersen     39.6     17.2         196      3550 female 2008
+26  Adelie Torgersen     45.8     18.9         197      4150   male 2008
+27  Adelie Torgersen     35.5     17.5         190      3700 female 2008
+28  Adelie Torgersen     42.8     18.5         195      4250   male 2008
+29  Adelie Torgersen     40.9     16.8         191      3700 female 2008
+30  Adelie Torgersen     37.2     19.4         184      3900   male 2008
+31  Adelie Torgersen     36.2     16.1         187      3550 female 2008
+32  Adelie Torgersen     42.1     19.1         195      4000   male 2008
+33  Adelie Torgersen     34.6     17.2         189      3200 female 2008
+34  Adelie Torgersen     42.9     17.6         196      4700   male 2008
+35  Adelie Torgersen     36.7     18.8         187      3800 female 2008
+36  Adelie Torgersen     35.1     19.4         193      4200   male 2008
+37  Adelie Torgersen     38.6     17.0         188      2900 female 2009
+38  Adelie Torgersen     37.3     20.5         199      3775   male 2009
+39  Adelie Torgersen     35.7     17.0         189      3350 female 2009
+40  Adelie Torgersen     41.1     18.6         189      3325   male 2009
+41  Adelie Torgersen     36.2     17.2         187      3150 female 2009
+42  Adelie Torgersen     37.7     19.8         198      3500   male 2009
+43  Adelie Torgersen     40.2     17.0         176      3450 female 2009
+44  Adelie Torgersen     41.4     18.5         202      3875   male 2009
+45  Adelie Torgersen     35.2     15.9         186      3050 female 2009
+46  Adelie Torgersen     40.6     19.0         199      4000   male 2009
+47  Adelie Torgersen     38.8     17.6         191      3275 female 2009
+48  Adelie Torgersen     41.5     18.3         195      4300   male 2009
+49  Adelie Torgersen     39.0     17.1         191      3050 female 2009
+50  Adelie Torgersen     44.1     18.0         210      4000   male 2009
+51  Adelie Torgersen     38.5     17.9         190      3325 female 2009
+52  Adelie Torgersen     43.1     19.2         197      3500   male 2009
+</na></na></na></na></na></pre>
 </button></li></ul>
 <div class="tab-content"><div class="active  tab-pane" id="NA" role="tabpanel" aria-labelledby="NA-tab">
 
@@ -700,7 +752,7 @@
 </div>
 </section></section></section><section class="level2"><h2 id="divs-and-spans">Divs and spans<a class="anchor" aria-label="anchor" href="#divs-and-spans"></a>
 </h2>
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="st">"This is some margin text."</span>, </span>
 <span>  class <span class="op">=</span> <span class="st">"column-margin"</span></span>
@@ -708,7 +760,7 @@
 <div class="column-margin">
 <p>This is some margin text.</p>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="st">"Using character vectors is fine."</span>,</span>
@@ -722,7 +774,7 @@
 <div class="column-margin">
 <p>Using character vectors is fine. /// This is also just one margin text block. /// All the strings get pasted together, /// with a separator.</p>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="st">"You can pass a list as the div content."</span>, </span>
@@ -738,7 +790,7 @@
 <div class="column-margin">
 <p>You can pass a list as the div content. /// That allows you to mix content, /// 1 /// 2 /// 3 /// of different types /// and lengths. /// But pay attention to where separators appear, /// and remember that <strong>markdown parsing still applies</strong></p>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="st">"This is a callout note."</span>,</span>
 <span>  class <span class="op">=</span> <span class="st">"callout-note"</span></span>
@@ -749,7 +801,7 @@
 <p>This is a callout note.</p>
 </blockquote>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="st">"You can supply multiple classes"</span>,</span>
 <span>  class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"column-margin"</span>, <span class="st">"callout-tip"</span><span class="op">)</span></span>
@@ -760,10 +812,10 @@
 <p>You can supply multiple classes</p>
 </blockquote>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span>content <span class="op">=</span> <span class="st">"this is highlighted"</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span></span></code></pre></div>
 <p><mark>this is highlighted</mark></p>
-<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span>content <span class="op">=</span> <span class="st">"this is plain text"</span><span class="op">)</span>,</span>
@@ -777,7 +829,7 @@
 </div>
 </section><section class="level2"><h2 id="raw-markdown">Raw markdown<a class="anchor" aria-label="anchor" href="#raw-markdown"></a>
 </h2>
-<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_group.html">quarto_markdown</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="st">"- this ends up being"</span>,</span>
