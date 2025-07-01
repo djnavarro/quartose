@@ -6,8 +6,14 @@
 #' @param level, Header level
 #' 
 #' @examples
-#' quarto_section("A level-two header", level = 2L)
-#' quarto_section("A level-three header", level = 3L)
+#' sec_2 <- quarto_section("A level-two header", level = 2L)
+#' sec_3 <- quarto_section("A level-three header", level = 3L)
+#' 
+#' print(sec_2)
+#' print(sec_3)
+#' 
+#' knitr::knit_print(sec_2)
+#' knitr::knit_print(sec_3)
 #' 
 #' @export
 quarto_section <- function(title, level) {
