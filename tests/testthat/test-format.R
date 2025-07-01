@@ -1,5 +1,5 @@
 
-# basic checks ----------------------------------------
+# basic checks ------------------------------------------------------------
 
 test_sections <- list(
   quarto_section(.title = "Hello", .level = 2L),
@@ -37,6 +37,31 @@ test_markdown <- list(
   quarto_markdown(.content = c("item", "item"), .sep = "\n")
 )
 
+test_tabsets <- list(
+  quarto_tabset(.content = list("text", "text"), .names = c("name", "name"), .level = 2L),
+  quarto_tabset(.content = list("text", "text"), .title = "title", .names = c("name", "name"), .level = 2L),
+  quarto_tabset(.content = list("text", "text"), .names = c("name", "name"), .level = 6L),
+  quarto_tabset(.content = list("text", "text", "text"), .names = c("name", "name", "name"), .level = 6L),
+  quarto_tabset(.content = list(x = "text", y = "text"), .level = 6L),
+  quarto_tabset(.content = list(a = 1:10, b = LETTERS, c = list(1:2, 3:4)), .level = 2L),
+  quarto_tabset(
+    .content = list(
+      a = lm(Sepal.Width ~ Sepal.Length, iris),
+      b = LETTERS, 
+      c = list(1:2, 3:4)
+    ), 
+    .level = 2L
+  ),
+  quarto_tabset(
+    .content = list(
+      a = ggplot2::ggplot(),
+      b = lm(Sepal.Width ~ Sepal.Length, iris)
+    ), 
+    .level = 2L
+  )
+)
+
+
 test_that("quarto_section objects can be formatted", {
   for(ss in test_sections) {
     expect_no_error(format(ss))
@@ -61,12 +86,20 @@ test_that("quarto_markdown objects can be formatted", {
   }
 })
 
+test_that("quarto_tabset objects can be formatted", {
+  for(tt in test_tabsets) {
+    expect_no_error(format(tt))
+  }
+})
+
+
 formatted_sections <- purrr::map(test_sections, format)
 formatted_spans <- purrr::map(test_spans, format)
 formatted_divs <- purrr::map(test_divs, format)
 formatted_markdown <- purrr::map(test_markdown, format)
+formatted_tabsets <- purrr::map(test_tabsets, format)
 
-# sections --------------------------------------------
+# sections ---------------------------------------------------------
 
 test_that("quarto_section objects format to strings", {
   for(ff in formatted_sections) {
@@ -86,9 +119,7 @@ test_that("formatted quarto_section objects have correct structure", {
   }
 })
 
-# tabsets --------------------------------------------
-
-# spans ----------------------------------------------
+# spans ------------------------------------------------------------
 
 test_that("quarto_span objects format to strings", {
   for(ff in formatted_spans) {
@@ -146,11 +177,77 @@ test_that("formatted quarto_div objects have correct structure", {
 # markdown ---------------------------------------------------------
 
 test_that("formatted quarto_markdown objects have correct structure", {
-
   for(i in seq_along(test_markdown)) {
     ff <- formatted_markdown[[i]]
     mm <- test_markdown[[i]]
     expect_equal(ff, paste(mm$content, collapse = mm$sep))
+  }
+})
+
+# tabsets ----------------------------------------------------------
+
+test_that("formatted quarto_tabset objects are character/graphics lists", {
+  for(i in seq_along(test_tabsets)) {
+    tt <- test_tabsets[[i]]
+    ff <- formatted_tabsets[[i]]
+    expect_true(rlang::is_list(ff))
+    expect_true(
+      all(purrr::map_lgl(ff, \(x) {
+        rlang::is_bare_character(x) | quartose:::is_ggplot(x)
+      }))
+    )
+    ff_text <- purrr::map(ff, \(x) {
+      if (rlang::is_bare_character(x)) return(x)
+      "PLOT"      
+    })
+    expect_true(all(purrr::map_int(ff_text, length) == 1L))
+  }
+})
+
+test_that("character elements of formatted quarto_tabset are length 1", {
+  for(i in seq_along(test_tabsets)) {
+    tt <- test_tabsets[[i]]
+    ff <- formatted_tabsets[[i]]
+    ff_text <- purrr::map(ff, \(x) {
+      if (rlang::is_bare_character(x)) return(x)
+      "PLOT"      
+    })
+    expect_true(all(purrr::map_int(ff_text, length) == 1L))
+  }
+})
+
+test_that("formatted quarto_tabsets include .panel-tabset div", {
+  for(i in seq_along(test_tabsets)) {
+    tt <- test_tabsets[[i]]
+    ff <- formatted_tabsets[[i]]
+    ff_chr <- unname(purrr::map_chr(ff, \(x) {
+      if (rlang::is_bare_character(x)) return(x)
+      "PLOT"      
+    }))
+    ind <- 1L
+    if (!is.null(tt$title)) ind <- 2L
+    expect_equal(ff_chr[ind], "\n\n::: {.panel-tabset}\n\n") # div open
+    expect_equal(ff_chr[length(ff_chr)], "\n\n::: \n\n") # div close
+  }
+})
+
+test_that("formatted quarto_tabsets include section/tab titles", {
+  for(i in seq_along(test_tabsets)) {
+    tt <- test_tabsets[[i]]
+    ff <- formatted_tabsets[[i]]
+    ff_chr <- unname(purrr::map_chr(ff, \(x) {
+      if (rlang::is_bare_character(x)) return(x)
+      "PLOT"      
+    }))
+
+    # the title should be there
+    if (!is.null(tt$title)) {
+      expect_match(ff_chr[1L], tt$title, fixed = TRUE)
+    }
+    # at least one formatted string should match each name
+    for (nn in seq_along(tt$names)) {
+      expect_true(length(grep(tt$names[nn], ff_chr)) > 0L)
+    }
   }
 })
 
