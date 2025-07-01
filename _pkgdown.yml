@@ -2,3 +2,6 @@ url: https://quartose.djnavarro.net/
 template:
   bootstrap: 5
 
+project:
+  render: ['*.qmd']
+  
