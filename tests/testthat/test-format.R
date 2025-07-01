@@ -31,6 +31,12 @@ test_divs <- list(
   )
 )
 
+test_markdown <- list(
+  quarto_markdown(.content = list("item", "item"), .sep = " "),
+  quarto_markdown(.content = c("item", "item"), .sep = " "),
+  quarto_markdown(.content = c("item", "item"), .sep = "\n")
+)
+
 test_that("quarto_section objects can be formatted", {
   for(ss in test_sections) {
     expect_no_error(format(ss))
@@ -49,9 +55,16 @@ test_that("quarto_div objects can be formatted", {
   }
 })
 
+test_that("quarto_markdown objects can be formatted", {
+  for(mm in test_markdown) {
+    expect_no_error(format(mm))
+  }
+})
+
 formatted_sections <- purrr::map(test_sections, format)
 formatted_spans <- purrr::map(test_spans, format)
 formatted_divs <- purrr::map(test_divs, format)
+formatted_markdown <- purrr::map(test_markdown, format)
 
 # sections --------------------------------------------
 
@@ -130,4 +143,16 @@ test_that("formatted quarto_div objects have correct structure", {
 })
 
 
-# groups/markdown ------------------------------------
+# markdown ---------------------------------------------------------
+
+test_that("formatted quarto_markdown objects have correct structure", {
+
+  for(i in seq_along(test_markdown)) {
+    ff <- formatted_markdown[[i]]
+    mm <- test_markdown[[i]]
+    expect_equal(ff, paste(mm$content, collapse = mm$sep))
+  }
+})
+
+
+# groups -----------------------------------------------------------
