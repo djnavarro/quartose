@@ -28,7 +28,6 @@ library(knitr)
 library(dplyr)
 library(purrr)
 library(ggplot2)
-library(quartose)
 ```
 
 ## Tabs and sections
