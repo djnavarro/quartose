@@ -17,3 +17,10 @@ quarto_markdown(content, sep = "")
 \description{
 Quarto groups
 }
+\examples{
+quarto_markdown(list("- a markdown", "- list"), sep = "\n")
+quarto_group(list(
+  quarto_div("This is a callout note", class = "callout-note"),
+  quarto_div("This is a callout tip", class = "callout-tip"),
+))
+}

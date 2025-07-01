@@ -19,3 +19,8 @@ quarto_span(content, class = NULL, sep = "")
 \description{
 Quarto divs and spans
 }
+\examples{
+quarto_span("This is underlined", class = "underline")
+quarto_div("This is a callout note", class = "callout-note")
+
+}

@@ -14,3 +14,8 @@ quarto_section(title, level)
 \description{
 Quarto section header
 }
+\examples{
+quarto_section("A level-two header", level = 2L)
+quarto_section("A level-three header", level = 3L)
+
+}

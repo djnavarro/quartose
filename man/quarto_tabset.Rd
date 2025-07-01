@@ -18,3 +18,7 @@ quarto_tabset(content, level, title = NULL, names = NULL)
 \description{
 Quarto tabset with section header
 }
+\examples{
+quarto_tabset(list(tab1 = 1:10, tab2 = "hello"), level = 3L) 
+
+}

@@ -4,6 +4,11 @@
 #' @title Quarto section header
 #' @param title, Section title
 #' @param level, Header level
+#' 
+#' @examples
+#' quarto_section("A level-two header", level = 2L)
+#' quarto_section("A level-three header", level = 3L)
+#' 
 #' @export
 quarto_section <- function(title, level) {
   check_args_section(title, level)
@@ -21,6 +26,10 @@ quarto_section <- function(title, level) {
 #' @param level, Header level
 #' @param title, Section title (optional)
 #' @param names, Names for tabs (defaults to names(content))
+#' 
+#' @examples
+#' quarto_tabset(list(tab1 = 1:10, tab2 = "hello"), level = 3L) 
+#' 
 #' @export
 quarto_tabset <- function(content, level, title = NULL, names = NULL) {
 
@@ -45,6 +54,12 @@ quarto_tabset <- function(content, level, title = NULL, names = NULL) {
 #' @param class, CSS class (or vector of classes) for the div/span
 #' @param sep, Separator used when merging content
 #' @name quarto_div
+#' 
+#' @examples
+#' quarto_span("This is underlined", class = "underline")
+#' quarto_div("This is a callout note", class = "callout-note")
+#' 
+NULL
 
 #' @rdname quarto_div
 #' @export
@@ -81,6 +96,13 @@ quarto_span <- function(content, class = NULL, sep = "") {
 #' @param content, A list of objects
 #' @param sep, Separator
 #' @name quarto_group
+#' @examples
+#' quarto_markdown(list("- a markdown", "- list"), sep = "\n")
+#' quarto_group(list(
+#'   quarto_div("This is a callout note", class = "callout-note"),
+#'   quarto_div("This is a callout tip", class = "callout-tip"),
+#' ))
+
 
 #' @rdname quarto_group
 #' @export
