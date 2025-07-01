@@ -14,6 +14,23 @@ test_spans <- list(
   quarto_span(.content = c("Hello", "world"), .class = "underline", .sep = "\n")
 )
 
+test_divs <- list(
+  quarto_div(.content = "Hello", .class = "column-margin"),
+  quarto_div(.content = "Hello", .class = c("column-margin", "callout-tip")),
+  quarto_div(.content = "Hello", .class = NULL),
+  quarto_div(.content = c("Hello", "world"), .class = "column-margin", .sep = " "),
+  quarto_div(.content = c("Hello", "world"), .class = "column-margin", .sep = "\n"),
+  quarto_div(.content = list("Hello", "world"), .class = "column-margin", .sep = " "),
+  quarto_div(
+    .content = list(
+      quarto_span(.content = "this is plain text"),
+      quarto_span(.content = "this is highlighted", .class = "mark"),
+      quarto_span(.content = "this is underlined", .class = "underline")
+    ),
+    .sep = ", "
+  )
+)
+
 test_that("quarto_section objects can be formatted", {
   for(ss in test_sections) {
     expect_no_error(format(ss))
@@ -26,8 +43,15 @@ test_that("quarto_span objects can be formatted", {
   }
 })
 
+test_that("quarto_div objects can be formatted", {
+  for(dd in test_divs) {
+    expect_no_error(format(dd))
+  }
+})
+
 formatted_sections <- purrr::map(test_sections, format)
 formatted_spans <- purrr::map(test_spans, format)
+formatted_divs <- purrr::map(test_divs, format)
 
 # sections --------------------------------------------
 
@@ -50,10 +74,6 @@ test_that("formatted quarto_section objects have correct structure", {
 })
 
 # tabsets --------------------------------------------
-
-
-# divs -----------------------------------------------
-
 
 # spans ----------------------------------------------
 
@@ -93,5 +113,21 @@ test_that("formatted quarto_span objects have correct structure", {
 
   }
 })
+
+# divs -----------------------------------------------
+
+test_that("formatted quarto_div objects have correct structure", {
+  for(i in seq_along(test_divs)) {
+    ff <- formatted_divs[[i]]
+    dd <- test_divs[[i]]
+    expect_match(object = ff, regexp = "^\n\n::: \\{") # check start
+    expect_match(object = ff, regexp = "\n\n:::\n\n$") # check end
+    if (is.null(dd$class)) dd$class <- "quartose-null"
+    cl <- paste0(".", dd$class, collapse = " ")
+    cl <- paste0("\\{", cl, "\\}")
+    expect_match(object = ff, regexp = cl) # check for class string
+  }
+})
+
 
 # groups/markdown ------------------------------------
