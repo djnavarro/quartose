@@ -54,7 +54,7 @@ for(sp in c("Adelie", "Chinstrap")) {
 ```{r}
 #| label: tabs-and-headers-2
 #| results: asis
-isl <- c("Torgetsen", "Biscoe", "Dream")
+isl <- c("Torgersen", "Biscoe", "Dream")
 dat <- map(isl, \(ii) filter(penguins, island == ii))
 pic <- map(dat, \(dd) ggplot(dd, aes(bill_len, bill_dep, color = species)) + geom_point())
 quarto_group(list(
