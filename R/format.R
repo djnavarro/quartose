@@ -54,7 +54,7 @@ format.quarto_tabset <- function(x, ...) {
     # cat(), but don't actually print them yet, just capture and store
     } else {
       out <- c(out, pre_open)
-      out <- c(out, capture.output(knitr::knit_print(x$content[[i]])))
+      out <- c(out, utils::capture.output(knitr::knit_print(x$content[[i]])))
       out <- c(out, pre_shut)
     }
 

@@ -13,7 +13,8 @@ BugReports: https://github.com/djnavarro/quartose/issues
 Imports: 
     knitr,
     purrr,
-    rlang
+    rlang,
+    utils
 Suggests: 
     ggplot2,
     testthat (>= 3.0.0)
