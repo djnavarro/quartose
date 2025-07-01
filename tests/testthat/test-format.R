@@ -177,6 +177,13 @@ test_that("formatted quarto_span objects have correct structure", {
 
 # divs -----------------------------------------------
 
+test_that("quarto_div objects format to strings", {
+  for(dd in formatted_divs) {
+    expect_true(rlang::is_character(dd))
+    expect_length(dd, 1L)
+  }
+})
+
 test_that("formatted quarto_div objects have correct structure", {
   for(i in seq_along(test_divs)) {
     ff <- formatted_divs[[i]]
