@@ -48,7 +48,7 @@
 #' 
 #' # formatted groups and markdown
 #' 
-#' mkd <- quarto_markdown(list("- this is a", "- markdown list"))
+#' mkd <- quarto_markdown(list("- this is a", "- markdown list"), .sep = "\n")
 #' gps <- quarto_group(list(div, mkd))
 #' 
 #' format(mkd)
