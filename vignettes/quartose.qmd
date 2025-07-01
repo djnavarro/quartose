@@ -28,6 +28,7 @@ library(knitr)
 library(dplyr)
 library(purrr)
 library(ggplot2)
+library(quartose)
 ```
 
 ## Tabs and sections
@@ -41,7 +42,7 @@ for(sp in c("Adelie", "Chinstrap")) {
   dat <- penguins |> filter(species == sp)
   pic <- ggplot(dat, aes(bill_len, bill_dep, color = sex)) + geom_point()
   knit_print(quarto_tabset(
-    content = list("Plot" = pic, "Data" = dat), 
+    content = list("Plot" = pic, "Data" = head(dat)), 
     title = sp,
     level = 4
   ))
@@ -58,7 +59,7 @@ dat <- map(isl, \(ii) filter(penguins, island == ii))
 pic <- map(dat, \(dd) ggplot(dd, aes(bill_len, bill_dep, color = species)) + geom_point())
 quarto_group(list(
   quarto_tabset(content = pic, names = isl, title = "Plot", level = 4),
-  quarto_tabset(content = dat, names = isl, title = "Data", level = 4)
+  quarto_tabset(content = map(dat, head), names = isl, title = "Data", level = 4)
 ))
 ```
 
