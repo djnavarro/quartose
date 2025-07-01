@@ -78,17 +78,18 @@ quarto_span <- function(.content, .class = NULL, .sep = "") {
 # groups of output -------------------------------------------
 
 #' @title Quarto groups
-#' @param ..., Objects to be rendered as a group
+#' @param .content, A list of quarto objects
 #' @param .sep, Separator
 #' @name quarto_group
 
 #' @rdname quarto_group
 #' @export
-quarto_group <- function(...) {
-  check_args_group(...)
+quarto_group <- function(.content, .sep = "") {
+  check_args_group(.content, .sep)
   structure(
     rlang::list2(
-      content = rlang::list2(...)
+      content = .content,
+      sep = .sep
     ),
     class = c("quarto_group", "quarto_object")
   )

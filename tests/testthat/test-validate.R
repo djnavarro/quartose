@@ -5,7 +5,7 @@ q_section <- quarto_section(.title = "title", .level = 2)
 q_tabset <- quarto_tabset(.content = list("content"), .level = 2, .names = "name")
 q_div <- quarto_div(.content = list("content"), .class = "column-margin", .sep = "")
 q_span <- quarto_span(.content = "text", .class = "underline", .sep = "")
-q_group <- quarto_group(quarto_section(.title = "title", .level = 2))
+q_group <- quarto_group(.content = list(quarto_section(.title = "title", .level = 2)))
 q_markdown <- quarto_markdown("- this is a", "- markdown list")
 
 valid_titles <- list("cat", "", "<^&3 dsc")
@@ -133,14 +133,14 @@ test_that("valid quarto_span arguments are permitted", {
 
 test_that("valid quarto_group arguments are permitted", {
 
-  expect_no_error(check_args_group(q_div))
-  expect_no_error(quarto_group(q_div))
+  expect_no_error(check_args_group(.content = list(q_div), .sep = ""))
+  expect_no_error(quarto_group(.content = list(q_div)))
 
-  expect_no_error(check_args_group(q_tabset))
-  expect_no_error(quarto_group(q_tabset))
+  expect_no_error(check_args_group(.content = list(q_tabset), .sep = ""))
+  expect_no_error(quarto_group(.content = list(q_tabset)))
 
-  expect_no_error(check_args_group(q_div, q_tabset))
-  expect_no_error(quarto_group(q_div, q_tabset))
+  expect_no_error(check_args_group(.content = list(q_div, q_tabset), .sep = ""))
+  expect_no_error(quarto_group(.content = list(q_div, q_tabset)))
 
 })
 
@@ -173,7 +173,7 @@ test_that("quarto objects are detected by is_quarto", {
     q_tabset = quarto_tabset(.content = list("content"), .level = 2, .names = "name"),
     q_div = quarto_div(.content = list("content"), .class = "column-margin", .sep = ""),
     q_span = quarto_span(.content = "text", .class = "underline", .sep = ""),
-    q_group = quarto_group(quarto_section(.title = "title", .level = 2)),
+    q_group = quarto_group(.content = list(quarto_section(.title = "title", .level = 2))),
     q_markdown = quarto_markdown("text")
   )
   for (q in obj) expect_true(is_quarto(q))
@@ -344,20 +344,19 @@ test_that("invalid quarto_group arguments are rejected", {
 
   # basic idea: 
   expect_no_error(
-    quarto_group(
+    quarto_group(list(
       quarto_section("quarto_groups only accept", 1L),
       quarto_section("quarto objects as input", 1L)
-    )
+    ))
   )
 
   # none of these should work:
   expect_error(quarto_group("quarto groups only accept quarto objects"))
-  expect_error(quarto_group(list("quarto groups don't accept lists")))
-  expect_error(quarto_group(NULL))
-  expect_error(quarto_group(
+  expect_error(quarto_group(list("quarto groups don't accept lists of non-quarto objects")))
+  expect_error(list(quarto_group(
     "quarto groups only accept quarto objects",
     quarto_section("all args must be quarto objects", 1L)
-  ))
+  )))
 
 })
 

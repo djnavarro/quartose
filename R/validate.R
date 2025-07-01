@@ -43,10 +43,9 @@ check_args_span <- function(.content, .class, .sep) {
 
 # groups of output -------------------------------------------
 
-check_args_group <- function(...) {
-  args <- rlang::list2(...)
-  is_q <- purrr::map_lgl(args, is_quarto)
-  if (!all(is_q)) rlang::abort("objects passed by ... must all be quarto objects")
+check_args_group <- function(.content, .sep) {
+  is_q <- purrr::map_lgl(.content, is_quarto)
+  if (!all(is_q)) rlang::abort("all elements of .content must all be quarto objects")
 }
 
 check_args_markdown <- function(..., .sep) {
