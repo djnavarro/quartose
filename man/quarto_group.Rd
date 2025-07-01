@@ -21,6 +21,6 @@ Quarto groups
 quarto_markdown(list("- a markdown", "- list"), sep = "\n")
 quarto_group(list(
   quarto_div("This is a callout note", class = "callout-note"),
-  quarto_div("This is a callout tip", class = "callout-tip"),
+  quarto_div("This is a callout tip", class = "callout-tip")
 ))
 }
