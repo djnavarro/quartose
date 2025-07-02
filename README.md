@@ -34,10 +34,8 @@ R all at once if you want the resulting document to look clean. That’s
 what I wrote quartose for: I want the nice, clean outputs that you get
 when you take care of all those little nuances, but also I don’t want to
 have to add *lots* of tiresome formatting code into my analysis
-documents.
-
-So I decided to suck it up, write myself a little package that handles
-this for me, so that I never have to think about it again.
+documents. So I decided to suck it up, write myself a little package
+that handles this for me, so that I never have to think about it again.
 
 ## Installation
 
