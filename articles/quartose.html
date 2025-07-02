@@ -75,16 +75,16 @@
 <section class="level3"><h3 id="printing-in-a-loop">Printing in a loop<a class="anchor" aria-label="anchor" href="#printing-in-a-loop"></a>
 </h3>
 <div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">for</span><span class="op">(</span><span class="va">sp</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Adelie"</span>, <span class="st">"Chinstrap"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">==</span> <span class="va">sp</span><span class="op">)</span></span>
-<span>  <span class="va">pic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">bill_len</span>, <span class="va">bill_dep</span>, color <span class="op">=</span> <span class="va">sex</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw">for</span><span class="op">(</span><span class="va">mm</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"audi"</span>, <span class="st">"subaru"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">manufacturer</span> <span class="op">==</span> <span class="va">mm</span><span class="op">)</span></span>
+<span>  <span class="va">pic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">displ</span>, <span class="va">hwy</span>, color <span class="op">=</span> <span class="va">year</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knit_print</a></span><span class="op">(</span><span class="fu"><a href="../reference/quarto_tabset.html">quarto_tabset</a></span><span class="op">(</span></span>
 <span>    content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Plot"</span> <span class="op">=</span> <span class="va">pic</span>, <span class="st">"Data"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span>, </span>
-<span>    title <span class="op">=</span> <span class="va">sp</span>,</span>
+<span>    title <span class="op">=</span> <span class="va">mm</span>,</span>
 <span>    level <span class="op">=</span> <span class="fl">4</span></span>
 <span>  <span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<section class="level4"><h4 id="adelie">Adelie<a class="anchor" aria-label="anchor" href="#adelie"></a>
+<section class="level4"><h4 id="audi">audi<a class="anchor" aria-label="anchor" href="#audi"></a>
 </h4>
 <div class="panel-tabset">
 <ul id="tabset-1" class="panel-tabset-tabby">
@@ -92,26 +92,26 @@
 <li><a href="#tabset-1-2">Data</a></li>
 </ul>
 <ul class="nav nav-tabs" id="NA" role="tablist"><li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#NA" id="NA-tab" type="button" role="tab" aria-controls="NA" aria-selected="true" class="active nav-link">
-<pre><code><span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">#&gt; (`geom_point()`).</span></span></code></pre>
 <p><img src="quartose_files/figure-html/tabs-and-headers-1.png" width="672"></p>
 </button></li></ul>
 <div class="tab-content"><div class="active  tab-pane" id="NA" role="tabpanel" aria-labelledby="NA-tab">
 
 <div id="tabset-1-2">
 <pre>
-  species    island bill_len bill_dep flipper_len body_mass    sex year
-1  Adelie Torgersen     39.1     18.7         181      3750   male 2007
-2  Adelie Torgersen     39.5     17.4         186      3800 female 2007
-3  Adelie Torgersen     40.3     18.0         195      3250 female 2007
-4  Adelie Torgersen       NA       NA          NA        NA   <na> 2007
-5  Adelie Torgersen     36.7     19.3         193      3450 female 2007
-6  Adelie Torgersen     39.3     20.6         190      3650   male 2007
-</na></pre>
+# A tibble: 6 × 11
+  manufacturer model displ  year   cyl trans      drv     cty   hwy fl    class
+  <chr><chr><dbl><int><int><chr><chr><int><int><chr><chr>
+1 audi         a4      1.8  1999     4 auto(l5)   f        18    29 p     compa…
+2 audi         a4      1.8  1999     4 manual(m5) f        21    29 p     compa…
+3 audi         a4      2    2008     4 manual(m6) f        20    31 p     compa…
+4 audi         a4      2    2008     4 auto(av)   f        21    30 p     compa…
+5 audi         a4      2.8  1999     6 auto(l5)   f        16    26 p     compa…
+6 audi         a4      2.8  1999     6 manual(m5) f        18    26 p     compa…
+</chr></chr></int></int></chr></chr></int></int></dbl></chr></chr></pre>
 </div>
 </div></div>
 </div>
-</section><section class="level4"><h4 id="chinstrap">Chinstrap<a class="anchor" aria-label="anchor" href="#chinstrap"></a>
+</section><section class="level4"><h4 id="subaru">subaru<a class="anchor" aria-label="anchor" href="#subaru"></a>
 </h4>
 <div class="panel-tabset">
 <ul id="tabset-2" class="panel-tabset-tabby">
@@ -125,49 +125,63 @@
 
 <div id="tabset-2-2">
 <pre>
-    species island bill_len bill_dep flipper_len body_mass    sex year
-1 Chinstrap  Dream     46.5     17.9         192      3500 female 2007
-2 Chinstrap  Dream     50.0     19.5         196      3900   male 2007
-3 Chinstrap  Dream     51.3     19.2         193      3650   male 2007
-4 Chinstrap  Dream     45.4     18.7         188      3525 female 2007
-5 Chinstrap  Dream     52.7     19.8         197      3725   male 2007
-6 Chinstrap  Dream     45.2     17.8         198      3950 female 2007
-</pre>
+# A tibble: 6 × 11
+  manufacturer model       displ  year   cyl trans drv     cty   hwy fl    class
+  <chr><chr><dbl><int><int><chr><chr><int><int><chr><chr>
+1 subaru       forester a…   2.5  1999     4 manu… 4        18    25 r     suv
+2 subaru       forester a…   2.5  1999     4 auto… 4        18    24 r     suv
+3 subaru       forester a…   2.5  2008     4 manu… 4        20    27 r     suv
+4 subaru       forester a…   2.5  2008     4 manu… 4        19    25 p     suv
+5 subaru       forester a…   2.5  2008     4 auto… 4        20    26 r     suv
+6 subaru       forester a…   2.5  2008     4 auto… 4        18    23 p     suv
+</chr></chr></int></int></chr></chr></int></int></dbl></chr></chr></pre>
 </div>
 </div></div>
 </div>
 </section></section><section class="level3"><h3 id="printing-as-a-group">Printing as a group<a class="anchor" aria-label="anchor" href="#printing-as-a-group"></a>
 </h3>
-<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">isl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Torgersen"</span>, <span class="st">"Biscoe"</span>, <span class="st">"Dream"</span><span class="op">)</span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">isl</span>, \<span class="op">(</span><span class="va">ii</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="va">island</span> <span class="op">==</span> <span class="va">ii</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">pic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">dat</span>, \<span class="op">(</span><span class="va">dd</span><span class="op">)</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">dd</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">bill_len</span>, <span class="va">bill_dep</span>, color <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">$</span><span class="va">class</span><span class="op">)</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">cls</span>, \<span class="op">(</span><span class="va">cl</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">class</span> <span class="op">==</span> <span class="va">cl</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">pic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">dat</span>, \<span class="op">(</span><span class="va">dd</span><span class="op">)</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">dd</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">displ</span>, <span class="va">hwy</span>, color <span class="op">=</span> <span class="va">year</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/quarto_group.html">quarto_group</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="../reference/quarto_tabset.html">quarto_tabset</a></span><span class="op">(</span>content <span class="op">=</span> <span class="va">pic</span>, names <span class="op">=</span> <span class="va">isl</span>, title <span class="op">=</span> <span class="st">"Plot"</span>, level <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_tabset.html">quarto_tabset</a></span><span class="op">(</span>content <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">head</span><span class="op">)</span>, names <span class="op">=</span> <span class="va">isl</span>, title <span class="op">=</span> <span class="st">"Data"</span>, level <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/quarto_tabset.html">quarto_tabset</a></span><span class="op">(</span>content <span class="op">=</span> <span class="va">pic</span>, names <span class="op">=</span> <span class="va">cls</span>, title <span class="op">=</span> <span class="st">"Plot"</span>, level <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/quarto_tabset.html">quarto_tabset</a></span><span class="op">(</span>content <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">head</span><span class="op">)</span>, names <span class="op">=</span> <span class="va">cls</span>, title <span class="op">=</span> <span class="st">"Data"</span>, level <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <section class="level4"><h4 id="plot-2">Plot<a class="anchor" aria-label="anchor" href="#plot-2"></a>
 </h4>
 <div class="panel-tabset">
 <ul id="tabset-3" class="panel-tabset-tabby">
-<li><a data-tabby-default="" href="#tabset-3-1">Torgersen</a></li>
-<li><a href="#tabset-3-2">Biscoe</a></li>
-<li><a href="#tabset-3-3">Dream</a></li>
+<li><a data-tabby-default="" href="#tabset-3-1">compact</a></li>
+<li><a href="#tabset-3-2">midsize</a></li>
+<li><a href="#tabset-3-3">suv</a></li>
+<li><a href="#tabset-3-4">2seater</a></li>
+<li><a href="#tabset-3-5">minivan</a></li>
+<li><a href="#tabset-3-6">pickup</a></li>
+<li><a href="#tabset-3-7">subcompact</a></li>
 </ul>
 <ul class="nav nav-tabs" id="NA" role="tablist"><li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#NA" id="NA-tab" type="button" role="tab" aria-controls="NA" aria-selected="true" class="active nav-link">
-<pre><code><span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">#&gt; (`geom_point()`).</span></span></code></pre>
 <p><img src="quartose_files/figure-html/tabs-and-headers-2-1.png" width="672"></p>
 </button></li></ul>
 <div class="tab-content"><div class="active  tab-pane" id="NA" role="tabpanel" aria-labelledby="NA-tab">
 
 <div id="tabset-3-2">
-<pre><code><span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">#&gt; (`geom_point()`).</span></span></code></pre>
 <p><img src="quartose_files/figure-html/tabs-and-headers-2-2.png" width="672"></p>
 </div>
 <div id="tabset-3-3">
 <p><img src="quartose_files/figure-html/tabs-and-headers-2-3.png" width="672"></p>
+</div>
+<div id="tabset-3-4">
+<p><img src="quartose_files/figure-html/tabs-and-headers-2-4.png" width="672"></p>
+</div>
+<div id="tabset-3-5">
+<p><img src="quartose_files/figure-html/tabs-and-headers-2-5.png" width="672"></p>
+</div>
+<div id="tabset-3-6">
+<p><img src="quartose_files/figure-html/tabs-and-headers-2-6.png" width="672"></p>
+</div>
+<div id="tabset-3-7">
+<p><img src="quartose_files/figure-html/tabs-and-headers-2-7.png" width="672"></p>
 </div>
 </div></div>
 </div>
@@ -175,50 +189,111 @@
 </h4>
 <div class="panel-tabset">
 <ul id="tabset-4" class="panel-tabset-tabby">
-<li><a data-tabby-default="" href="#tabset-4-1">Torgersen</a></li>
-<li><a href="#tabset-4-2">Biscoe</a></li>
-<li><a href="#tabset-4-3">Dream</a></li>
+<li><a data-tabby-default="" href="#tabset-4-1">compact</a></li>
+<li><a href="#tabset-4-2">midsize</a></li>
+<li><a href="#tabset-4-3">suv</a></li>
+<li><a href="#tabset-4-4">2seater</a></li>
+<li><a href="#tabset-4-5">minivan</a></li>
+<li><a href="#tabset-4-6">pickup</a></li>
+<li><a href="#tabset-4-7">subcompact</a></li>
 </ul>
 <ul class="nav nav-tabs" id="NA" role="tablist"><li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#NA" id="NA-tab" type="button" role="tab" aria-controls="NA" aria-selected="true" class="active nav-link">
 <pre>
-  species    island bill_len bill_dep flipper_len body_mass    sex year
-1  Adelie Torgersen     39.1     18.7         181      3750   male 2007
-2  Adelie Torgersen     39.5     17.4         186      3800 female 2007
-3  Adelie Torgersen     40.3     18.0         195      3250 female 2007
-4  Adelie Torgersen       NA       NA          NA        NA   <na> 2007
-5  Adelie Torgersen     36.7     19.3         193      3450 female 2007
-6  Adelie Torgersen     39.3     20.6         190      3650   male 2007
-</na></pre>
+# A tibble: 6 × 11
+  manufacturer model displ  year   cyl trans      drv     cty   hwy fl    class
+  <chr><chr><dbl><int><int><chr><chr><int><int><chr><chr>
+1 audi         a4      1.8  1999     4 auto(l5)   f        18    29 p     compa…
+2 audi         a4      1.8  1999     4 manual(m5) f        21    29 p     compa…
+3 audi         a4      2    2008     4 manual(m6) f        20    31 p     compa…
+4 audi         a4      2    2008     4 auto(av)   f        21    30 p     compa…
+5 audi         a4      2.8  1999     6 auto(l5)   f        16    26 p     compa…
+6 audi         a4      2.8  1999     6 manual(m5) f        18    26 p     compa…
+</chr></chr></int></int></chr></chr></int></int></dbl></chr></chr></pre>
 </button></li></ul>
 <div class="tab-content"><div class="active  tab-pane" id="NA" role="tabpanel" aria-labelledby="NA-tab">
 
 <div id="tabset-4-2">
 <pre>
-  species island bill_len bill_dep flipper_len body_mass    sex year
-1  Adelie Biscoe     37.8     18.3         174      3400 female 2007
-2  Adelie Biscoe     37.7     18.7         180      3600   male 2007
-3  Adelie Biscoe     35.9     19.2         189      3800 female 2007
-4  Adelie Biscoe     38.2     18.1         185      3950   male 2007
-5  Adelie Biscoe     38.8     17.2         180      3800   male 2007
-6  Adelie Biscoe     35.3     18.9         187      3800 female 2007
-</pre>
+# A tibble: 6 × 11
+  manufacturer model      displ  year   cyl trans  drv     cty   hwy fl    class
+  <chr><chr><dbl><int><int><chr><chr><int><int><chr><chr>
+1 audi         a6 quattro   2.8  1999     6 auto(… 4        15    24 p     mids…
+2 audi         a6 quattro   3.1  2008     6 auto(… 4        17    25 p     mids…
+3 audi         a6 quattro   4.2  2008     8 auto(… 4        16    23 p     mids…
+4 chevrolet    malibu       2.4  1999     4 auto(… f        19    27 r     mids…
+5 chevrolet    malibu       2.4  2008     4 auto(… f        22    30 r     mids…
+6 chevrolet    malibu       3.1  1999     6 auto(… f        18    26 r     mids…
+</chr></chr></int></int></chr></chr></int></int></dbl></chr></chr></pre>
 </div>
 <div id="tabset-4-3">
 <pre>
-  species island bill_len bill_dep flipper_len body_mass    sex year
-1  Adelie  Dream     39.5     16.7         178      3250 female 2007
-2  Adelie  Dream     37.2     18.1         178      3900   male 2007
-3  Adelie  Dream     39.5     17.8         188      3300 female 2007
-4  Adelie  Dream     40.9     18.9         184      3900   male 2007
-5  Adelie  Dream     36.4     17.0         195      3325 female 2007
-6  Adelie  Dream     39.2     21.1         196      4150   male 2007
-</pre>
+# A tibble: 6 × 11
+  manufacturer model       displ  year   cyl trans drv     cty   hwy fl    class
+  <chr><chr><dbl><int><int><chr><chr><int><int><chr><chr>
+1 chevrolet    c1500 subu…   5.3  2008     8 auto… r        14    20 r     suv
+2 chevrolet    c1500 subu…   5.3  2008     8 auto… r        11    15 e     suv
+3 chevrolet    c1500 subu…   5.3  2008     8 auto… r        14    20 r     suv
+4 chevrolet    c1500 subu…   5.7  1999     8 auto… r        13    17 r     suv
+5 chevrolet    c1500 subu…   6    2008     8 auto… r        12    17 r     suv
+6 chevrolet    k1500 taho…   5.3  2008     8 auto… 4        14    19 r     suv
+</chr></chr></int></int></chr></chr></int></int></dbl></chr></chr></pre>
+</div>
+<div id="tabset-4-4">
+<pre>
+# A tibble: 5 × 11
+  manufacturer model    displ  year   cyl trans    drv     cty   hwy fl    class
+  <chr><chr><dbl><int><int><chr><chr><int><int><chr><chr>
+1 chevrolet    corvette   5.7  1999     8 manual(… r        16    26 p     2sea…
+2 chevrolet    corvette   5.7  1999     8 auto(l4) r        15    23 p     2sea…
+3 chevrolet    corvette   6.2  2008     8 manual(… r        16    26 p     2sea…
+4 chevrolet    corvette   6.2  2008     8 auto(s6) r        15    25 p     2sea…
+5 chevrolet    corvette   7    2008     8 manual(… r        15    24 p     2sea…
+</chr></chr></int></int></chr></chr></int></int></dbl></chr></chr></pre>
+</div>
+<div id="tabset-4-5">
+<pre>
+# A tibble: 6 × 11
+  manufacturer model       displ  year   cyl trans drv     cty   hwy fl    class
+  <chr><chr><dbl><int><int><chr><chr><int><int><chr><chr>
+1 dodge        caravan 2wd   2.4  1999     4 auto… f        18    24 r     mini…
+2 dodge        caravan 2wd   3    1999     6 auto… f        17    24 r     mini…
+3 dodge        caravan 2wd   3.3  1999     6 auto… f        16    22 r     mini…
+4 dodge        caravan 2wd   3.3  1999     6 auto… f        16    22 r     mini…
+5 dodge        caravan 2wd   3.3  2008     6 auto… f        17    24 r     mini…
+6 dodge        caravan 2wd   3.3  2008     6 auto… f        17    24 r     mini…
+</chr></chr></int></int></chr></chr></int></int></dbl></chr></chr></pre>
+</div>
+<div id="tabset-4-6">
+<pre>
+# A tibble: 6 × 11
+  manufacturer model       displ  year   cyl trans drv     cty   hwy fl    class
+  <chr><chr><dbl><int><int><chr><chr><int><int><chr><chr>
+1 dodge        dakota pic…   3.7  2008     6 manu… 4        15    19 r     pick…
+2 dodge        dakota pic…   3.7  2008     6 auto… 4        14    18 r     pick…
+3 dodge        dakota pic…   3.9  1999     6 auto… 4        13    17 r     pick…
+4 dodge        dakota pic…   3.9  1999     6 manu… 4        14    17 r     pick…
+5 dodge        dakota pic…   4.7  2008     8 auto… 4        14    19 r     pick…
+6 dodge        dakota pic…   4.7  2008     8 auto… 4        14    19 r     pick…
+</chr></chr></int></int></chr></chr></int></int></dbl></chr></chr></pre>
+</div>
+<div id="tabset-4-7">
+<pre>
+# A tibble: 6 × 11
+  manufacturer model   displ  year   cyl trans     drv     cty   hwy fl    class
+  <chr><chr><dbl><int><int><chr><chr><int><int><chr><chr>
+1 ford         mustang   3.8  1999     6 manual(m… r        18    26 r     subc…
+2 ford         mustang   3.8  1999     6 auto(l4)  r        18    25 r     subc…
+3 ford         mustang   4    2008     6 manual(m… r        17    26 r     subc…
+4 ford         mustang   4    2008     6 auto(l5)  r        16    24 r     subc…
+5 ford         mustang   4.6  1999     8 auto(l4)  r        15    21 r     subc…
+6 ford         mustang   4.6  1999     8 manual(m… r        15    22 r     subc…
+</chr></chr></int></int></chr></chr></int></int></dbl></chr></chr></pre>
 </div>
 </div></div>
 </div>
 </section></section></section><section class="level2"><h2 id="divs-and-spans">Divs and spans<a class="anchor" aria-label="anchor" href="#divs-and-spans"></a>
 </h2>
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="st">"This is some margin text."</span>, </span>
 <span>  class <span class="op">=</span> <span class="st">"column-margin"</span></span>
@@ -226,7 +301,7 @@
 <div class="column-margin">
 <p>This is some margin text.</p>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="st">"Using character vectors is fine."</span>,</span>
@@ -240,7 +315,7 @@
 <div class="column-margin">
 <p>Using character vectors is fine. /// This is also just one margin text block. /// All the strings get pasted together, /// with a separator.</p>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="st">"You can pass a list as the div content."</span>, </span>
@@ -256,7 +331,7 @@
 <div class="column-margin">
 <p>You can pass a list as the div content. /// That allows you to mix content, /// 1 /// 2 /// 3 /// of different types /// and lengths. /// But pay attention to where separators appear, /// and remember that <strong>markdown parsing still applies</strong></p>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="st">"This is a callout note."</span>,</span>
 <span>  class <span class="op">=</span> <span class="st">"callout-note"</span></span>
@@ -267,7 +342,7 @@
 <p>This is a callout note.</p>
 </blockquote>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="st">"You can supply multiple classes"</span>,</span>
 <span>  class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"column-margin"</span>, <span class="st">"callout-tip"</span><span class="op">)</span></span>
@@ -278,10 +353,10 @@
 <p>You can supply multiple classes</p>
 </blockquote>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span>content <span class="op">=</span> <span class="st">"this is highlighted"</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span></span></code></pre></div>
 <p><mark>this is highlighted</mark></p>
-<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span>content <span class="op">=</span> <span class="st">"this is plain text"</span><span class="op">)</span>,</span>
@@ -295,7 +370,7 @@
 </div>
 </section><section class="level2"><h2 id="raw-markdown">Raw markdown<a class="anchor" aria-label="anchor" href="#raw-markdown"></a>
 </h2>
-<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_group.html">quarto_markdown</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="st">"- this ends up being"</span>,</span>
