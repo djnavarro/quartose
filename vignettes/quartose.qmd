@@ -38,12 +38,12 @@ library(quartose)
 ```{r}
 #| label: tabs-and-headers
 #| results: asis
-for(sp in c("Adelie", "Chinstrap")) {
-  dat <- penguins |> filter(species == sp)
-  pic <- ggplot(dat, aes(bill_len, bill_dep, color = sex)) + geom_point()
+for(mm in c("audi", "subaru")) {
+  dat <- filter(mpg, manufacturer == mm)
+  pic <- ggplot(dat, aes(displ, hwy, color = year)) + geom_point()
   knit_print(quarto_tabset(
     content = list("Plot" = pic, "Data" = head(dat)), 
-    title = sp,
+    title = mm,
     level = 4
   ))
 }
@@ -54,12 +54,12 @@ for(sp in c("Adelie", "Chinstrap")) {
 ```{r}
 #| label: tabs-and-headers-2
 #| results: asis
-isl <- c("Torgersen", "Biscoe", "Dream")
-dat <- map(isl, \(ii) filter(penguins, island == ii))
-pic <- map(dat, \(dd) ggplot(dd, aes(bill_len, bill_dep, color = species)) + geom_point())
+cls <- unique(mpg$class)
+dat <- map(cls, \(cl) filter(mpg, class == cl))
+pic <- map(dat, \(dd) ggplot(dd, aes(displ, hwy, color = year)) + geom_point())
 quarto_group(list(
-  quarto_tabset(content = pic, names = isl, title = "Plot", level = 4),
-  quarto_tabset(content = map(dat, head), names = isl, title = "Data", level = 4)
+  quarto_tabset(content = pic, names = cls, title = "Plot", level = 4),
+  quarto_tabset(content = map(dat, head), names = cls, title = "Data", level = 4)
 ))
 ```
 
