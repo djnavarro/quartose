@@ -87,38 +87,43 @@ not call <code><a href="https://rdrr.io/r/base/format.html" class="external-link
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A formatted quarto object, sometimes a single string
-(e.g., for <code>quarto_section</code> objects), but can be a list of
-strings and/or plot objects (e.g., for <code>quarto_tabset</code> objects).</p>
+    <p>A formatted quarto object. For <code>quarto_section</code>, <code>quarto_span</code>,
+and <code>quarto_markdown</code> objects, the formatted output is always a
+string (character vector of length 1). For <code>quarto_tabset</code> and
+<code>quarto_group</code> objects, the output is always a list whose elements
+are either strings or plot objects. For <code>quarto_div</code> objects,
+the output is currently a string, but this may change to list
+output in future if divs are permitted to contain plots.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The intent behind the <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code> methods for quarto objects
 is to create a ready-to-print representation of that is almost
 identical to what will be printed into the quarto document
-when the print method is called. Because of this, the formatted
-version of a quarto object is usually a string or a list of
-strings, but it can also include plot objects that have not
-yet been rendered. The resulting representation isn't usually
-very pretty, though if passed to <code><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat()</a></code> it is generally
-readable.</p>
+when <code><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knitr::knit_print()</a></code> is called. Because of this, the
+formatted version of a quarto object is a string or a list of
+strings, but it may also include plot objects that have not
+yet been rendered. The resulting representation isn't always
+very pretty, though it is generally fairly readable.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># formatted sections, spans and divs</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># formatted sections, spans and divs ----------------------------------</span></span></span>
 <span class="r-in"><span><span class="va">sec</span> <span class="op">&lt;-</span> <span class="fu"><a href="quarto_object.html">quarto_section</a></span><span class="op">(</span><span class="st">"Header"</span>, level <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">spn</span> <span class="op">&lt;-</span> <span class="fu"><a href="quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"Content"</span>, class <span class="op">=</span> <span class="st">"underline"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">div</span> <span class="op">&lt;-</span> <span class="fu"><a href="quarto_object.html">quarto_div</a></span><span class="op">(</span><span class="st">"Content"</span>, class <span class="op">=</span> <span class="st">"content-margin"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">sec</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "\n\n## Header\n\n"</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">spn</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "[Content]{.underline}"</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">div</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "\n\n::: {.content-margin}\n\n Content \n\n:::\n\n"</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># formatted tabsets</span></span></span>
+<span class="r-in"><span><span class="co"># formatted tabsets ---------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="va">tbs</span> <span class="op">&lt;-</span> <span class="fu"><a href="quarto_object.html">quarto_tabset</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>tab1 <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, tab2 <span class="op">=</span> <span class="st">"hello"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  title <span class="op">=</span> <span class="st">"Header"</span>,</span></span>
@@ -160,13 +165,14 @@ readable.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "\n\n::: \n\n"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># formatted groups and markdown</span></span></span>
+<span class="r-in"><span><span class="co"># formatted groups and markdown ---------------------------------------</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mkd</span> <span class="op">&lt;-</span> <span class="fu"><a href="quarto_object.html">quarto_markdown</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"- this is a"</span>, <span class="st">"- markdown list"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">gps</span> <span class="op">&lt;-</span> <span class="fu"><a href="quarto_object.html">quarto_group</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">div</span>, <span class="va">mkd</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">mkd</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "- this is a\n- markdown list"</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">gps</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "\n\n::: {.content-margin}\n\n Content \n\n:::\n\n"</span>
