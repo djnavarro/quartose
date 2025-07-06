@@ -53,7 +53,17 @@
 #' invisibly returns the quarto object itself.
 #' 
 #' @details
-#' Additional details...
+#' There are two print methods supplied for quarto objects, one for
+#' `base::print()` and another for `knitr::knit_print()`. The regular
+#' print method behaves similarly to any other print method: it prints
+#' a summary of the object to the R console, and invisibly returns the
+#' object itself. 
+#' 
+#' When `knitr::knit_print()` is called on a quarto object, the behaviour
+#' is quite different. The object is first passed to `format()`, which 
+#' constructs the required quarto syntax, then the object is printed 
+#' to the document (or console, if called interactively) using the 
+#' appropriate syntax. In this case, the function invisibly returns `NULL`.
 #' 
 #' @name quarto_print
 #' 
