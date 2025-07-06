@@ -1,7 +1,18 @@
 url: https://quartose.djnavarro.net/
+
 template:
   bootstrap: 5
 
 project:
   render: ['*.qmd']
+
+reference:
+- title: Specifying quarto objects
+- contents:
+  - quarto_object
+- title: Formatting and printing quarto objects
+- contents:
+  - format_quarto
+  - knit_print.quarto_object
+
 

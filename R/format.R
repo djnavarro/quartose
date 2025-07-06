@@ -5,7 +5,19 @@
 #' 
 #' @description
 #' Creates a formatted representation of a quarto object in a 
-#' form suitable for printing.
+#' form suitable for printing. When calling `knitr::knit_print()`
+#' on a quarto object, the relevant `format()` method is called
+#' first, and the formatted version is printed to the document.
+#' Note that the base `print()` method for quarto objects does
+#' not call `format()`. 
+#' 
+#' @param x A quarto object
+#' @param ... Other arguments (ignored)
+#' 
+#' @return 
+#' A formatted quarto object, sometimes a single string
+#' (e.g., for `quarto_section` objects), but can be a list of
+#' strings and/or plot objects (e.g., for `quarto_tabset` objects)
 #' 
 #' @details
 #' The intent behind the `format()` methods for quarto objects
@@ -17,13 +29,6 @@
 #' yet been rendered. The resulting representation isn't usually
 #' very pretty, though if passed to `cat()` it is generally
 #' readable. 
-#' 
-#' @return A formatted quarto object, sometimes a single string
-#' (e.g., for `quarto_section` objects), but can be a list of
-#' strings and/or plot objects (e.g., for `quarto_tabset` objects)
-#' 
-#' @param x The quarto object
-#' @param ... Other arguments (ignored)
 #' 
 #' @name format_quarto
 #' 

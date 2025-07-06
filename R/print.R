@@ -35,6 +35,23 @@
 #   into the document, any such formatting will be done inside the
 #   format() method via capture.output(knit_print()) 
 
+
+#' @title Print a quarto object with knitr
+#' 
+#' @description
+#' Prints a quarto object. When calling `knitr::knit_print()`
+#' on a quarto object, the relevant `format()` method is called
+#' first, and the formatted version is printed to the document.
+#' 
+#' @param x A quarto object
+#' @param ... Other arguments (ignored)
+#' 
+#' @return 
+#' Invisibly returns NULL.
+#' 
+#' @details
+#' Additional details...
+#' 
 #' @exportS3Method knitr::knit_print
 knit_print.quarto_object <- function(x, ...) {
   fmt <- format(x, ...)
@@ -42,4 +59,5 @@ knit_print.quarto_object <- function(x, ...) {
     if (is.character(ff)) cat(ff, "\n")
     else knitr::knit_print(ff)
   })
+  return(invisible(NULL))
 }

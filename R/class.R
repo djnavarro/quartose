@@ -1,17 +1,69 @@
 
-# tabs and sections -------------------------------------------
-
-#' @title Quarto section header
-#' @param title, Section title
-#' @param level, Header level
+#' @title Dynamically generate quarto syntax
+#' 
+#' @description
+#' Define quarto objects for insertion into a document. 
+#' Intended to be used inside a quarto document, within a knitr 
+#' code chunk with the `results: asis` option set.
+#'   
+#' @param content Tab content as a list.
+#' @param title Section title, a character string.
+#' @param level Header level, an integer between 1 and 6.
+#' @param names Names for tabs (defaults to names(content)).
+#' @param class CSS class (or vector of classes) to be supplied.
+#' @param sep Separator used when merging content.
+#'  
+#' @return 
+#' These functions always return an object with parent S3 class 
+#' "quarto_object", in addition to a specific S3 class corresponding
+#' to the function (e.g., `quarto_section()` objects also possess the
+#' "quarto_section" class). When printed, the object is
+#' rendered to a character vector of length 1 containing the quarto 
+#' syntax that inserts an HTML section header into the document.
+#' 
+#' @details
+#' Additional details...
+#' 
+#' @name quarto_object
+#' @aliases 
+#' quarto_div
+#' quarto_span
+#' quarto_tabset
+#' quarto_section
+#' quarto_group
+#' quarto_markdown
 #' 
 #' @examples
-#' sec_2 <- quarto_section("A level-two header", level = 2L)
-#' sec_3 <- quarto_section("A level-three header", level = 3L)
+#' sec <- quarto_section("A level-two header", level = 2L)
 #'  
-#' knitr::knit_print(sec_2)
-#' knitr::knit_print(sec_3)
+#' # Use knitr::knit_print() to see the rendered quarto syntax
+#' knitr::knit_print(sec)
 #' 
+#' # Use base::print() to see the structure of the object
+#' print(sec)
+#'
+#' spn <- quarto_span("This is underlined", class = "underline")
+#' knitr::knit_print(spn)
+#'  
+#' div <- quarto_div("This is a callout note", class = "callout-note")
+#' knitr::knit_print(div)
+#' 
+#' tbs <- quarto_tabset(list(tab1 = 1:10, tab2 = "hello"), level = 3L)
+#' knitr::knit_print(tbs)
+#' 
+#' mkd <- quarto_markdown(list("- a markdown", "- list"), sep = "\n")
+#' knitr::knit_print(mkd)
+#' 
+#' grp <- quarto_group(list(
+#'   quarto_div("This is a callout note", class = "callout-note"),
+#'   quarto_div("This is a callout tip", class = "callout-tip")
+#' ))
+#' knitr::knit_print(grp)
+NULL
+
+# tabs and sections -------------------------------------------
+
+#' @rdname quarto_object
 #' @export
 quarto_section <- function(title, level) {
   check_args_section(title, level)
@@ -24,16 +76,7 @@ quarto_section <- function(title, level) {
   )
 }
 
-#' @title Quarto tabset with section header
-#' @param content, Tab content as a list
-#' @param level, Header level
-#' @param title, Section title (optional)
-#' @param names, Names for tabs (defaults to names(content))
-#' 
-#' @examples
-#' tabs <- quarto_tabset(list(tab1 = 1:10, tab2 = "hello"), level = 3L)
-#' knitr::knit_print(tabs)
-#' 
+#' @rdname quarto_object
 #' @export
 quarto_tabset <- function(content, level, title = NULL, names = NULL) {
 
@@ -53,22 +96,7 @@ quarto_tabset <- function(content, level, title = NULL, names = NULL) {
 
 # divs and spans -------------------------------------------
 
-#' @title Quarto divs and spans
-#' @param content, Content to be contained in the div/span
-#' @param class, CSS class (or vector of classes) for the div/span
-#' @param sep, Separator used when merging content
-#' @name quarto_div
-#' 
-#' @examples
-#' spn <- quarto_span("This is underlined", class = "underline")
-#' div <- quarto_div("This is a callout note", class = "callout-note")
-#' 
-#' knitr::knit_print(spn)
-#' knitr::knit_print(div)
-#' 
-NULL
-
-#' @rdname quarto_div
+#' @rdname quarto_object
 #' @export
 quarto_div <- function(content, class = NULL, sep = "") {
   if (!rlang::is_bare_list(content)) content = list(content)
@@ -83,7 +111,7 @@ quarto_div <- function(content, class = NULL, sep = "") {
   )
 }
 
-#' @rdname quarto_div
+#' @rdname quarto_object
 #' @export
 quarto_span <- function(content, class = NULL, sep = "") {
   check_args_span(content, class, sep)
@@ -99,21 +127,7 @@ quarto_span <- function(content, class = NULL, sep = "") {
 
 # groups of output -------------------------------------------
 
-#' @title Quarto groups
-#' @param content, A list of objects
-#' @param sep, Separator
-#' @name quarto_group
-#' @examples
-#' mkd <- quarto_markdown(list("- a markdown", "- list"), sep = "\n")
-#' grp <- quarto_group(list(
-#'   quarto_div("This is a callout note", class = "callout-note"),
-#'   quarto_div("This is a callout tip", class = "callout-tip")
-#' ))
-#' 
-#' knitr::knit_print(mkd)
-#' knitr::knit_print(grp)
-
-#' @rdname quarto_group
+#' @rdname quarto_object
 #' @export
 quarto_group <- function(content, sep = "") {
   check_args_group(content, sep)
@@ -126,7 +140,7 @@ quarto_group <- function(content, sep = "") {
   )
 }
 
-#' @rdname quarto_group
+#' @rdname quarto_object
 #' @export
 quarto_markdown <- function(content, sep = "") {
   check_args_markdown(content, sep = sep)

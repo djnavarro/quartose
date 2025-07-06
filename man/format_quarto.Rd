@@ -23,7 +23,7 @@
 \method{format}{quarto_group}(x, ...)
 }
 \arguments{
-\item{x}{The quarto object}
+\item{x}{A quarto object}
 
 \item{...}{Other arguments (ignored)}
 }
@@ -34,7 +34,11 @@ strings and/or plot objects (e.g., for \code{quarto_tabset} objects)
 }
 \description{
 Creates a formatted representation of a quarto object in a
-form suitable for printing.
+form suitable for printing. When calling \code{knitr::knit_print()}
+on a quarto object, the relevant \code{format()} method is called
+first, and the formatted version is printed to the document.
+Note that the base \code{print()} method for quarto objects does
+not call \code{format()}.
 }
 \details{
 The intent behind the \code{format()} methods for quarto objects
