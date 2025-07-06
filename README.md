@@ -34,8 +34,8 @@ R all at once if you want the resulting document to look clean. That’s
 what I wrote quartose for: I want the nice, clean outputs that you get
 when you take care of all those little nuances, but also I don’t want to
 have to add *lots* of tiresome formatting code into my analysis
-documents. So I decided to suck it up, write myself a little package
-that handles this for me, so that I never have to think about it again.
+documents. So I decided to write a small package that handles this for
+me, so that I never have to think about it again.
 
 ## Installation
 
@@ -53,5 +53,53 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(quartose)
-## basic example code
+
+# define a quarto tabset
+tabs <- quarto_tabset(
+  content = list(tab1 = 1:5, tab2 = "hello"), 
+  title = "My tabs", 
+  level = 2
+)
+
+# base::print() outputs a simple summary
+print(tabs)
+#> <quarto_tabset>
+#> • content: <list>
+#> • title: My tabs
+#> • names: tab1 tab2
+#> • level: 2
+
+# knitr::knit_print() outputs quarto syntax
+knitr::knit_print(tabs)
+#> 
+#> 
+#> ## My tabs
+#> 
+#>  
+#> 
+#> 
+#> ::: {.panel-tabset}
+#> 
+#>  
+#> 
+#> 
+#> ### tab1
+#> 
+#>  
+#> <pre> 
+#> [1] 1 2 3 4 5 
+#> </pre> 
+#> 
+#> 
+#> ### tab2
+#> 
+#>  
+#> <pre> 
+#> [1] "hello" 
+#> </pre> 
+#> 
+#> 
+#> ::: 
+#> 
+#> 
 ```
