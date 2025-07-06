@@ -63,84 +63,182 @@ code chunk with the <code>results: asis</code> option set.</p>
 
 
 <dl><dt id="arg-title">title<a class="anchor" aria-label="anchor" href="#arg-title"></a></dt>
-<dd><p>Section title, a character string.</p></dd>
+<dd><p>Character string specifying the text to use as a section title.
+For <code>quarto_section()</code> this is a required argument. For <code>quarto_tabset()</code>
+it is permitted to use <code>title = NULL</code>, in which case the tabset will
+be printed without a section header above it. This is the default
+behaviour for tabsets.</p></dd>
 
 
 <dt id="arg-level">level<a class="anchor" aria-label="anchor" href="#arg-level"></a></dt>
-<dd><p>Header level, an integer between 1 and 6.</p></dd>
+<dd><p>Numeric header level applied to section title or tabset names.
+The <code>level</code> argument must be a whole number between 1 and 6. Only
+relevant to quarto objects that produce section headings, specifically
+<code>quarto_section()</code> and <code>quarto_tabset()</code>.</p></dd>
 
 
 <dt id="arg-content">content<a class="anchor" aria-label="anchor" href="#arg-content"></a></dt>
-<dd><p>Tab content as a list.</p></dd>
+<dd><p>List or character vector containing content to be included within
+the quarto object. The expected format of the <code>content</code> argument
+differs slightly depending on which function is used. See the
+"details" section for more information.</p></dd>
 
 
 <dt id="arg-names">names<a class="anchor" aria-label="anchor" href="#arg-names"></a></dt>
-<dd><p>Names for tabs (defaults to names(content)).</p></dd>
+<dd><p>Character vector of names to be applied to the tabs in a tabset. Only
+relevant to  <code>quarto_tabset()</code>. If <code>names = NULL</code>, the names will be
+taken from the names of the <code>content</code> argument.</p></dd>
 
 
 <dt id="arg-class">class<a class="anchor" aria-label="anchor" href="#arg-class"></a></dt>
-<dd><p>CSS class (or vector of classes) to be supplied.</p></dd>
+<dd><p>Character vector specifying CSS classes to be applied to the content.
+Only relevant to <code>quarto_div()</code> and <code>quarto_span()</code>. Defaults to
+<code>class = NULL</code>, in which case the formatted text written to the document
+will have a dummy CSS class "quartose-null" applied.</p></dd>
 
 
 <dt id="arg-sep">sep<a class="anchor" aria-label="anchor" href="#arg-sep"></a></dt>
-<dd><p>Separator used when merging content.</p></dd>
+<dd><p>Character string specifying the separator to be used when merging content
+for printing to the document. Defaults to <code>sep = ""</code> for all functions.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>These functions always return an object with parent S3 class
 "quarto_object", in addition to a specific S3 class corresponding
-to the function (e.g., <code>quarto_section()</code> objects also possess the
-"quarto_section" class). When printed, the object is
-rendered to a character vector of length 1 containing the quarto
-syntax that inserts an HTML section header into the document.</p>
+to the function. For example, <code>quarto_section()</code> objects also possess the
+"quarto_section" class.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Additional details...</p>
+    <p>The purpose of these functions is to allow the user to dynamically
+generate quarto syntax from R. When used within a quarto document they
+allow the user to generate callouts, margin text, tabsets, section
+headers, and other kinds of quarto output. At the current state of
+development the functionality is somewhat limited, discussed below.</p>
+<p>The <code>quarto_*()</code> functions supplied by the quartose package have a common
+design: argument values supplied by the user are stored internally as a
+list, with only a minimum of processing done at the time that the function
+is called. The object is assigned to two S3 classes, the "quarto_object"
+shared by all objects, and a specific class associated with the calling
+function. These objects can be inspected and manipulated programmatically
+like any other R objects prior to printing.</p>
+<p>When creating a quarto object, note that most <code>quarto_*()</code> functions take
+a <code>content</code> argument, which differs slightly depending on the context:</p><ul><li><p>For <code>quarto_section()</code> there is no `content“ argument: section headers
+have titles, but they do not contain content.</p></li>
+<li><p>For <code>quarto_span()</code> the `content“ argument <em>must</em> be a character vector,
+not a list.</p></li>
+<li><p>For <code>quarto_div()</code> the `content“ argument is permitted to be a character
+vector or a list, but it will always be stored internally as a list.
+If the input is a list, it can contain other quarto objects. The
+intended use for this is a div that contains several spans, but it is
+not limited to this use case.</p></li>
+<li><p>For <code>quarto_tabset()</code> the <code>content</code> argument <em>must</em> be a list. The list
+elements can be any printable R object: each element of the list will
+appear in its own tab. At present the support for graphics objects is
+limited: ggplot2 objects are captured and will only be rendered when
+<code><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knitr::knit_print()</a></code> is called. No attempt is made (as yet!) to support
+other kinds of graphic objecvts, and if these are passed via the <code>content</code>
+argument the function will likely fail.</p></li>
+<li><p>For <code>quarto_markdown()</code> the <code>content</code> argument may be a character vector
+or a list of character vectors. The function will throw an error if other
+kinds of objects are passed via <code>content</code>.</p></li>
+<li><p>For <code>quarto_group()</code> the <code>content</code> argument <em>must</em> be a list, and all
+elements of the list must be quarto objects. The intended use of this
+function is simply to collect several quarto objects into a single group
+that will be printed all at the same time rather than sequentially.</p></li>
+</ul><p>Creating a quarto object only defines the data structure, it does not
+perform any formatting. Similarly, if the object is printed using
+<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, no formatting will be applied. A brief summary of the
+data structure will be printed to the console, no more. However, when
+<code><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knitr::knit_print()</a></code> is called, the quarto object is first passed to
+the relevant <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code> method, which is responsible for constructing
+the appropriate quarto syntax. Calling <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code> will return a
+character vector or a list. If it returns a list all elements will
+either be character strings with the appropriate quarto syntax, or a
+plot object that has not yet been rendered. After formatting is applied
+the <code><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knitr::knit_print()</a></code> method will pass the strings (or plots) to
+the document. For more detail on the formatting and printing methods
+see <code><a href="quarto_print.html">knit_print.quarto_object()</a></code> and <code><a href="quarto_format.html">format.quarto_object()</a></code>.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># a quarto_section object</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># quarto_section ------------------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sec</span> <span class="op">&lt;-</span> <span class="fu">quarto_section</span><span class="op">(</span><span class="st">"A level-two header"</span>, level <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># quarto objects have two classes, a general purpose class shared by </span></span></span>
+<span class="r-in"><span><span class="co"># all quarto objects, and a class specific to the function</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">sec</span><span class="op">)</span> </span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "quarto_section" "quarto_object" </span>
 <span class="r-in"><span> </span></span>
-<span class="r-in"><span><span class="co"># base::print() displays a summary of the object </span></span></span>
+<span class="r-in"><span><span class="co"># base::print() displays an abstract summary of the object </span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">sec</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> &lt;quarto_section&gt;</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • title: A level-two header</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • level: 2</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># knitr::knit_print() displays the rendered quarto syntax</span></span></span>
-<span class="r-in"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knit_print</a></span><span class="op">(</span><span class="va">sec</span><span class="op">)</span> </span></span>
+<span class="r-in"><span><span class="co"># knitr::knit_print() produces the rendered quarto syntax</span></span></span>
+<span class="r-in"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knit_print</a></span><span class="op">(</span><span class="va">sec</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## A level-two header</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># a quarto_span object</span></span></span>
-<span class="r-in"><span><span class="va">spn</span> <span class="op">&lt;-</span> <span class="fu">quarto_span</span><span class="op">(</span><span class="st">"This is underlined"</span>, class <span class="op">=</span> <span class="st">"underline"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># quarto_span ---------------------------------------------------------</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">spn</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">spn1</span> <span class="op">&lt;-</span> <span class="fu">quarto_span</span><span class="op">(</span><span class="st">"This is plain text"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">spn2</span> <span class="op">&lt;-</span> <span class="fu">quarto_span</span><span class="op">(</span><span class="st">"This is underlined text"</span>, class <span class="op">=</span> <span class="st">"underline"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">spn1</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> &lt;quarto_span&gt;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> • content: This is underlined</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • content: This is plain text</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • class:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • sep:</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">spn2</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> &lt;quarto_span&gt;</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • content: This is underlined text</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • class: underline</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • sep:</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knit_print</a></span><span class="op">(</span><span class="va">spn</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [This is underlined]{.underline} </span>
+<span class="r-in"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knit_print</a></span><span class="op">(</span><span class="va">spn1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [This is plain text]{.quartose-null} </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># a quarto_div object </span></span></span>
-<span class="r-in"><span><span class="va">div</span> <span class="op">&lt;-</span> <span class="fu">quarto_div</span><span class="op">(</span><span class="st">"This is a callout note"</span>, class <span class="op">=</span> <span class="st">"callout-note"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knit_print</a></span><span class="op">(</span><span class="va">spn2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [This is underlined text]{.underline} </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">div</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># quarto_div ----------------------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># quarto_div objects are flexible: they can take a character vector as</span></span></span>
+<span class="r-in"><span><span class="co"># the content argument, but can also take lists of other objects; note</span></span></span>
+<span class="r-in"><span><span class="co"># that internally the content is always represented as a list</span></span></span>
+<span class="r-in"><span><span class="va">div1</span> <span class="op">&lt;-</span> <span class="fu">quarto_div</span><span class="op">(</span><span class="st">"This is a callout note"</span>, class <span class="op">=</span> <span class="st">"callout-note"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">div2</span> <span class="op">&lt;-</span> <span class="fu">quarto_div</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu">quarto_span</span><span class="op">(</span>content <span class="op">=</span> <span class="st">"You can wrap multiple spans in a div so that"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu">quarto_span</span><span class="op">(</span>content <span class="op">=</span> <span class="st">"some text is highlighted"</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu">quarto_span</span><span class="op">(</span>content <span class="op">=</span> <span class="st">"and some is underlined"</span>, class <span class="op">=</span> <span class="st">"underline"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span>,</span></span>
+<span class="r-in"><span>  class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"column-margin"</span>, <span class="st">"callout-tip"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  sep <span class="op">=</span> <span class="st">" "</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">div1</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> &lt;quarto_div&gt;</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • content: &lt;list&gt;</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • class: callout-note</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> • sep:</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knit_print</a></span><span class="op">(</span><span class="va">div</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">div2</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> &lt;quarto_div&gt;</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • content: &lt;list&gt;</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • class: column-margin callout-tip</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> • sep:</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knit_print</a></span><span class="op">(</span><span class="va">div1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ::: {.callout-note}</span>
@@ -151,7 +249,19 @@ syntax that inserts an HTML section header into the document.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># a quarto_tabset object</span></span></span>
+<span class="r-in"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knit_print</a></span><span class="op">(</span><span class="va">div2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ::: {.column-margin .callout-tip}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [You can wrap multiple spans in a div so that]{.quartose-null} [some text is highlighted]{.mark} [and some is underlined]{.underline} </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> :::</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># quarto_tabset -------------------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">tbs</span> <span class="op">&lt;-</span> <span class="fu">quarto_tabset</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>tab1 <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, tab2 <span class="op">=</span> <span class="st">"hello"</span><span class="op">)</span>, level <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tbs</span><span class="op">)</span></span></span>
@@ -189,7 +299,8 @@ syntax that inserts an HTML section header into the document.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># a quarto_markdown object</span></span></span>
+<span class="r-in"><span><span class="co"># quarto_markdown -----------------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mkd</span> <span class="op">&lt;-</span> <span class="fu">quarto_markdown</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"- a markdown"</span>, <span class="st">"- list"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mkd</span><span class="op">)</span></span></span>
@@ -201,7 +312,8 @@ syntax that inserts an HTML section header into the document.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - a markdown</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - list </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># a quarto_group object</span></span></span>
+<span class="r-in"><span><span class="co"># quarto_group --------------------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">grp</span> <span class="op">&lt;-</span> <span class="fu">quarto_group</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu">quarto_div</span><span class="op">(</span><span class="st">"This is a callout note"</span>, class <span class="op">=</span> <span class="st">"callout-note"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  <span class="fu">quarto_div</span><span class="op">(</span><span class="st">"This is a callout tip"</span>, class <span class="op">=</span> <span class="st">"callout-tip"</span><span class="op">)</span></span></span>
