@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/djnavarro/quartose/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/djnavarro/quartose/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/djnavarro/quartose/graph/badge.svg)](https://app.codecov.io/gh/djnavarro/quartose)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![CRAN status](https://www.r-pkg.org/badges/version/quartose)](https://CRAN.R-project.org/package=quartose)
 <!-- badges: end -->
 
 When analyzing data sets in R, it is often convenient to wrap the analysis within a quarto document for reporting purposes: containing all the analysis components within a single easy-to-navigate HTML document is generally a kindness for the reader. One consequence of this, however, is that sometimes you find yourself wanting to write code *within* an R code chunk that will generate parts of the quarto document for you. For instance, when iterating over many analyses within a single R chunk, you might want to have that chunk generate the quarto section headers, tabsets and so on. This is possible because the knitr engine (which evaluates the R code chunks) allows you to generate "asis" output that will later be captured by the quarto parser; if such output is formatted to look like correct quarto syntax, it will be captured and translated to the appropriate HTML. 

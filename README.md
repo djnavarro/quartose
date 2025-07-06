@@ -10,6 +10,8 @@
 coverage](https://codecov.io/gh/djnavarro/quartose/graph/badge.svg)](https://app.codecov.io/gh/djnavarro/quartose)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/quartose)](https://CRAN.R-project.org/package=quartose)
 <!-- badges: end -->
 
 When analyzing data sets in R, it is often convenient to wrap the
