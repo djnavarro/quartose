@@ -51,26 +51,32 @@ On its own this isn't entirely useful, but starts to become rather more practica
 ```{r}
 #| label: div-span-1
 #| results: asis
-quarto_div(list(
-  quarto_span("As a simple illustration, you could write a paragraph that "),
-  quarto_span("highlighted some sections for emphasis ", class = "mark"),
-  quarto_span("but left other sections unmarked. "),
-  quarto_span("Some things could be underlined too. ", class = "underline"),
-  quarto_span("You get the idea, hopefully!")
-))
+quarto_div(
+  content = list(
+    quarto_span("As an illustration, you could write a paragraph that"),
+    quarto_span("highlighted some sections for emphasis", class = "mark"),
+    quarto_span("but left other sections unmarked."),
+    quarto_span("Some things could be underlined too.", class = "underline"),
+    quarto_span("You get the idea, hopefully!")
+  ), 
+  sep = " "
+)
 ```
 
 Again for illustrative purposes, we can remove the `results: asis` option to see what's happening under the hood:
 
 ```{r}
 #| label: div-span-2
-quarto_div(list(
-  quarto_span("As a simple illustration, you could write a paragraph that "),
-  quarto_span("highlighted some sections for emphasis ", class = "mark"),
-  quarto_span("but left other sections unmarked. "),
-  quarto_span("Some things could be underlined too. ", class = "underline"),
-  quarto_span("You get the idea, hopefully!")
-))
+quarto_div(
+  content = list(
+    quarto_span("As an illustration, you could write a paragraph that"),
+    quarto_span("highlighted some sections for emphasis", class = "mark"),
+    quarto_span("but left other sections unmarked."),
+    quarto_span("Some things could be underlined too.", class = "underline"),
+    quarto_span("You get the idea, hopefully!")
+  ), 
+  sep = " "
+)
 ```
 
 The same idea can be used to generate the quarto syntax to insert section headers:
