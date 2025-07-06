@@ -15,7 +15,6 @@ valid_content_tabset <- list(
   list("this list is two strings", "see?"),
   list("this list", c("contains two", "character vectors")),
   list("this list is mixed", 2L, TRUE, c(1.2, 1.9)),
-  list("this list has images", ggplot2::ggplot()),
   list("this list has lists", list(x = 1, y = 2)),
   list("this list has dates", as.Date("2025-10-10")),
   list("this list has data frames", data.frame(x = 1:2, y = 1:2)),
@@ -24,6 +23,14 @@ valid_content_tabset <- list(
   list("this list contains a quarto_span", q_span),
   list("this list contains a quarto_markdown", q_markdown)
 )
+
+if (requireNamespace("ggplot2", quietly = TRUE)) {
+  valid_content_tabset <- c(
+    valid_content_tabset,
+    list("this list has images", ggplot2::ggplot())
+  )
+}
+
 valid_content_div <- list(
   list("this list is one string"),
   list("this list is two strings", "see?"),
@@ -182,11 +189,12 @@ test_that("quarto objects are detected by is_quarto", {
   for (q in obj) expect_true(is_quarto(q))
 })
 
-test_that("ggplot objects are detected by is_ggplot", {
-  p <- ggplot2::ggplot()
-  expect_true(is_ggplot(p))
-}) 
-
+if (requireNamespace("ggplot2", quietly = TRUE)) {
+  test_that("ggplot objects are detected by is_ggplot", {
+    p <- ggplot2::ggplot()
+    expect_true(is_ggplot(p))
+  }) 
+}
 
 # check that invalid quarto_section inputs are rejected -----------------------------------
 
@@ -382,3 +390,4 @@ test_that("invalid quarto_markdown arguments are rejected", {
   expect_error(quarto_markdown("all inputs must be text", 23.123))
 
 })
+  
