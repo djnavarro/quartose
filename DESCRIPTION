@@ -1,6 +1,6 @@
 Package: quartose
 Title: Syntactic Sugar for Quarto
-Version: 0.0.0.9000
+Version: 0.1
 Authors@R: 
     person("Danielle", "Navarro", , "djnavarro@protonmail.com", role = c("aut", "cre"))
 Description: Provides helper functions to work programmatically within a quarto document.
