@@ -82,31 +82,37 @@
 </div>
 <p>On its own this isn’t entirely useful, but starts to become rather more practical if you wrap multiple <code><a href="../reference/quarto_object.html">quarto_span()</a></code> sections within a <code><a href="../reference/quarto_object.html">quarto_div()</a></code> object.</p>
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_object.html">quarto_div</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"As a simple illustration, you could write a paragraph that "</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"highlighted some sections for emphasis "</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"but left other sections unmarked. "</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"Some things could be underlined too. "</span>, class <span class="op">=</span> <span class="st">"underline"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"You get the idea, hopefully!"</span><span class="op">)</span></span>
-<span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_object.html">quarto_div</a></span><span class="op">(</span></span>
+<span>  content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"As an illustration, you could write a paragraph that"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"highlighted some sections for emphasis"</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"but left other sections unmarked."</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"Some things could be underlined too."</span>, class <span class="op">=</span> <span class="st">"underline"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"You get the idea, hopefully!"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>, </span>
+<span>  sep <span class="op">=</span> <span class="st">" "</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="quartose-null">
-<p><span class="quartose-null">As a simple illustration, you could write a paragraph that</span><mark>highlighted some sections for emphasis</mark><span class="quartose-null">but left other sections unmarked.</span><u>Some things could be underlined too.</u><span class="quartose-null">You get the idea, hopefully!</span></p>
+<p><span class="quartose-null">As an illustration, you could write a paragraph that</span> <mark>highlighted some sections for emphasis</mark><span class="quartose-null">but left other sections unmarked.</span> <u>Some things could be underlined too.</u> <span class="quartose-null">You get the idea, hopefully!</span></p>
 </div>
 <p>Again for illustrative purposes, we can remove the <code>results: asis</code> option to see what’s happening under the hood:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_object.html">quarto_div</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"As a simple illustration, you could write a paragraph that "</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"highlighted some sections for emphasis "</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"but left other sections unmarked. "</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"Some things could be underlined too. "</span>, class <span class="op">=</span> <span class="st">"underline"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"You get the idea, hopefully!"</span><span class="op">)</span></span>
-<span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_object.html">quarto_div</a></span><span class="op">(</span></span>
+<span>  content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"As an illustration, you could write a paragraph that"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"highlighted some sections for emphasis"</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"but left other sections unmarked."</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"Some things could be underlined too."</span>, class <span class="op">=</span> <span class="st">"underline"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"You get the idea, hopefully!"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>, </span>
+<span>  sep <span class="op">=</span> <span class="st">" "</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ::: {.quartose-null}</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  [As a simple illustration, you could write a paragraph that ]{.quartose-null}[highlighted some sections for emphasis ]{.mark}[but left other sections unmarked. ]{.quartose-null}[Some things could be underlined too. ]{.underline}[You get the idea, hopefully!]{.quartose-null} </span></span>
+<span><span class="co">#&gt;  [As an illustration, you could write a paragraph that]{.quartose-null} [highlighted some sections for emphasis]{.mark} [but left other sections unmarked.]{.quartose-null} [Some things could be underlined too.]{.underline} [You get the idea, hopefully!]{.quartose-null} </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; :::</span></span>
 <span><span class="co">#&gt; </span></span>

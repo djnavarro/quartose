@@ -77,7 +77,16 @@ invisibly returns the quarto object itself.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Additional details...</p>
+    <p>There are two print methods supplied for quarto objects, one for
+<code><a href="https://rdrr.io/r/base/print.html" class="external-link">base::print()</a></code> and another for <code><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knitr::knit_print()</a></code>. The regular
+print method behaves similarly to any other print method: it prints
+a summary of the object to the R console, and invisibly returns the
+object itself.</p>
+<p>When <code><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knitr::knit_print()</a></code> is called on a quarto object, the behaviour
+is quite different. The object is first passed to <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code>, which
+constructs the required quarto syntax, then the object is printed
+to the document (or console, if called interactively) using the
+appropriate syntax. In this case, the function invisibly returns <code>NULL</code>.</p>
     </div>
 
     <div class="section level2">
