@@ -11,13 +11,13 @@
 #' Note that the base `print()` method for quarto objects does
 #' not call `format()`. 
 #' 
-#' @param x A quarto object
-#' @param ... Other arguments (ignored)
+#' @param x A quarto object.
+#' @param ... Other arguments (ignored).
 #' 
 #' @return 
 #' A formatted quarto object, sometimes a single string
 #' (e.g., for `quarto_section` objects), but can be a list of
-#' strings and/or plot objects (e.g., for `quarto_tabset` objects)
+#' strings and/or plot objects (e.g., for `quarto_tabset` objects).
 #' 
 #' @details
 #' The intent behind the `format()` methods for quarto objects
@@ -30,7 +30,16 @@
 #' very pretty, though if passed to `cat()` it is generally
 #' readable. 
 #' 
-#' @name format_quarto
+#' @name quarto_format
+#' 
+#' @aliases 
+#' format.quarto_object
+#' format.quarto_div
+#' format.quarto_span
+#' format.quarto_tabset
+#' format.quarto_section
+#' format.quarto_group
+#' format.quarto_markdown
 #' 
 #' @examples
 #' # formatted sections, spans and divs
@@ -61,7 +70,7 @@
 #' 
 NULL
 
-#' @rdname format_quarto
+#' @rdname quarto_format
 #' @exportS3Method base::format
 format.quarto_section <- function(x, ...) {
 
@@ -71,7 +80,7 @@ format.quarto_section <- function(x, ...) {
   return(header)
 }
 
-#' @rdname format_quarto
+#' @rdname quarto_format
 #' @exportS3Method base::format
 format.quarto_tabset <- function(x, ...) {
 
@@ -128,7 +137,7 @@ format.quarto_tabset <- function(x, ...) {
 
 # divs and spans -------------------------------------------
 
-#' @rdname format_quarto
+#' @rdname quarto_format
 #' @exportS3Method base::format
 format.quarto_div <- function(x, ...) {
 
@@ -144,7 +153,7 @@ format.quarto_div <- function(x, ...) {
   return(div)
 }
 
-#' @rdname format_quarto
+#' @rdname quarto_format
 #' @exportS3Method base::format
 format.quarto_span <- function(x, ...) {
 
@@ -158,7 +167,7 @@ format.quarto_span <- function(x, ...) {
 
 # groups of output -------------------------------------------
 
-#' @rdname format_quarto
+#' @rdname quarto_format
 #' @exportS3Method base::format
 format.quarto_markdown <- function(x, ...) {
   md <- format_elements(x$content)
@@ -166,7 +175,7 @@ format.quarto_markdown <- function(x, ...) {
   return(md)
 }
 
-#' @rdname format_quarto
+#' @rdname quarto_format
 #' @exportS3Method base::format
 format.quarto_group <- function(x, ...) {
   out <- format_elements(x$content)

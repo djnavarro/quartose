@@ -12,7 +12,7 @@ reference:
   - quarto_object
 - title: Formatting and printing quarto objects
 - contents:
-  - format_quarto
-  - knit_print.quarto_object
+  - quarto_format
+  - quarto_print
 
 

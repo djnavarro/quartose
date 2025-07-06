@@ -25,6 +25,7 @@
 #' Additional details...
 #' 
 #' @name quarto_object
+#' 
 #' @aliases 
 #' quarto_div
 #' quarto_span
@@ -34,30 +35,51 @@
 #' quarto_markdown
 #' 
 #' @examples
+#' # a quarto_section object
 #' sec <- quarto_section("A level-two header", level = 2L)
 #'  
-#' # Use knitr::knit_print() to see the rendered quarto syntax
-#' knitr::knit_print(sec)
-#' 
-#' # Use base::print() to see the structure of the object
+#' # base::print() displays a summary of the object 
 #' print(sec)
+#' 
+#' # knitr::knit_print() displays the rendered quarto syntax
+#' knitr::knit_print(sec) 
 #'
+#' # a quarto_span object
 #' spn <- quarto_span("This is underlined", class = "underline")
+#' 
+#' print(spn)
+#' 
 #' knitr::knit_print(spn)
-#'  
+#' 
+#' # a quarto_div object 
 #' div <- quarto_div("This is a callout note", class = "callout-note")
+#' 
+#' print(div)
+#' 
 #' knitr::knit_print(div)
 #' 
+#' # a quarto_tabset object
 #' tbs <- quarto_tabset(list(tab1 = 1:10, tab2 = "hello"), level = 3L)
+#' 
+#' print(tbs)
+#' 
 #' knitr::knit_print(tbs)
 #' 
+#' # a quarto_markdown object
 #' mkd <- quarto_markdown(list("- a markdown", "- list"), sep = "\n")
+#' 
+#' print(mkd)
+#' 
 #' knitr::knit_print(mkd)
 #' 
+#' # a quarto_group object
 #' grp <- quarto_group(list(
 #'   quarto_div("This is a callout note", class = "callout-note"),
 #'   quarto_div("This is a callout tip", class = "callout-tip")
 #' ))
+#' 
+#' print(grp)
+#' 
 #' knitr::knit_print(grp)
 NULL
 

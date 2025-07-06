@@ -36,22 +36,62 @@
 #   format() method via capture.output(knit_print()) 
 
 
-#' @title Print a quarto object with knitr
+#' @title Print a quarto object
 #' 
 #' @description
 #' Prints a quarto object. When calling `knitr::knit_print()`
 #' on a quarto object, the relevant `format()` method is called
 #' first, and the formatted version is printed to the document.
+#' When calling `print()`, a summary of the object structure is
+#' printed.
 #' 
-#' @param x A quarto object
-#' @param ... Other arguments (ignored)
+#' @param x A quarto object.
+#' @param ... Other arguments (ignored).
 #' 
 #' @return 
-#' Invisibly returns NULL.
+#' `knitr::knit_print()` invisibly returns `NULL`; `print()` 
+#' invisibly returns the quarto object itself.
 #' 
 #' @details
 #' Additional details...
 #' 
+#' @name quarto_print
+#' 
+#' @aliases 
+#' print.quarto_object
+#' print.quarto_div
+#' print.quarto_span
+#' print.quarto_tabset
+#' print.quarto_section
+#' print.quarto_group
+#' print.quarto_markdown
+#' knit_print.quarto_object
+#' knit_print.quarto_div
+#' knit_print.quarto_span
+#' knit_print.quarto_tabset
+#' knit_print.quarto_section
+#' knit_print.quarto_group
+#' knit_print.quarto_markdown
+#' 
+#' @examples
+#' # a quarto_section object
+#' sec <- quarto_section("A level-two header", level = 2L)
+#'  
+#' # base::print() displays a summary of the object 
+#' print(sec)
+#' 
+#' # knitr::knit_print() displays the rendered quarto syntax
+#' knitr::knit_print(sec) 
+#'
+#' # a quarto_span object
+#' spn <- quarto_span("This is underlined", class = "underline")
+#' 
+#' print(spn)
+#' 
+#' knitr::knit_print(spn)
+#'  
+
+#' @rdname quarto_print
 #' @exportS3Method knitr::knit_print
 knit_print.quarto_object <- function(x, ...) {
   fmt <- format(x, ...)
@@ -61,3 +101,21 @@ knit_print.quarto_object <- function(x, ...) {
   })
   return(invisible(NULL))
 }
+
+#' @rdname quarto_print
+#' @exportS3Method base::print
+print.quarto_object <- function(x, ...) {
+  cls <- class(x)[1]
+  vals <- purrr::imap_chr(x, \(value, name) {
+    if (name != "content" | rlang::is_character(value)) {
+      return(paste(unname(as.character(value)), collapse = " "))
+    }
+    return(paste0("<", class(value)[1], ">"))
+  })
+  cli::cli({
+    cli::cli_text("<", cls, ">");
+    cli::cli_ul(items = paste0(names(x), ": ", vals))
+  })
+  return(invisible(x))
+}
+
