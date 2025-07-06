@@ -99,7 +99,7 @@ format.quarto_tabset <- function(x, ...) {
   }
 
   # tab names
-  tabname <- purrr::map_chr(x$names, \(tt) {
+  tabname <- purrr::map_chr(x$names, function(tt) {
     format(quarto_section(tt, x$level))
   })
 
@@ -192,6 +192,6 @@ format.quarto_group <- function(x, ...) {
 # formatting helpers -----------------------------------------
 
 format_elements <- function(x, ...) {
-  purrr::map(x, \(cc) format(cc, ...))
+  purrr::map(x, function(cc) format(cc, ...))
 }
 

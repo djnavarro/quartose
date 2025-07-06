@@ -223,11 +223,11 @@ test_that("formatted quarto_tabset objects are character/graphics lists", {
     ff <- formatted_tabsets[[i]]
     expect_true(rlang::is_list(ff))
     expect_true(
-      all(purrr::map_lgl(ff, \(x) {
+      all(purrr::map_lgl(ff, function(x) {
         rlang::is_bare_character(x) | quartose:::is_ggplot(x)
       }))
     )
-    ff_text <- purrr::map(ff, \(x) {
+    ff_text <- purrr::map(ff, function(x) {
       if (rlang::is_bare_character(x)) return(x)
       "PLOT"      
     })
@@ -239,7 +239,7 @@ test_that("character elements of formatted quarto_tabset are length 1", {
   for(i in seq_along(test_tabsets)) {
     tt <- test_tabsets[[i]]
     ff <- formatted_tabsets[[i]]
-    ff_text <- purrr::map(ff, \(x) {
+    ff_text <- purrr::map(ff, function(x) {
       if (rlang::is_bare_character(x)) return(x)
       "PLOT"      
     })
@@ -251,7 +251,7 @@ test_that("formatted quarto_tabsets include .panel-tabset div", {
   for(i in seq_along(test_tabsets)) {
     tt <- test_tabsets[[i]]
     ff <- formatted_tabsets[[i]]
-    ff_chr <- unname(purrr::map_chr(ff, \(x) {
+    ff_chr <- unname(purrr::map_chr(ff, function(x) {
       if (rlang::is_bare_character(x)) return(x)
       "PLOT"      
     }))
@@ -266,7 +266,7 @@ test_that("formatted quarto_tabsets include section/tab titles", {
   for(i in seq_along(test_tabsets)) {
     tt <- test_tabsets[[i]]
     ff <- formatted_tabsets[[i]]
-    ff_chr <- unname(purrr::map_chr(ff, \(x) {
+    ff_chr <- unname(purrr::map_chr(ff, function(x) {
       if (rlang::is_bare_character(x)) return(x)
       "PLOT"      
     }))

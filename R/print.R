@@ -105,7 +105,7 @@
 #' @exportS3Method knitr::knit_print
 knit_print.quarto_object <- function(x, ...) {
   fmt <- format(x, ...)
-  purrr::walk(fmt, \(ff) {
+  purrr::walk(fmt, function(ff) {
     if (is.character(ff)) cat(ff, "\n")
     else knitr::knit_print(ff)
   })
@@ -116,7 +116,7 @@ knit_print.quarto_object <- function(x, ...) {
 #' @exportS3Method base::print
 print.quarto_object <- function(x, ...) {
   cls <- class(x)[1]
-  vals <- purrr::imap_chr(x, \(value, name) {
+  vals <- purrr::imap_chr(x, function(value, name) {
     if (name != "content" | rlang::is_character(value)) {
       return(paste(unname(as.character(value)), collapse = " "))
     }
