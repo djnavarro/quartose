@@ -55,16 +55,15 @@ test_tabsets <- list(
 )
 
 if (requireNamespace("ggplot2", quietly = TRUE)) {
-  test_tabsets <- c(
-    test_tabsets,
-    quarto_tabset(
-      content = list(
-        a = ggplot2::ggplot(),
-        b = lm(Sepal.Width ~ Sepal.Length, iris)
-      ), 
-      level = 2L
-    )  
+  tt <- quarto_tabset(
+    content = list(
+      a = ggplot2::ggplot(),
+      b = lm(Sepal.Width ~ Sepal.Length, iris)
+    ), 
+    level = 2L
   )
+  ll <- length(test_tabsets)
+  test_tabsets[[ll + 1]] <- tt
 }
 
 test_groups <- list(

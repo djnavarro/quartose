@@ -25,10 +25,9 @@ valid_content_tabset <- list(
 )
 
 if (requireNamespace("ggplot2", quietly = TRUE)) {
-  valid_content_tabset <- c(
-    valid_content_tabset,
-    list("this list has images", ggplot2::ggplot())
-  )
+  cc <- list("this list has images", ggplot2::ggplot())
+  ll <- length(valid_content_tabset)
+  valid_content_tabset[[ll + 1]] <- cc
 }
 
 valid_content_div <- list(
