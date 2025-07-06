@@ -70,24 +70,24 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/djnavarro/quartose" class="external-link">quartose</a></span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>The package was originally designed to support automatic tabsets (e.g., writing several plots, one per tab), and to my mind this is the most practical feature of quartose. However, pkgdown has limited support for quarto, so it is difficult to illustrate in this document. Instead, I’ll start by illustrating some of the simpler features. You can use <code><a href="../reference/quarto_div.html">quarto_span()</a></code> to supply CSS classes to sections of text:</p>
+<p>The package was originally designed to support automatic tabsets (e.g., writing several plots, one per tab), and to my mind this is the most practical feature of quartose. However, pkgdown has limited support for quarto, so it is difficult to illustrate in this document. Instead, I’ll start by illustrating some of the simpler features. You can use <code><a href="../reference/quarto_object.html">quarto_span()</a></code> to supply CSS classes to sections of text:</p>
 <div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span>content <span class="op">=</span> <span class="st">"this is highlighted"</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span>content <span class="op">=</span> <span class="st">"this is highlighted"</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span></span></code></pre></div>
 <p><mark>this is highlighted</mark></p>
 <p>If we print this object without the <code>results: asis</code> tag, you can see what actually gets written into the document:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span>content <span class="op">=</span> <span class="st">"this is highlighted"</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span>content <span class="op">=</span> <span class="st">"this is highlighted"</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [this is highlighted]{.mark}</span></span></code></pre></div>
 </div>
-<p>On its own this isn’t entirely useful, but starts to become rather more practical if you wrap multiple <code><a href="../reference/quarto_div.html">quarto_span()</a></code> sections within a <code><a href="../reference/quarto_div.html">quarto_div()</a></code> object.</p>
+<p>On its own this isn’t entirely useful, but starts to become rather more practical if you wrap multiple <code><a href="../reference/quarto_object.html">quarto_span()</a></code> sections within a <code><a href="../reference/quarto_object.html">quarto_div()</a></code> object.</p>
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span><span class="st">"As a simple illustration, you could write a paragraph that "</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span><span class="st">"highlighted some sections for emphasis "</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span><span class="st">"but left other sections unmarked. "</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span><span class="st">"Some things could be underlined too. "</span>, class <span class="op">=</span> <span class="st">"underline"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span><span class="st">"You get the idea, hopefully!"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_object.html">quarto_div</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"As a simple illustration, you could write a paragraph that "</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"highlighted some sections for emphasis "</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"but left other sections unmarked. "</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"Some things could be underlined too. "</span>, class <span class="op">=</span> <span class="st">"underline"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"You get the idea, hopefully!"</span><span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="quartose-null">
 <p><span class="quartose-null">As a simple illustration, you could write a paragraph that</span><mark>highlighted some sections for emphasis</mark><span class="quartose-null">but left other sections unmarked.</span><u>Some things could be underlined too.</u><span class="quartose-null">You get the idea, hopefully!</span></p>
@@ -95,12 +95,12 @@
 <p>Again for illustrative purposes, we can remove the <code>results: asis</code> option to see what’s happening under the hood:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span><span class="st">"As a simple illustration, you could write a paragraph that "</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span><span class="st">"highlighted some sections for emphasis "</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span><span class="st">"but left other sections unmarked. "</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span><span class="st">"Some things could be underlined too. "</span>, class <span class="op">=</span> <span class="st">"underline"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/quarto_div.html">quarto_span</a></span><span class="op">(</span><span class="st">"You get the idea, hopefully!"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_object.html">quarto_div</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"As a simple illustration, you could write a paragraph that "</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"highlighted some sections for emphasis "</span>, class <span class="op">=</span> <span class="st">"mark"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"but left other sections unmarked. "</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"Some things could be underlined too. "</span>, class <span class="op">=</span> <span class="st">"underline"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/quarto_object.html">quarto_span</a></span><span class="op">(</span><span class="st">"You get the idea, hopefully!"</span><span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -115,16 +115,16 @@
 <p>The same idea can be used to generate the quarto syntax to insert section headers:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_section.html">quarto_section</a></span><span class="op">(</span><span class="st">"A level 3 heading"</span>, level <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_object.html">quarto_section</a></span><span class="op">(</span><span class="st">"A level 3 heading"</span>, level <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ### A level 3 heading</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 </div>
-<p>If the code here included the <code>results: asis</code> chunk option this would insert a heading into the document. Similarly, there are functions like <code><a href="../reference/quarto_group.html">quarto_markdown()</a></code> that you can use to pass plain markdown:</p>
+<p>If the code here included the <code>results: asis</code> chunk option this would insert a heading into the document. Similarly, there are functions like <code><a href="../reference/quarto_object.html">quarto_markdown()</a></code> that you can use to pass plain markdown:</p>
 <div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_group.html">quarto_markdown</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_object.html">quarto_markdown</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="st">"- this ends up being"</span>,</span>
 <span>    <span class="st">"- a markdown list"</span>, </span>
@@ -138,9 +138,9 @@
 <li>with <strong>formatting</strong>
 </li>
 </ul>
-<p>Unfortunately for this vignette, the limitations of pkgdown/quarto integration mean that some of the more fun things you can do with quartose are hard to illustrate here. In a regular quarto project, you could create callout boxes and margin text by defining a <code><a href="../reference/quarto_div.html">quarto_div()</a></code> with the appropriate CSS classes. If I try that here, however, it doesn’t quite work:</p>
+<p>Unfortunately for this vignette, the limitations of pkgdown/quarto integration mean that some of the more fun things you can do with quartose are hard to illustrate here. In a regular quarto project, you could create callout boxes and margin text by defining a <code><a href="../reference/quarto_object.html">quarto_div()</a></code> with the appropriate CSS classes. If I try that here, however, it doesn’t quite work:</p>
 <div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_div.html">quarto_div</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/quarto_object.html">quarto_div</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="st">"This would normally be a callout note."</span>,</span>
 <span>  class <span class="op">=</span> <span class="st">"callout-note"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -150,12 +150,12 @@
 <p>This would normally be a callout note.</p>
 </blockquote>
 </div>
-<p>Similarly, because tabsets aren’t a supported feature in pkgdown, I can’t easily show what a <code><a href="../reference/quarto_tabset.html">quarto_tabset()</a></code> looks like in this document. I can show you the quarto syntax that gets written to the document…</p>
+<p>Similarly, because tabsets aren’t a supported feature in pkgdown, I can’t easily show what a <code><a href="../reference/quarto_object.html">quarto_tabset()</a></code> looks like in this document. I can show you the quarto syntax that gets written to the document…</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">$</span><span class="va">class</span><span class="op">)</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">cls</span>, \<span class="op">(</span><span class="va">cl</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">class</span> <span class="op">==</span> <span class="va">cl</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/quarto_tabset.html">quarto_tabset</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="../reference/quarto_object.html">quarto_tabset</a></span><span class="op">(</span></span>
 <span>  content <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">head</span><span class="op">)</span>, </span>
 <span>  names <span class="op">=</span> <span class="va">cls</span>, </span>
 <span>  title <span class="op">=</span> <span class="st">"Data"</span>, </span>
