@@ -59,7 +59,7 @@
 #' a summary of the object to the R console, and invisibly returns the
 #' object itself. 
 #' 
-#' When `knitr::knit_print()` is called on a quarto object, the behaviour
+#' When `knitr::knit_print()` is called on a quarto object, the behavior
 #' is quite different. The object is first passed to `format()`, which 
 #' constructs the required quarto syntax, then the object is printed 
 #' to the document (or console, if called interactively) using the 

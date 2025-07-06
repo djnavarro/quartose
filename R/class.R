@@ -17,7 +17,7 @@
 #' For `quarto_section()` this is a required argument. For `quarto_tabset()` 
 #' it is permitted to use `title = NULL`, in which case the tabset will 
 #' be printed without a section header above it. This is the default 
-#' behaviour for tabsets.
+#' behavior for tabsets.
 #' 
 #' @param level 
 #' Numeric header level applied to section title or tabset names. 
@@ -79,7 +79,7 @@
 #'   appear in its own tab. At present the support for graphics objects is
 #'   limited: ggplot2 objects are captured and will only be rendered when
 #'   `knitr::knit_print()` is called. No attempt is made (as yet!) to support
-#'   other kinds of graphic objecvts, and if these are passed via the `content`
+#'   other kinds of graphic objects, and if these are passed via the `content`
 #'   argument the function will likely fail.
 #' - For `quarto_markdown()` the `content` argument may be a character vector
 #'   or a list of character vectors. The function will throw an error if other

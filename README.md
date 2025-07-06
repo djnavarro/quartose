@@ -12,7 +12,7 @@ coverage](https://codecov.io/gh/djnavarro/quartose/graph/badge.svg)](https://app
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-When analysing data sets in R, it is often convenient to wrap the
+When analyzing data sets in R, it is often convenient to wrap the
 analysis within a quarto document for reporting purposes: containing all
 the analysis components within a single easy-to-navigate HTML document
 is generally a kindness for the reader. One consequence of this,
@@ -28,7 +28,7 @@ translated to the appropriate HTML.
 
 The purpose of the quartose package is to provide some helper functions
 to make this task a little easier. The reason for writing it is that
-while it is *conceptually* straightfoward to generate quarto syntax
+while it is *conceptually* straightforward to generate quarto syntax
 within R, there are some practical issues in juggling knitr, quarto, and
 R all at once if you want the resulting document to look clean. That’s
 what I wrote quartose for: I want the nice, clean outputs that you get

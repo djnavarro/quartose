@@ -27,7 +27,7 @@ quarto_markdown(content, sep = "")
 For \code{quarto_section()} this is a required argument. For \code{quarto_tabset()}
 it is permitted to use \code{title = NULL}, in which case the tabset will
 be printed without a section header above it. This is the default
-behaviour for tabsets.}
+behavior for tabsets.}
 
 \item{level}{Numeric header level applied to section title or tabset names.
 The \code{level} argument must be a whole number between 1 and 6. Only
@@ -91,7 +91,7 @@ elements can be any printable R object: each element of the list will
 appear in its own tab. At present the support for graphics objects is
 limited: ggplot2 objects are captured and will only be rendered when
 \code{knitr::knit_print()} is called. No attempt is made (as yet!) to support
-other kinds of graphic objecvts, and if these are passed via the \code{content}
+other kinds of graphic objects, and if these are passed via the \code{content}
 argument the function will likely fail.
 \item For \code{quarto_markdown()} the \code{content} argument may be a character vector
 or a list of character vectors. The function will throw an error if other
