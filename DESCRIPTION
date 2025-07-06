@@ -1,8 +1,8 @@
 Package: quartose
-Title: Syntactic Sugar for Quarto
+Title: Dynamically Generate Quarto Syntax
 Version: 0.1
 Authors@R: 
-    person("Danielle", "Navarro", , "djnavarro@protonmail.com", role = c("aut", "cre"))
+    person("Danielle", "Navarro", , "djnavarro@protonmail.com", role = c("aut", "cre", "cph"))
 Description: Provides helper functions to work programmatically within a quarto document.
 License: MIT + file LICENSE
 Encoding: UTF-8
