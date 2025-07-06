@@ -72,7 +72,8 @@
 #'   vector or a list, but it will always be stored internally as a list. 
 #'   If the input is a list, it can contain other quarto objects. The 
 #'   intended use for this is a div that contains several spans, but it is
-#'   not limited to this use case.
+#'   not limited to this use case. At present, `quarto_div()` cannot handle 
+#'   plot objects, but functionality may be extended to permit this in future.
 #' - For `quarto_tabset()` the `content` argument *must* be a list. The list 
 #'   elements can be any printable R object: each element of the list will
 #'   appear in its own tab. At present the support for graphics objects is

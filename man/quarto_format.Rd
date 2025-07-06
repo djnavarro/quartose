@@ -29,9 +29,13 @@
 \item{...}{Other arguments (ignored).}
 }
 \value{
-A formatted quarto object, sometimes a single string
-(e.g., for \code{quarto_section} objects), but can be a list of
-strings and/or plot objects (e.g., for \code{quarto_tabset} objects).
+A formatted quarto object. For \code{quarto_section}, \code{quarto_span},
+and \code{quarto_markdown} objects, the formatted output is always a
+string (character vector of length 1). For \code{quarto_tabset} and
+\code{quarto_group} objects, the output is always a list whose elements
+are either strings or plot objects. For \code{quarto_div} objects,
+the output is currently a string, but this may change to list
+output in future if divs are permitted to contain plots.
 }
 \description{
 Creates a formatted representation of a quarto object in a
@@ -45,24 +49,25 @@ not call \code{format()}.
 The intent behind the \code{format()} methods for quarto objects
 is to create a ready-to-print representation of that is almost
 identical to what will be printed into the quarto document
-when the print method is called. Because of this, the formatted
-version of a quarto object is usually a string or a list of
-strings, but it can also include plot objects that have not
-yet been rendered. The resulting representation isn't usually
-very pretty, though if passed to \code{cat()} it is generally
-readable.
+when \code{knitr::knit_print()} is called. Because of this, the
+formatted version of a quarto object is a string or a list of
+strings, but it may also include plot objects that have not
+yet been rendered. The resulting representation isn't always
+very pretty, though it is generally fairly readable.
 }
 \examples{
-# formatted sections, spans and divs
+# formatted sections, spans and divs ----------------------------------
 sec <- quarto_section("Header", level = 2L)
 spn <- quarto_span("Content", class = "underline")
 div <- quarto_div("Content", class = "content-margin")
 
 format(sec)
+
 format(spn)
+
 format(div)
 
-# formatted tabsets
+# formatted tabsets ---------------------------------------------------
 tbs <- quarto_tabset(
   content = list(tab1 = 1:10, tab2 = "hello"),
   title = "Header",
@@ -71,12 +76,13 @@ tbs <- quarto_tabset(
 
 format(tbs)
 
-# formatted groups and markdown
+# formatted groups and markdown ---------------------------------------
 
 mkd <- quarto_markdown(list("- this is a", "- markdown list"), sep = "\n")
 gps <- quarto_group(list(div, mkd))
 
 format(mkd)
+
 format(gps)
 
 }

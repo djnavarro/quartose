@@ -200,6 +200,13 @@ test_that("formatted quarto_div objects have correct structure", {
 
 # markdown ---------------------------------------------------------
 
+test_that("quarto_markdown objects format to strings", {
+  for(mm in formatted_markdown) {
+    expect_true(rlang::is_character(mm))
+    expect_length(mm, 1L)
+  }
+})
+
 test_that("formatted quarto_markdown objects have correct structure", {
   for(i in seq_along(test_markdown)) {
     ff <- formatted_markdown[[i]]
