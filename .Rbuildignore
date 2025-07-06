@@ -12,3 +12,4 @@
 ^vignettes/articles$
 ^vignettes$
 ^cran-comments\.md$
+^CRAN-SUBMISSION$
