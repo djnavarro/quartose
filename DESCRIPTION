@@ -1,6 +1,6 @@
 Package: quartose
 Title: Dynamically Generate Quarto Syntax
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: 
     person("Danielle", "Navarro", , "djnavarro@protonmail.com", role = c("aut", "cre", "cph"))
 Description: 
