@@ -11,7 +11,7 @@ code chunk with the results: asis option set."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">quartose</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -129,7 +129,11 @@ a <code>content</code> argument, which differs slightly depending on the context
 have titles, but they do not contain content.</p></li>
 <li><p>For <code>quarto_span()</code> the `content“ argument <em>must</em> be a character vector,
 not a list.</p></li>
-<li><p>For <code>quarto_div()</code> the <code>content`` argument is permitted to be a character vector or a list, but it will always be stored internally as a list.  If the input is a list, it can contain other quarto objects. The  intended use for this is a div that contains several spans, but it is not limited to this use case. At present, </code>quarto_div()` cannot handle
+<li><p>For <code>quarto_div()</code> the <code>content</code> argument is permitted to be a character
+vector or a list, but it will always be stored internally as a list.
+If the input is a list, it can contain other quarto objects. The
+intended use for this is a div that contains several spans, but it is
+not limited to this use case. At present, <code>quarto_div()</code> cannot handle
 plot objects, but functionality may be extended to permit this in future.</p></li>
 <li><p>For <code>quarto_tabset()</code> the <code>content</code> argument <em>must</em> be a list. The list
 elements can be any printable R object: each element of the list will
