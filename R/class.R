@@ -68,7 +68,7 @@
 #'   have titles, but they do not contain content.
 #' - For `quarto_span()` the `content`` argument *must* be a character vector, 
 #'   not a list.
-#' - For `quarto_div()` the `content`` argument is permitted to be a character
+#' - For `quarto_div()` the `content` argument is permitted to be a character
 #'   vector or a list, but it will always be stored internally as a list. 
 #'   If the input is a list, it can contain other quarto objects. The 
 #'   intended use for this is a div that contains several spans, but it is
