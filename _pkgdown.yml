@@ -1,8 +1,11 @@
 url: https://quartose.djnavarro.net/
+
 template:
-  package: waeponwifestre
+  bootstrap: 5
+
 project:
   render: '*.qmd'
+
 reference:
 - title: Specifying quarto objects
 - contents: quarto_object
