@@ -2,7 +2,44 @@ url: https://quartose.djnavarro.net/
 
 template:
   bootstrap: 5
+  light-switch: true
+  bslib:
+    base_font: {google: "Atkinson Hyperlegible"}
+    heading_font: {google: "Atkinson Hyperlegible"}
 
+navbar:
+  structure:
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, github, packages, sites, lightswitch]
+  components:
+    packages:
+      icon: fa-code
+      href: https://code.djnavarro.net
+      aria-label: Code projects
+    sites:
+      icon: fa-link
+      aria-label: Links
+      menu:
+      - text: Homepage
+        href: https://djnavarro.net
+      - text: Data science blog
+        href: https://blog.djnavarro.net
+      - text: Computational art
+        href: https://art.djnavarro.net
+      - text: Coding projects
+        href: https://code.djnavarro.net
+      - text: Academic papers
+        href: https://papers.djnavarro.net
+      - text: More...
+        href: https://djnavarro.net/sites/
+
+footer:
+  structure: 
+    left: by_danielle
+    right: built_with
+  components:
+    by_danielle: Developed by [Danielle Navarro](https://djnavarro.net) 
+  
 project:
   render: '*.qmd'
 
