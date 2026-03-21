@@ -26,5 +26,5 @@ Suggests:
     spelling,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Config/Needs/website: rmarkdown
+Config/Needs/website: djnavarro/waeponwifestre
 Language: en-US

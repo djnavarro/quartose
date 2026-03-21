@@ -33,7 +33,8 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, local::.
+          install-quarto: true
+          extra-packages: any::pkgdown, github::djnavarro/waeponwifestr, local::.
           needs: website
 
       - name: Build site
