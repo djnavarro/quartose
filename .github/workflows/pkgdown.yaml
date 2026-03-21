@@ -34,7 +34,7 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           install-quarto: true
-          extra-packages: any::pkgdown, github::djnavarro/waeponwifestr, local::.
+          extra-packages: any::pkgdown, github::djnavarro/waeponwifestre, local::.
           needs: website
 
       - name: Build site
