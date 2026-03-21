@@ -1,9 +1,7 @@
 url: https://quartose.djnavarro.net/
-
 template:
   bootstrap: 5
-  light-switch: true  
- 
+
 project:
   render: '*.qmd'
 
