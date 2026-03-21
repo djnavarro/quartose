@@ -1,18 +1,13 @@
 url: https://quartose.djnavarro.net/
-
 template:
   package: waeponwifestre
-
 project:
-  render: ['*.qmd']
-
+  render: '*.qmd'
 reference:
 - title: Specifying quarto objects
-- contents:
-  - quarto_object
+- contents: quarto_object
 - title: Formatting and printing quarto objects
 - contents:
   - quarto_format
   - quarto_print
-
 
