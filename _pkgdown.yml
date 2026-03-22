@@ -1,6 +1,6 @@
 url: https://quartose.djnavarro.net/
 template:
-  bootstrap: 5
+  package: waeponwifestre
 
 project:
   render: '*.qmd'

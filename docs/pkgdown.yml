@@ -1,0 +1,9 @@
+pandoc: 3.6.3
+pkgdown: 2.1.2
+pkgdown_sha: ~
+articles:
+  articles/quartose: quartose.html
+last_built: 2026-03-22T06:12Z
+urls:
+  reference: https://quartose.djnavarro.net/reference
+  article: https://quartose.djnavarro.net/articles
