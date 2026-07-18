@@ -336,6 +336,82 @@ test_that("quarto_tabset escapes angle brackets in captured output (#1)", {
   expect_true(any(grepl("&lt;fct&gt;", ff_chr, fixed = TRUE)))
 })
 
+# generalized graphics support (issue #2) -----------------------------------
+
+test_that("quarto_tabset wraps recorded plots and grobs in quarto_plot, like ggplot", {
+
+  rp <- make_recorded_plot()
+
+  tt <- quarto_tabset(content = list(a = rp, b = grid::rectGrob()), level = 2L)
+  ff <- format(tt)
+  is_plot <- purrr::map_lgl(ff, function(x) inherits(x, "quarto_plot"))
+
+  expect_equal(sum(is_plot), 2L)
+  plot_els <- ff[is_plot]
+  expect_s3_class(plot_els[[1]]$content, "recordedplot")
+  expect_s3_class(plot_els[[2]]$content, "grob")
+
+})
+
+test_that("recorded plots and grobs in a tabset can be knit-printed", {
+
+  rp <- make_recorded_plot()
+
+  tt <- quarto_tabset(content = list(a = rp, b = grid::rectGrob()), level = 2L)
+  expect_no_error(purrr::quietly(knitr::knit_print)(tt))
+
+})
+
+test_that("render_graphic_png renders recorded plots and grobs to a real file", {
+
+  rp <- make_recorded_plot()
+
+  out1 <- quartose:::render_graphic_png(rp)
+  expect_true(file.exists(out1))
+  expect_gt(file.size(out1), 0)
+
+  out2 <- quartose:::render_graphic_png(grid::rectGrob())
+  expect_true(file.exists(out2))
+  expect_gt(file.size(out2), 0)
+
+})
+
+if (requireNamespace("lattice", quietly = TRUE)) {
+  test_that("trellis objects in a tabset are detected and knit-print without error", {
+    tt <- quarto_tabset(content = list(a = lattice::xyplot(1 ~ 1)), level = 2L)
+    ff <- format(tt)
+    expect_true(any(purrr::map_lgl(ff, function(x) inherits(x, "quarto_plot"))))
+    expect_no_error(purrr::quietly(knitr::knit_print)(tt))
+  })
+}
+
+if (requireNamespace("ggplot2", quietly = TRUE) && requireNamespace("patchwork", quietly = TRUE)) {
+  test_that("patchwork objects in a tabset are handled via the existing ggplot path", {
+    combined <- ggplot2::ggplot() + ggplot2::ggplot()
+    tt <- quarto_tabset(content = list(a = combined), level = 2L)
+    ff <- format(tt)
+    is_plot <- purrr::map_lgl(ff, function(x) inherits(x, "quarto_plot"))
+    expect_true(any(is_plot))
+    expect_s3_class(ff[[which(is_plot)[1]]]$content, "ggplot")
+    expect_no_error(purrr::quietly(knitr::knit_print)(tt))
+  })
+}
+
+test_that("as_quarto_graphic() lets an unrecognized graphics object be captured in a tabset", {
+
+  obj <- structure(list(), class = "quartose_test_baseplot")
+  registerS3method("print", "quartose_test_baseplot", function(x, ...) plot(1:3))
+
+  tt <- quarto_tabset(content = list(a = as_quarto_graphic(obj)), level = 2L)
+  ff <- format(tt)
+  is_plot <- purrr::map_lgl(ff, function(x) inherits(x, "quarto_plot"))
+
+  expect_true(any(is_plot))
+  expect_s3_class(ff[[which(is_plot)[1]]]$content, "quartose_graphic")
+  expect_no_error(purrr::quietly(knitr::knit_print)(tt))
+
+})
+
 test_that("formatted quarto_groups concatenate their formatted constituents", {
   for(i in seq_along(test_groups)) {
     gg <- test_groups[[i]]

@@ -126,7 +126,20 @@ knit_print.quarto_object <- function(x, ...) {
 #' @noRd
 #' @exportS3Method knitr::knit_print
 knit_print.quarto_plot <- function(x, ...) {
-  knitr::knit_print(x$content, ...)
+  content <- x$content
+
+  # ggplot2 (and patchwork, which subclasses ggplot) already have their own
+  # efficient knit_print rendering path; defer to it directly rather than
+  # re-rendering to a plain PNG
+  if (is_ggplot(content)) {
+    return(knitr::knit_print(content, ...))
+  }
+
+  # everything else recognized by is_graphic() (recorded plots, grobs,
+  # trellis objects, or anything tagged via as_quarto_graphic()) has no
+  # knitr-native rendering, so render it to a PNG file and embed that
+  path <- render_graphic_png(content)
+  knitr::knit_print(knitr::include_graphics(path), ...)
 }
 
 #' @rdname quarto_print

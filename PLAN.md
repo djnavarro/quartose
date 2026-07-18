@@ -11,7 +11,7 @@ Last reviewed: 2026-07-19.
 | # | Title | Type | Notes |
 |---|-------|------|-------|
 | [#1](https://github.com/djnavarro/quartose/issues/1) | protect "<" and ">" characters in HTML output | bug | Confirmed reproducible (see below). Highest priority — silent output corruption. |
-| [#2](https://github.com/djnavarro/quartose/issues/2) | support wider range of graphics objects | enhancement | Only `ggplot` objects are special-cased via `is_ggplot()`. Base R plots, grid grobs, lattice/trellis, patchwork, etc. are unsupported and will "likely fail" per the `class.R` docs. Also requests a user-facing way to tag an object as graphics. |
+| [#2](https://github.com/djnavarro/quartose/issues/2) | support wider range of graphics objects | enhancement | RESOLVED for `quarto_tabset()` — see remediation step 5 below. `is_graphic()` now covers ggplot2/patchwork, recorded plots, grobs, and trellis objects, plus the `as_quarto_graphic()` tagging escape hatch. Divs still don't support graphics at all (#3) — that's a separate, still-open follow-up (step 6). |
 | [#3](https://github.com/djnavarro/quartose/issues/3) | allow graphics objects within divs | enhancement | `format.quarto_div()` always coerces content via `paste()`/`unlist()`; no plot-capture path exists for divs at all (only tabsets have one). |
 | [#4](https://github.com/djnavarro/quartose/issues/4) | quartose and revealjs format | not a quartose bug (diagnosed) | Reproduced and root-caused — see below. No code fix needed in `format.R`/`print.R`; the correct usage pattern already works under revealjs. A doc clarification is worth making. |
 
@@ -171,14 +171,24 @@ leave `quarto_markdown()` untouched) rather than patching only the literal
 
 ### Phase 2 — graphics support (target: 0.2.0)
 
-5. **#2 — wider graphics support.** Generalize the plot-detection helper
-   (currently `is_ggplot()`) to a small dispatch table covering at least:
-   base R recorded plots (`recordPlot()`), grid grobs, lattice/trellis
-   objects, and patchwork (which subclasses `ggplot`, so should already work
-   once the flattening bug is fixed — verify with a test). Add the
-   user-tagging escape hatch requested in the issue, e.g. a
-   `quarto_graphic()`/`as_quarto_graphic()` helper users can wrap objects in
-   when auto-detection fails.
+5. **#2 — wider graphics support — RESOLVED for `quarto_tabset()`.**
+   `is_graphic()` (`R/validate.R`) generalizes `is_ggplot()` to a small
+   dispatch table covering ggplot2 (and patchwork, which subclasses
+   `ggplot` and already worked once the flattening bug was fixed — verified
+   with a test), base R recorded plots (`grDevices::recordPlot()`), grid
+   grobs, and lattice/trellis objects. `format.quarto_tabset()` now checks
+   `is_graphic()` instead of `is_ggplot()`. Rendering for the non-ggplot
+   classes is handled by a new `render_graphic_png()` helper in
+   `knit_print.quarto_plot()`: it opens a PNG device, draws the object
+   (`replayPlot()` for recorded plots, `grid::grid.draw()` for grobs,
+   `print()` for trellis/tagged objects), and embeds the result via
+   `knitr::include_graphics()`. ggplot/patchwork content still goes through
+   knitr's own native `knit_print.ggplot` rendering rather than this PNG
+   fallback. This adds `grDevices` and `grid` to `Imports` — both are base
+   R packages bundled with every R installation, so no new installation
+   burden. Added the user-tagging escape hatch requested in the issue:
+   `as_quarto_graphic()`, a helper users can wrap objects in when
+   auto-detection fails.
 6. **#3 — graphics in divs.** Once the tabset graphics-capture path is
    generalized (step 5), reuse the same helper in `format.quarto_div()` so
    divs can contain plots the way tabsets can. Update `class.R` docs, which
