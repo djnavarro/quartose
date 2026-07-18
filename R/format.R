@@ -122,16 +122,23 @@ format.quarto_tabset <- function(x, ...) {
 
     # for plot objects, we do no formatting at this stage. all we do
     # is wrap them safely within a quarto_* class, so that later on
-    # when the print method is called, it is handled as a quarto obj
+    # when the print method is called, it is handled as a quarto obj.
+    # wrapping in list() here is essential: quarto_plot() is itself a
+    # list, so appending it with c() directly would flatten it into
+    # `out` and silently strip its class (see PLAN.md).
     if (is_ggplot(x$content[[i]])) {
-      out <- c(out, quarto_plot(content = x$content[[i]]))
+      out <- c(out, list(quarto_plot(content = x$content[[i]])))
     
     # for everything else, call knit_print() now in order to produce 
     # character strings that can be passed directly to document with
-    # cat(), but don't actually print them yet, just capture and store
+    # cat(), but don't actually print them yet, just capture and store.
+    # captured output may contain "<" / ">" from the default print
+    # representation of arbitrary R objects (e.g. tibble's "<fct>"
+    # column-type tags); escape these so they aren't parsed as HTML tags.
     } else {
+      captured <- utils::capture.output(knitr::knit_print(x$content[[i]]))
       out <- c(out, pre_open)
-      out <- c(out, utils::capture.output(knitr::knit_print(x$content[[i]])))
+      out <- c(out, protect_angle_brackets(captured))
       out <- c(out, pre_shut)
     }
 
@@ -193,5 +200,16 @@ format.quarto_group <- function(x, ...) {
 
 format_elements <- function(x, ...) {
   purrr::map(x, function(cc) format(cc, ...))
+}
+
+# escape "<" and ">" in captured output so that literal text such as a
+# tibble's "<fct>" column-type tag is not parsed as an (unknown) HTML tag
+# by the quarto/pandoc markdown parser. Order matters: escape "&" first
+# would be needed if we ever escape ampersands too, but for now we only
+# protect the two characters that can form spurious tags.
+protect_angle_brackets <- function(x) {
+  x <- gsub("<", "&lt;", x, fixed = TRUE)
+  x <- gsub(">", "&gt;", x, fixed = TRUE)
+  x
 }
 

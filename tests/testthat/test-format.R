@@ -229,7 +229,7 @@ test_that("formatted quarto_tabset objects are character/graphics lists", {
     expect_true(rlang::is_list(ff))
     expect_true(
       all(purrr::map_lgl(ff, function(x) {
-        rlang::is_bare_character(x) | quartose:::is_ggplot(x)
+        rlang::is_bare_character(x) | inherits(x, "quarto_plot")
       }))
     )
     ff_text <- purrr::map(ff, function(x) {
@@ -295,6 +295,45 @@ test_that("formatted quarto_groups are lists", {
     ff <- formatted_groups[[i]]
     expect_true(rlang::is_list(ff))
   }
+})
+
+# regression tests: html escaping and plot-class preservation (issue #1) ---
+
+test_that("quarto_plot wrapper preserves its class when captured in a tabset", {
+  skip_if_not_installed("ggplot2")
+  tt <- quarto_tabset(content = list(a = ggplot2::ggplot()), level = 2L)
+  ff <- format(tt)
+  is_plot <- purrr::map_lgl(ff, function(x) inherits(x, "quarto_plot"))
+  expect_true(any(is_plot))
+  plot_el <- ff[[which(is_plot)[1]]]
+  expect_s3_class(plot_el, "quarto_object")
+  expect_s3_class(plot_el$content, "ggplot")
+})
+
+test_that("quarto_tabset content wrapped in a quarto_plot can be knit-printed", {
+  skip_if_not_installed("ggplot2")
+  tt <- quarto_tabset(content = list(a = ggplot2::ggplot()), level = 2L)
+  expect_no_error(purrr::quietly(knitr::knit_print)(tt))
+})
+
+test_that("protect_angle_brackets escapes '<' and '>'", {
+  expect_equal(
+    quartose:::protect_angle_brackets("a <fct> b"),
+    "a &lt;fct&gt; b"
+  )
+  expect_equal(quartose:::protect_angle_brackets("no brackets"), "no brackets")
+})
+
+test_that("quarto_tabset escapes angle brackets in captured output (#1)", {
+  fake <- structure(list(), class = "quartose_test_fake")
+  registerS3method("print", "quartose_test_fake", function(x, ...) cat("<fct>\n"))
+
+  tt <- quarto_tabset(content = list(a = fake), level = 2L)
+  ff <- format(tt)
+  ff_chr <- unlist(ff[purrr::map_lgl(ff, rlang::is_bare_character)])
+
+  expect_false(any(grepl("<fct>", ff_chr, fixed = TRUE)))
+  expect_true(any(grepl("&lt;fct&gt;", ff_chr, fixed = TRUE)))
 })
 
 test_that("formatted quarto_groups concatenate their formatted constituents", {
