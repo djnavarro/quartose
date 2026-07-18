@@ -239,6 +239,40 @@ test_that("invalid quarto_tabset .name arguments throw errors", {
 
 })
 
+test_that("unnamed quarto_tabset content with no explicit names gets a specific, helpful error", {
+
+  # content unnamed, names omitted entirely: names(content) is NULL, and this
+  # should be diagnosed specifically rather than "names must be a character
+  # vector" (which incorrectly implies the user passed a bad `names` value)
+  expect_error(
+    quarto_tabset(content = list("a", "b"), title = tt, level = ll),
+    regexp = "content has no names"
+  )
+  expect_error(
+    check_args_tabset(content = list("a", "b"), title = tt, level = ll, names = NULL),
+    regexp = "content has no names"
+  )
+
+  # explicitly passing names = NULL is equivalent, since quarto_tabset()
+  # falls back to names(content) either way
+  expect_error(
+    quarto_tabset(content = list("a", "b"), title = tt, level = ll, names = NULL),
+    regexp = "content has no names"
+  )
+
+  # naming the content, or supplying `names` explicitly, both avoid the error
+  expect_no_error(quarto_tabset(content = list(a = "a", b = "b"), title = tt, level = ll))
+  expect_no_error(quarto_tabset(content = list("a", "b"), title = tt, level = ll, names = c("a", "b")))
+
+  # a genuinely wrong-typed `names` still gets the generic type error, not
+  # the "content has no names" message
+  expect_error(
+    quarto_tabset(content = list("this is okay"), title = tt, level = ll, names = 2L),
+    regexp = "names must be a character vector"
+  )
+
+})
+
 test_that("inconsistent .name and content arguments to quarto_tabset throws errors", {
 
   expect_error(quarto_tabset(content = list("this is okay"), title = tt, level = ll, names = c("but this is", "too long")))

@@ -115,16 +115,23 @@ rejected. Tests added to `test-validate.R` covering both the newly-rejected
 element types (numbers, logicals, nested lists, data frames, model objects)
 and the still-valid empty/character/quarto-object cases.
 
-### 3. Unhelpful error when tabset content is unnamed and `names` is omitted
+### 3. Unhelpful error when tabset content is unnamed and `names` is omitted — RESOLVED
 
 Per the docs, `names = NULL` should fall back to `names(content)`. If
 `content` is an unnamed list and `names` isn't supplied, `names(content)` is
-`NULL`, and `check_args_tabset()` then aborts with the generic message
-`"names must be a character vector"` — which doesn't tell the user *why*
+`NULL`, and `check_args_tabset()` used to abort with the generic message
+`"names must be a character vector"` — which didn't tell the user *why*
 (missing names on content, not a type error on an explicit `names` argument).
-Either supply a friendlier error for this specific case, or consider
-generating default tab labels (`"Tab 1"`, `"Tab 2"`, ...) when neither is
-available, and let the user decide which behavior they'd prefer.
+
+Confirmed with the maintainer: keep this a hard error (don't auto-generate
+default labels like `"Tab 1"`, `"Tab 2"`), but make the message specific.
+`check_args_tabset()` now detects the case where `names` is still `NULL` at
+validation time — which, given `quarto_tabset()`'s fallback logic, can only
+happen when the caller didn't supply `names` *and* `content` has no names of
+its own — and raises `"content has no names, and \`names\` was not
+supplied..."` instead of the generic type error. A genuinely wrong-typed
+`names` (e.g. a number or list) still gets the original `"names must be a
+character vector"` message. Tests added to `test-validate.R`.
 
 ### 4. Escaping is one instance of a broader "raw text vs. markup" ambiguity
 

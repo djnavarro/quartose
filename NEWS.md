@@ -17,6 +17,10 @@
   into `quarto_div()` and only fail later inside `format()`. An empty div
   (`content = NULL`, `content = list()`, or `content = character(0)`) is
   still permitted.
+* `quarto_tabset()` now raises a specific error ("content has no names, and
+  `names` was not supplied...") when `content` is unnamed and `names` isn't
+  supplied, instead of the generic (and misleading) "names must be a
+  character vector".
 
 # quartose 0.1.0
 

@@ -14,6 +14,14 @@ check_args_tabset <- function(content, level, title, names) {
     if (!rlang::is_character(title, n = 1)) rlang::abort("title must be a single character string") 
   }
   if (!rlang::is_list(content)) rlang::abort("content must be a list")
+  if (rlang::is_null(names)) {
+    # the only way `names` can still be NULL here is if the caller didn't
+    # supply `names` explicitly *and* `content` has no names of its own
+    # (quarto_tabset() falls back to `names(content)` when `names = NULL`)
+    rlang::abort(
+      "content has no names, and `names` was not supplied. Either provide `names` explicitly, or name the elements of `content` (e.g. `content = list(a = ..., b = ...)`)."
+    )
+  }
   if (!rlang::is_character(names)) rlang::abort("names must be a character vector")
   if (length(content) != length(names)) rlang::abort("content and names must have the same length")
 }
