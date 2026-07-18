@@ -82,3 +82,48 @@ is_quarto <- function(x) {
 is_ggplot <- function(x) {
   inherits(x, "ggplot")  
 }
+
+# patchwork objects subclass ggplot, so is_ggplot() already recognizes them.
+# recordedplot: produced by grDevices::recordPlot() (base R graphics)
+is_recorded_plot <- function(x) {
+  inherits(x, "recordedplot")
+}
+
+# grob: grid graphical objects (the foundation lattice/ggplot2 are built on)
+is_grob <- function(x) {
+  inherits(x, "grob")
+}
+
+# trellis: lattice package plot objects
+is_trellis <- function(x) {
+  inherits(x, "trellis")
+}
+
+# escape hatch: as_quarto_graphic() tags an arbitrary object with this class
+# so it is treated as a graphic even if none of the predicates above
+# recognize it (e.g. a plotting object from a package quartose doesn't
+# know about)
+is_tagged_graphic <- function(x) {
+  inherits(x, "quartose_graphic")
+}
+
+# dispatch table used by is_graphic(): add new predicates here to extend
+# auto-detection to further graphics classes
+graphic_predicates <- list(
+  is_tagged_graphic,
+  is_ggplot,
+  is_recorded_plot,
+  is_grob,
+  is_trellis
+)
+
+#' Is this object recognized as a graphic?
+#'
+#' Generalizes `is_ggplot()` to a small dispatch table covering ggplot2
+#' (and patchwork, which subclasses ggplot2), base R recorded plots
+#' (`grDevices::recordPlot()`), grid grobs, and lattice/trellis objects,
+#' plus anything explicitly tagged via `as_quarto_graphic()`.
+#' @noRd
+is_graphic <- function(x) {
+  any(vapply(graphic_predicates, function(pred) pred(x), logical(1)))
+}

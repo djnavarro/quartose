@@ -195,6 +195,56 @@ if (requireNamespace("ggplot2", quietly = TRUE)) {
   }) 
 }
 
+# is_graphic() generalizes is_ggplot() to a dispatch table covering more
+# graphics classes, plus an explicit tagging escape hatch (issue #2) -------
+
+test_that("is_graphic recognizes recorded plots and grobs", {
+
+  rp <- make_recorded_plot()
+
+  expect_true(is_graphic(rp))
+  expect_true(is_graphic(grid::rectGrob()))
+  expect_false(is_graphic(1:3))
+  expect_false(is_graphic(list("not a graphic")))
+  expect_false(is_graphic(data.frame(x = 1)))
+
+})
+
+if (requireNamespace("ggplot2", quietly = TRUE)) {
+  test_that("is_graphic recognizes ggplot objects", {
+    expect_true(is_graphic(ggplot2::ggplot()))
+  })
+}
+
+if (requireNamespace("lattice", quietly = TRUE)) {
+  test_that("is_graphic recognizes trellis objects", {
+    expect_true(is_graphic(lattice::xyplot(1 ~ 1)))
+  })
+}
+
+if (requireNamespace("patchwork", quietly = TRUE) && requireNamespace("ggplot2", quietly = TRUE)) {
+  test_that("is_graphic recognizes patchwork objects (they subclass ggplot)", {
+    combined <- ggplot2::ggplot() + ggplot2::ggplot()
+    expect_s3_class(combined, "ggplot")
+    expect_true(is_graphic(combined))
+  })
+}
+
+test_that("as_quarto_graphic tags otherwise-unrecognized objects as graphics", {
+
+  obj <- structure(list(), class = "quartose_test_untagged_plot")
+  expect_false(is_graphic(obj))
+
+  tagged <- as_quarto_graphic(obj)
+  expect_true(is_graphic(tagged))
+  expect_s3_class(tagged, "quartose_graphic")
+  expect_s3_class(tagged, "quartose_test_untagged_plot") # original class retained
+
+  # tagging is idempotent
+  expect_equal(class(as_quarto_graphic(tagged)), class(tagged))
+
+})
+
 # check that invalid quarto_section inputs are rejected -----------------------------------
 
 ll <- valid_levels[[1]]

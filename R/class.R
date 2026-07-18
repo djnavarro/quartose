@@ -76,11 +76,13 @@
 #'   plot objects, but functionality may be extended to permit this in future.
 #' - For `quarto_tabset()` the `content` argument *must* be a list. The list 
 #'   elements can be any printable R object: each element of the list will
-#'   appear in its own tab. At present the support for graphics objects is
-#'   limited: ggplot2 objects are captured and will only be rendered when
-#'   `knitr::knit_print()` is called. No attempt is made (as yet!) to support
-#'   other kinds of graphic objects, and if these are passed via the `content`
-#'   argument the function will likely fail.
+#'   appear in its own tab. Several kinds of graphics objects are 
+#'   auto-detected and rendered as images rather than as captured text: 
+#'   ggplot2 (and patchwork, which subclasses ggplot2) objects, base R 
+#'   recorded plots (`grDevices::recordPlot()`), grid grobs, and 
+#'   lattice/trellis objects. If a graphics object from another package 
+#'   isn't auto-detected, wrap it with `as_quarto_graphic()` to force this 
+#'   treatment. Rendering happens when `knitr::knit_print()` is called.
 #' - For `quarto_markdown()` the `content` argument may be a character vector
 #'   or a list of character vectors. The function will throw an error if other
 #'   kinds of objects are passed via `content`.
@@ -287,6 +289,41 @@ quarto_markdown <- function(content, sep = "") {
 
 
 # plots -------------------------------------------------------
+
+#' @title Tag an object as a graphic for `quarto_tabset()`
+#'
+#' @description
+#' `quarto_tabset()` auto-detects several kinds of graphics objects (ggplot2/
+#' patchwork, base R recorded plots, grid grobs, and lattice/trellis objects)
+#' and renders them as images rather than as captured text output. If
+#' `content` includes a graphics object from a package quartose doesn't
+#' know about, wrap it in `as_quarto_graphic()` to force this treatment.
+#'
+#' @param x An object to tag as a graphic.
+#'
+#' @return `x`, with the additional class `"quartose_graphic"` prepended.
+#'
+#' @details
+#' Objects tagged this way are rendered via a generic fallback: a PNG device
+#' is opened and `print(x)` is called on the (untagged) object, on the
+#' assumption that printing it draws a plot to the active graphics device.
+#' This works for many graphics-producing S3 objects but is best-effort;
+#' if `print(x)` doesn't draw anything, the resulting image will be blank.
+#'
+#' @examples
+#' # a hypothetical object whose print method draws a plot, but which
+#' # quartose doesn't otherwise recognize as a graphic
+#' obj <- structure(list(), class = "some_custom_plot_class")
+#' tagged <- as_quarto_graphic(obj)
+#' class(tagged)
+#'
+#' @export
+as_quarto_graphic <- function(x) {
+  if (!inherits(x, "quartose_graphic")) {
+    class(x) <- c("quartose_graphic", class(x))
+  }
+  x
+}
 
 quarto_plot <- function(content) {
   structure(

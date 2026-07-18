@@ -120,13 +120,15 @@ format.quarto_tabset <- function(x, ...) {
 
     out <- c(out, tabname[i])
 
-    # for plot objects, we do no formatting at this stage. all we do
+    # for graphics objects (ggplot2/patchwork, base R recorded plots, grid
+    # grobs, lattice/trellis objects, or anything tagged via
+    # as_quarto_graphic()) we do no formatting at this stage. all we do
     # is wrap them safely within a quarto_* class, so that later on
     # when the print method is called, it is handled as a quarto obj.
     # wrapping in list() here is essential: quarto_plot() is itself a
     # list, so appending it with c() directly would flatten it into
     # `out` and silently strip its class (see PLAN.md).
-    if (is_ggplot(x$content[[i]])) {
+    if (is_graphic(x$content[[i]])) {
       out <- c(out, list(quarto_plot(content = x$content[[i]])))
     
     # for everything else, call knit_print() now in order to produce 
@@ -211,5 +213,33 @@ protect_angle_brackets <- function(x) {
   x <- gsub("<", "&lt;", x, fixed = TRUE)
   x <- gsub(">", "&gt;", x, fixed = TRUE)
   x
+}
+
+# render a graphics object recognized by is_graphic() (other than
+# ggplot/patchwork, which already have their own knit_print rendering) to
+# a temporary PNG file, and return its path. used by knit_print.quarto_plot()
+render_graphic_png <- function(x, width = 7, height = 5, res = 96) {
+  path <- tempfile(fileext = ".png")
+  grDevices::png(path, width = width, height = height, units = "in", res = res)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  draw_graphic(x)
+  path
+}
+
+# draw a recognized graphics object to the currently active device
+draw_graphic <- function(x) {
+  if (inherits(x, "recordedplot")) {
+    grDevices::replayPlot(x)
+  } else if (inherits(x, "grob")) {
+    grid::grid.newpage()
+    grid::grid.draw(x)
+  } else {
+    # trellis objects, and anything tagged via as_quarto_graphic() that
+    # isn't otherwise recognized, are drawn via their own print method.
+    # this is a best-effort fallback: it assumes print(x) draws a plot to
+    # the active device, which is true for many (but not all) S3 objects
+    # that behave like graphics.
+    print(x)
+  }
 }
 

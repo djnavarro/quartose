@@ -92,11 +92,13 @@ not limited to this use case. At present, \code{quarto_div()} cannot handle
 plot objects, but functionality may be extended to permit this in future.
 \item For \code{quarto_tabset()} the \code{content} argument \emph{must} be a list. The list
 elements can be any printable R object: each element of the list will
-appear in its own tab. At present the support for graphics objects is
-limited: ggplot2 objects are captured and will only be rendered when
-\code{knitr::knit_print()} is called. No attempt is made (as yet!) to support
-other kinds of graphic objects, and if these are passed via the \code{content}
-argument the function will likely fail.
+appear in its own tab. Several kinds of graphics objects are
+auto-detected and rendered as images rather than as captured text:
+ggplot2 (and patchwork, which subclasses ggplot2) objects, base R
+recorded plots (\code{grDevices::recordPlot()}), grid grobs, and
+lattice/trellis objects. If a graphics object from another package
+isn't auto-detected, wrap it with \code{as_quarto_graphic()} to force this
+treatment. Rendering happens when \code{knitr::knit_print()} is called.
 \item For \code{quarto_markdown()} the \code{content} argument may be a character vector
 or a list of character vectors. The function will throw an error if other
 kinds of objects are passed via \code{content}.

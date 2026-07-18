@@ -21,6 +21,16 @@
   `names` was not supplied...") when `content` is unnamed and `names` isn't
   supplied, instead of the generic (and misleading) "names must be a
   character vector".
+* `quarto_tabset()` now auto-detects and renders a wider range of graphics
+  objects as images, rather than only ggplot2 (#2): base R recorded plots
+  (`grDevices::recordPlot()`), grid grobs, lattice/trellis objects, and
+  patchwork objects (which subclass ggplot2 and already worked once the
+  `quarto_plot` flattening bug was fixed). Added `as_quarto_graphic()`, an
+  escape hatch that tags an arbitrary object so it is treated as a graphic
+  even when quartose doesn't otherwise recognize its class. This adds
+  `grDevices` and `grid` to `Imports`; both are base R packages bundled
+  with every R installation, so this does not add any new installation
+  burden.
 
 # quartose 0.1.0
 
