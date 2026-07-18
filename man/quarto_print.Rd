@@ -50,6 +50,17 @@ is quite different. The object is first passed to \code{format()}, which
 constructs the required quarto syntax, then the object is printed
 to the document (or console, if called interactively) using the
 appropriate syntax. In this case, the function invisibly returns \code{NULL}.
+
+Note that \code{print()} is console-only: it never writes quarto syntax into
+the rendered document, even when called from within a code chunk. Its
+console summary is written via \code{\link[cli:cli_text]{cli::cli_text()}}, which routes through
+\code{message()} rather than \code{cat()} when not attached to an interactive
+terminal (as is the case during \verb{quarto render}). Some output formats
+hide \code{message}/\code{warning} chunk output by default (e.g. \code{revealjs}
+presentations), so a stray \code{print()} call left in a chunk may appear to
+produce nothing at all under those formats, even though the object was
+evaluated correctly. To emit the actual quarto syntax into the document,
+use \code{knitr::knit_print()} inside a chunk with the \code{results: asis} option.
 }
 \examples{
 # a quarto_section object

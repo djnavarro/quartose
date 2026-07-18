@@ -65,6 +65,17 @@
 #' to the document (or console, if called interactively) using the 
 #' appropriate syntax. In this case, the function invisibly returns `NULL`.
 #' 
+#' Note that `print()` is console-only: it never writes quarto syntax into
+#' the rendered document, even when called from within a code chunk. Its
+#' console summary is written via [cli::cli_text()], which routes through
+#' `message()` rather than `cat()` when not attached to an interactive
+#' terminal (as is the case during `quarto render`). Some output formats
+#' hide `message`/`warning` chunk output by default (e.g. `revealjs`
+#' presentations), so a stray `print()` call left in a chunk may appear to
+#' produce nothing at all under those formats, even though the object was
+#' evaluated correctly. To emit the actual quarto syntax into the document,
+#' use `knitr::knit_print()` inside a chunk with the `results: asis` option.
+#' 
 #' @name quarto_print
 #' 
 #' @aliases 
