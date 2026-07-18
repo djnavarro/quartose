@@ -28,7 +28,17 @@ check_args_div <- function(content, class, sep) {
         rlang::warn("class contains missing values or empty strings")
       }
     }
+  # an empty div (no content supplied) is a deliberate edge case: quarto_div()
+  # wraps a bare `NULL` into `list(NULL)` before this check runs, so it must
+  # be special-cased rather than rejected as "not character/quarto_object"
+  is_empty_div <- length(content) == 0 || (length(content) == 1 && rlang::is_null(content[[1]]))
+  if (!is_empty_div) {
+    is_valid <- purrr::map_lgl(content, function(x) rlang::is_character(x) || is_quarto(x))
+    if (!all(is_valid)) {
+      rlang::abort("all elements of content must be character vectors or quarto objects")
+    }
   }
+}
 
 check_args_span <- function(content, class, sep) {
   if (!rlang::is_character(content)) rlang::abort("content must be a character vector")

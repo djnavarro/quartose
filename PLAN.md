@@ -103,16 +103,17 @@ deliberate contract. Any refactor of the graphics-capture path (needed for
 `knit_print.quarto_plot()` methods so the dispatch is intentional rather than
 coincidental.
 
-### 2. `quarto_div()` content is essentially unvalidated
+### 2. `quarto_div()` content is essentially unvalidated — RESOLVED
 
-`check_args_div()` (`R/validate.R:23-31`) takes a `content` argument but never
-uses it — contrast with `check_args_group()` and `check_args_markdown()`,
-which both verify every element is of an appropriate type. In practice this
-means passing an unsupported object (e.g. a bare list, a model object, `NULL`
-elements mixed with strings) into `quarto_div()` won't fail until `format()`
-is called deep inside `format_elements()`, producing a confusing error far
-from the point of misuse. Worth aligning `quarto_div()` validation with the
-pattern already used for `quarto_group()`/`quarto_markdown()`.
+~~`check_args_div()` (`R/validate.R:23-31`) takes a `content` argument but
+never uses it~~ — `check_args_div()` now checks that every element of
+`content` is either a character vector or a `quarto_object`, mirroring
+`check_args_group()`/`check_args_markdown()`. An empty div (`content = NULL`,
+`list()`, or `character(0)`) remains a supported edge case (see the existing
+"divs can be pretty flexible" test intent) and is special-cased rather than
+rejected. Tests added to `test-validate.R` covering both the newly-rejected
+element types (numbers, logicals, nested lists, data frames, model objects)
+and the still-valid empty/character/quarto-object cases.
 
 ### 3. Unhelpful error when tabset content is unnamed and `names` is omitted
 
