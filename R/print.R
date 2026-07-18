@@ -112,6 +112,12 @@ knit_print.quarto_object <- function(x, ...) {
   return(invisible(NULL))
 }
 
+#' @noRd
+#' @exportS3Method knitr::knit_print
+knit_print.quarto_plot <- function(x, ...) {
+  knitr::knit_print(x$content, ...)
+}
+
 #' @rdname quarto_print
 #' @exportS3Method base::print
 print.quarto_object <- function(x, ...) {
