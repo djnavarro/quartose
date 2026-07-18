@@ -333,8 +333,23 @@ test_that("invalid quarto_span sep arguments throw errors", {
 
 test_that("invalid quarto_div content arguments throw errors", {
 
-  # divs can be pretty flexible actually, e.g.,
+  # an empty div (no content) is a deliberate edge case, not an error
+  expect_no_error(check_args_div(content = list(NULL), class = cl, sep = ss))
   expect_no_error(quarto_div(content = NULL, class = cl, sep = ss))
+  expect_no_error(quarto_div(content = list(), class = cl, sep = ss))
+  expect_no_error(quarto_div(content = character(0L), class = cl, sep = ss))
+
+  # but elements that are neither character vectors nor quarto objects
+  # should be rejected, mirroring check_args_group()/check_args_markdown()
+  expect_error(quarto_div(content = list(2L), class = cl, sep = ss))
+  expect_error(quarto_div(content = list(TRUE), class = cl, sep = ss))
+  expect_error(quarto_div(content = list(list("no lists of lists")), class = cl, sep = ss))
+  expect_error(quarto_div(content = list(data.frame(x = 1)), class = cl, sep = ss))
+  expect_error(quarto_div(content = list("this is fine", 2L), class = cl, sep = ss))
+  expect_error(quarto_div(content = lm(Sepal.Length ~ Sepal.Width, iris), class = cl, sep = ss))
+
+  # character vectors and quarto objects (even mixed) remain valid
+  expect_no_error(quarto_div(content = list("this is fine", q_span), class = cl, sep = ss))
 
 })
 
