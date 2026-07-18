@@ -13,9 +13,60 @@ Last reviewed: 2026-07-19.
 | [#1](https://github.com/djnavarro/quartose/issues/1) | protect "<" and ">" characters in HTML output | bug | Confirmed reproducible (see below). Highest priority — silent output corruption. |
 | [#2](https://github.com/djnavarro/quartose/issues/2) | support wider range of graphics objects | enhancement | Only `ggplot` objects are special-cased via `is_ggplot()`. Base R plots, grid grobs, lattice/trellis, patchwork, etc. are unsupported and will "likely fail" per the `class.R` docs. Also requests a user-facing way to tag an object as graphics. |
 | [#3](https://github.com/djnavarro/quartose/issues/3) | allow graphics objects within divs | enhancement | `format.quarto_div()` always coerces content via `paste()`/`unlist()`; no plot-capture path exists for divs at all (only tabsets have one). |
-| [#4](https://github.com/djnavarro/quartose/issues/4) | quartose and revealjs format | bug (unconfirmed) | Reporter says quartose output isn't evaluated properly under `format: revealjs`. Not yet reproduced/diagnosed — needs investigation before it's clear whether this is a quartose bug, a Quarto/pandoc revealjs limitation, or a usage issue (e.g. chunk not marked `results: asis`). |
+| [#4](https://github.com/djnavarro/quartose/issues/4) | quartose and revealjs format | not a quartose bug (diagnosed) | Reproduced and root-caused — see below. No code fix needed in `format.R`/`print.R`; the correct usage pattern already works under revealjs. A doc clarification is worth making. |
 
 There are no open pull requests.
+
+## Issue #4 diagnosis (revealjs)
+
+Reproduced locally with `quarto` 1.5.52 using the reporter's exact example
+(`quarto_tabset()` + `print(tabs)`, `format: revealjs`, no `results: asis`).
+Three follow-up experiments isolate the cause:
+
+1. **The reporter's exact repro** — a chunk that builds a `quarto_tabset()`
+   and calls `print(tabs)` (not `knitr::knit_print()`), with no
+   `results: asis` — renders a completely empty slide under `revealjs`: no
+   `cell`/`cell-output` div at all makes it into the HTML.
+2. Rendering the *same* chunk to plain `format: html` **does** show output —
+   a `cell-output-stderr` block containing the `print.quarto_object()`
+   summary (`<quarto_tabset>`, `• content: <list>`, ...). This shows the
+   content isn't failing to evaluate; it's specifically absent under
+   revealjs.
+3. Isolating further: a chunk with `cat()`/`print()` (stdout) and
+   `message()`/`warning()` (stderr) shows the stdout lines under revealjs's
+   defaults, but the stderr lines are missing entirely — until they're
+   force-enabled with `#| message: true` / `#| warning: true`, at which
+   point they render identically to `html`. So **revealjs's default execute
+   options suppress message/warning-stream chunk output**, while `html`'s
+   defaults show it.
+4. `print.quarto_object()` builds its console summary with
+   `cli::cli_text()`/`cli::cli_ul()`. `cli` routes output through
+   `message()` (not `cat()`/stdout) when not attached to an interactive
+   terminal — which is exactly the case during a `quarto render`. That's why
+   the reporter's `print(tabs)` call vanished under revealjs but was visible
+   under `html`.
+5. Separately, and more importantly: the actual document-generation path
+   (`quarto_tabset()` + `knitr::knit_print()` inside a `results: asis`
+   chunk) was tested directly under `revealjs` and rendered correctly —
+   `panel-tabset` markup, section title, and tab names all present in the
+   output HTML.
+
+**Conclusion:** this is not a bug in quartose's syntax generation. It's a
+combination of (a) the reporter using `print()`, which by design only
+produces a console summary and was never intended to write to the document
+(see `?quarto_print`), and (b) that console summary happening to be
+invisible on revealjs specifically because of `cli`'s message-stream routing
+combined with revealjs's default `warning`/`message` suppression — a
+Quarto/`cli` interaction unrelated to quartose's own code. No `format.R`/
+`print.R` fix is planned for this. Suggested follow-ups (not yet done,
+pending maintainer input):
+
+- Reply on #4 explaining the diagnosis above and pointing to
+  `knitr::knit_print()` + `results: asis` as the correct pattern.
+- Consider a small doc clarification in `?quarto_print`/README noting that
+  `print()` output is console-only and, on some renderers (e.g. revealjs),
+  may not appear at all if debugging via `print()` mid-render — use
+  `knitr::knit_print()` for the actual document output.
 
 ## Additional weaknesses found during code review
 
