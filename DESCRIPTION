@@ -25,9 +25,14 @@ Suggests:
     ggplot2,
     lattice,
     patchwork,
+    pkgdown,
     quarto,
     rmarkdown,
     spelling,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    waeponwifestre
+Remotes:
+    djnavarro/waeponwifestre
 Config/testthat/edition: 3
+Config/Needs/website: djnavarro/waeponwifestre
 Language: en-US
