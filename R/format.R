@@ -34,6 +34,22 @@
 #' yet been rendered. The resulting representation isn't always
 #' very pretty, though it is generally fairly readable. 
 #' 
+#' **Escaping policy.** `quarto_tabset()` is the one constructor that
+#' accepts arbitrary R objects as `content` and captures their default
+#' printed representation (via `knitr::knit_print()`/`capture.output()`)
+#' to display inside each tab. That captured text may incidentally contain
+#' `<` or `>` (for example, a tibble's `<fct>` column-type tag), which
+#' would otherwise be parsed as an unrecognized HTML tag by quarto/pandoc
+#' and silently dropped from the rendered document. To prevent this,
+#' `format.quarto_tabset()` escapes `<` and `>` to `&lt;`/`&gt;` in that
+#' captured text before it is written out. This escaping is applied only
+#' to captured object output, not to markup the user intentionally wrote
+#' themselves: `quarto_span()` and `quarto_div()` content is restricted by
+#' validation to character vectors, quarto objects, or graphics objects
+#' (never arbitrary captured print output), and `quarto_markdown()` is
+#' explicitly meant to carry raw markdown/HTML through untouched — none of
+#' these are escaped.
+#' 
 #' @name quarto_format
 #' 
 #' @aliases 

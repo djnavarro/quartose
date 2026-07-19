@@ -55,6 +55,22 @@ formatted version of a quarto object is a string or a list of
 strings, but it may also include plot objects that have not
 yet been rendered. The resulting representation isn't always
 very pretty, though it is generally fairly readable.
+
+\strong{Escaping policy.} \code{quarto_tabset()} is the one constructor that
+accepts arbitrary R objects as \code{content} and captures their default
+printed representation (via \code{knitr::knit_print()}/\code{capture.output()})
+to display inside each tab. That captured text may incidentally contain
+\code{<} or \code{>} (for example, a tibble's \verb{<fct>} column-type tag), which
+would otherwise be parsed as an unrecognized HTML tag by quarto/pandoc
+and silently dropped from the rendered document. To prevent this,
+\code{format.quarto_tabset()} escapes \code{<} and \code{>} to \verb{&lt;}/\verb{&gt;} in that
+captured text before it is written out. This escaping is applied only
+to captured object output, not to markup the user intentionally wrote
+themselves: \code{quarto_span()} and \code{quarto_div()} content is restricted by
+validation to character vectors, quarto objects, or graphics objects
+(never arbitrary captured print output), and \code{quarto_markdown()} is
+explicitly meant to carry raw markdown/HTML through untouched — none of
+these are escaped.
 }
 \examples{
 # formatted sections, spans and divs ----------------------------------

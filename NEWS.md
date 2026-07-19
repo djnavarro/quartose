@@ -3,7 +3,11 @@
 * Fixed a bug where `format.quarto_tabset()` did not escape `<`/`>` in
   captured output from arbitrary R objects (e.g. a tibble's `<fct>`
   column-type tag), which could be parsed as an unknown HTML tag by
-  quarto/pandoc (#1).
+  quarto/pandoc (#1). `?quarto_format` now documents the resulting escaping
+  policy: only `quarto_tabset()`'s captured object output is escaped this
+  way; `quarto_span()`/`quarto_div()` content is validated rather than
+  captured, and `quarto_markdown()` passes raw markup through untouched by
+  design.
 * Fixed a bug where the internal `quarto_plot` wrapper used to capture
   ggplot2 objects inside `quarto_tabset()` had its class silently stripped
   by `c()`-based list flattening in `format.quarto_tabset()`. Plot capture
