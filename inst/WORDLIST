@@ -1,6 +1,8 @@
 CMD
 Codecov
 Lifecycle
+Sasaki
+Yusuke
 asis
 callout
 callouts
@@ -8,7 +10,14 @@ divs
 djnavarro
 ggplot
 knitr
+pandoc
 pkgdown
+qreport
+quartabs
+quartose's
+reflowed
+roxygen
 tabset
 tabsets
+tibble's
 untagged

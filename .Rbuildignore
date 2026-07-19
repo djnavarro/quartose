@@ -13,3 +13,5 @@
 ^vignettes$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
+^AGENTS\.md$
+^PLAN\.md$
