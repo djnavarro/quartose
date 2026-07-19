@@ -12,7 +12,7 @@ Last reviewed: 2026-07-19.
 |---|-------|------|-------|
 | [#1](https://github.com/djnavarro/quartose/issues/1) | protect "<" and ">" characters in HTML output | bug | Confirmed reproducible (see below). Highest priority — silent output corruption. |
 | [#2](https://github.com/djnavarro/quartose/issues/2) | support wider range of graphics objects | enhancement | RESOLVED for `quarto_tabset()` — see remediation step 5 below. `is_graphic()` now covers ggplot2/patchwork, recorded plots, grobs, and trellis objects, plus the `as_quarto_graphic()` tagging escape hatch. Divs still don't support graphics at all (#3) — that's a separate, still-open follow-up (step 6). |
-| [#3](https://github.com/djnavarro/quartose/issues/3) | allow graphics objects within divs | enhancement | `format.quarto_div()` always coerces content via `paste()`/`unlist()`; no plot-capture path exists for divs at all (only tabsets have one). |
+| [#3](https://github.com/djnavarro/quartose/issues/3) | allow graphics objects within divs | enhancement | RESOLVED — see remediation step 6 below. `check_args_div()`/`format.quarto_div()` now reuse `is_graphic()`/the `quarto_plot` rendering path from step 5. |
 | [#4](https://github.com/djnavarro/quartose/issues/4) | quartose and revealjs format | not a quartose bug (diagnosed) | Reproduced and root-caused — see below. No code fix needed in `format.R`/`print.R`; the correct usage pattern already works under revealjs. A doc clarification is worth making. |
 
 There are no open pull requests.
@@ -189,10 +189,19 @@ leave `quarto_markdown()` untouched) rather than patching only the literal
    burden. Added the user-tagging escape hatch requested in the issue:
    `as_quarto_graphic()`, a helper users can wrap objects in when
    auto-detection fails.
-6. **#3 — graphics in divs.** Once the tabset graphics-capture path is
-   generalized (step 5), reuse the same helper in `format.quarto_div()` so
-   divs can contain plots the way tabsets can. Update `class.R` docs, which
-   currently state plots in divs are unsupported.
+6. **#3 — graphics in divs — RESOLVED.** `check_args_div()` now accepts
+   content elements recognized by `is_graphic()` (in addition to character
+   vectors and quarto objects), and `format.quarto_div()` wraps them in
+   `quarto_plot()` the same way `format.quarto_tabset()` does. Since most
+   divs contain no graphics, `format.quarto_div()` keeps returning a single
+   string in that case (preserving the pre-existing contract and all
+   existing tests); it only switches to list output (strings + plot
+   objects, exactly like `quarto_tabset()`) when `content` includes a
+   recognized graphic. Updated the `class.R`/`format.R` docs, which
+   previously stated plots in divs are unsupported. Tests added to
+   `test-validate.R` (content validation) and `test-format.R` (both
+   return-type cases, mixed text/graphic ordering, the `as_quarto_graphic()`
+   escape hatch, and `knit_print()`).
 
 ### Phase 3 — investigation (unscheduled until reproduced)
 

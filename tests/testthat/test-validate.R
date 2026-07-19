@@ -437,6 +437,24 @@ test_that("invalid quarto_div content arguments throw errors", {
 
 })
 
+test_that("quarto_div content accepts graphics objects recognized by is_graphic (#3)", {
+
+  rp <- make_recorded_plot()
+
+  expect_no_error(quarto_div(content = list(rp), class = cl, sep = ss))
+  expect_no_error(quarto_div(content = list(grid::rectGrob()), class = cl, sep = ss))
+  expect_no_error(quarto_div(content = list("caption", rp), class = cl, sep = ss))
+
+  obj <- structure(list(), class = "quartose_test_untagged_plot_for_div")
+  expect_error(quarto_div(content = list(obj), class = cl, sep = ss))
+  expect_no_error(quarto_div(content = list(as_quarto_graphic(obj)), class = cl, sep = ss))
+
+  if (requireNamespace("ggplot2", quietly = TRUE)) {
+    expect_no_error(quarto_div(content = list(ggplot2::ggplot()), class = cl, sep = ss))
+  }
+
+})
+
 
 test_that("invalid quarto_span content arguments throw errors", {
 

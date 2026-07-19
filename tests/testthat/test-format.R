@@ -412,6 +412,85 @@ test_that("as_quarto_graphic() lets an unrecognized graphics object be captured 
 
 })
 
+# graphics support in quarto_div() (issue #3) -------------------------------
+
+test_that("quarto_div without graphics still formats to a single string", {
+  dd <- quarto_div(content = list("plain text", "more text"), sep = " ")
+  ff <- format(dd)
+  expect_true(rlang::is_character(ff))
+  expect_length(ff, 1L)
+})
+
+test_that("quarto_div wraps recorded plots and grobs in quarto_plot, like quarto_tabset", {
+
+  rp <- make_recorded_plot()
+
+  dd <- quarto_div(content = list(rp, grid::rectGrob()), sep = " ")
+  ff <- format(dd)
+
+  expect_true(rlang::is_list(ff))
+  is_plot <- purrr::map_lgl(ff, function(x) inherits(x, "quarto_plot"))
+  expect_equal(sum(is_plot), 2L)
+
+  plot_els <- ff[is_plot]
+  expect_s3_class(plot_els[[1]]$content, "recordedplot")
+  expect_s3_class(plot_els[[2]]$content, "grob")
+
+  # div open/close markup still bookends the list
+  expect_true(grepl("^\n\n::: \\{", ff[[1]]))
+  expect_true(grepl("\n\n:::\n\n$", ff[[length(ff)]]))
+
+})
+
+test_that("a mix of text and a graphic in a quarto_div formats to a list, in order", {
+
+  rp <- make_recorded_plot()
+
+  dd <- quarto_div(content = list("before", rp, "after"), sep = " | ")
+  ff <- format(dd)
+
+  is_plot <- purrr::map_lgl(ff, function(x) inherits(x, "quarto_plot"))
+  expect_equal(sum(is_plot), 1L)
+
+  ff_chr <- unlist(ff[!is_plot])
+  expect_true(any(grepl("before", ff_chr, fixed = TRUE)))
+  expect_true(any(grepl("after", ff_chr, fixed = TRUE)))
+  expect_true(any(grepl("\\|", ff_chr))) # the separator appears between elements
+
+})
+
+test_that("a quarto_div containing a graphic can be knit-printed", {
+  rp <- make_recorded_plot()
+  dd <- quarto_div(content = list("caption", rp), sep = " ")
+  expect_no_error(purrr::quietly(knitr::knit_print)(dd))
+})
+
+test_that("as_quarto_graphic() lets an unrecognized graphics object be captured in a div", {
+
+  obj <- structure(list(), class = "quartose_test_baseplot_div")
+  registerS3method("print", "quartose_test_baseplot_div", function(x, ...) plot(1:3))
+
+  dd <- quarto_div(content = list(as_quarto_graphic(obj)))
+  ff <- format(dd)
+  is_plot <- purrr::map_lgl(ff, function(x) inherits(x, "quarto_plot"))
+
+  expect_true(any(is_plot))
+  expect_s3_class(ff[[which(is_plot)[1]]]$content, "quartose_graphic")
+  expect_no_error(purrr::quietly(knitr::knit_print)(dd))
+
+})
+
+if (requireNamespace("ggplot2", quietly = TRUE)) {
+  test_that("ggplot objects in a div are handled via the existing ggplot path", {
+    dd <- quarto_div(content = list(ggplot2::ggplot()))
+    ff <- format(dd)
+    is_plot <- purrr::map_lgl(ff, function(x) inherits(x, "quarto_plot"))
+    expect_true(any(is_plot))
+    expect_s3_class(ff[[which(is_plot)[1]]]$content, "ggplot")
+    expect_no_error(purrr::quietly(knitr::knit_print)(dd))
+  })
+}
+
 test_that("formatted quarto_groups concatenate their formatted constituents", {
   for(i in seq_along(test_groups)) {
     gg <- test_groups[[i]]

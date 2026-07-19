@@ -19,9 +19,10 @@
 #' and `quarto_markdown` objects, the formatted output is always a
 #' string (character vector of length 1). For `quarto_tabset` and
 #' `quarto_group` objects, the output is always a list whose elements
-#' are either strings or plot objects. For `quarto_div` objects,
-#' the output is currently a string, but this may change to list 
-#' output in future if divs are permitted to contain plots. 
+#' are either strings or plot objects. For `quarto_div` objects, the
+#' output is a string unless `content` includes a graphics object, in
+#' which case it is a list whose elements are either strings or plot
+#' objects, exactly as for `quarto_tabset`.
 #'  
 #' @details
 #' The intent behind the `format()` methods for quarto objects
@@ -156,13 +157,41 @@ format.quarto_tabset <- function(x, ...) {
 #' @exportS3Method base::format
 format.quarto_div <- function(x, ...) {
 
-  div_body <- format_elements(x$content)
-  div_body <- paste(unlist(div_body), collapse = x$sep)
-  
+  has_graphic <- any(purrr::map_lgl(x$content, is_graphic))
+
+  if (has_graphic) {
+    # mirrors format.quarto_tabset(): graphics objects are wrapped in
+    # quarto_plot() and kept as list elements (not pasted into a string)
+    # so that knit_print.quarto_object() can render them later. wrapping
+    # in list() is essential here for the same reason it is in
+    # format.quarto_tabset() -- see the comment there.
+    n <- length(x$content)
+    div_body <- list()
+    for (i in seq_len(n)) {
+      el <- x$content[[i]]
+      if (is_graphic(el)) {
+        div_body <- c(div_body, list(quarto_plot(content = el)))
+      } else {
+        div_body <- c(div_body, format(el))
+      }
+      if (i < n) div_body <- c(div_body, x$sep)
+    }
+  } else {
+    div_body <- format_elements(x$content)
+    div_body <- paste(unlist(div_body), collapse = x$sep)
+  }
+
   if (is.null(x$class) | !length(x$class)) x$class <- "quartose-null"
   css_info <- paste(".", x$class, sep = "", collapse = " ")
   div_open <- paste("\n\n::: {", css_info, "}\n\n", sep = "", collapse = " ")
   div_shut <- "\n\n:::\n\n"
+
+  # only when the div contains a graphic does format() return a list
+  # (mixed strings and quarto_plot objects) instead of a single string;
+  # this matches the documented contract in ?quarto_format
+  if (has_graphic) {
+    return(c(list(div_open), div_body, list(div_shut)))
+  }
 
   div <- paste(div_open, div_body, div_shut)
   return(div)
