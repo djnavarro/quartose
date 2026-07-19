@@ -30,10 +30,7 @@ Suggests:
     quarto,
     rmarkdown,
     spelling,
-    testthat (>= 3.0.0),
-    waeponwifestre
-Remotes:
-    djnavarro/waeponwifestre
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Config/Needs/website: djnavarro/waeponwifestre
 Language: en-US
