@@ -109,13 +109,7 @@
 #' 
 #' @name quarto_object
 #' 
-#' @aliases 
-#' quarto_div
-#' quarto_span
-#' quarto_tabset
-#' quarto_section
-#' quarto_group
-#' quarto_markdown
+#' @aliases quarto_div quarto_span quarto_tabset quarto_section quarto_group quarto_markdown
 #' 
 #' @examples
 #' # quarto_section ------------------------------------------------------

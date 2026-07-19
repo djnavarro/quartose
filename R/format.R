@@ -52,14 +52,7 @@
 #' 
 #' @name quarto_format
 #' 
-#' @aliases 
-#' format.quarto_object
-#' format.quarto_div
-#' format.quarto_span
-#' format.quarto_tabset
-#' format.quarto_section
-#' format.quarto_group
-#' format.quarto_markdown
+#' @aliases format.quarto_object format.quarto_div format.quarto_span format.quarto_tabset format.quarto_section format.quarto_group format.quarto_markdown
 #' 
 #' @examples
 #' # formatted sections, spans and divs ----------------------------------

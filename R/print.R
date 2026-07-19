@@ -78,21 +78,7 @@
 #' 
 #' @name quarto_print
 #' 
-#' @aliases 
-#' print.quarto_object
-#' print.quarto_div
-#' print.quarto_span
-#' print.quarto_tabset
-#' print.quarto_section
-#' print.quarto_group
-#' print.quarto_markdown
-#' knit_print.quarto_object
-#' knit_print.quarto_div
-#' knit_print.quarto_span
-#' knit_print.quarto_tabset
-#' knit_print.quarto_section
-#' knit_print.quarto_group
-#' knit_print.quarto_markdown
+#' @aliases print.quarto_object print.quarto_div print.quarto_span print.quarto_tabset print.quarto_section print.quarto_group print.quarto_markdown knit_print.quarto_object knit_print.quarto_div knit_print.quarto_span knit_print.quarto_tabset knit_print.quarto_section knit_print.quarto_group knit_print.quarto_markdown
 #' 
 #' @examples
 #' # a quarto_section object
