@@ -22,6 +22,7 @@ Imports:
     rlang,
     utils
 Suggests: 
+    dplyr,
     ggplot2,
     lattice,
     patchwork,
