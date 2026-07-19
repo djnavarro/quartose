@@ -104,6 +104,17 @@ knitr::knit_print(tabs)
 #> 
 ```
 
+Note the distinction between the two: `print()` is console-only and
+never writes quarto syntax into a rendered document, even when called
+from inside a code chunk; use `knitr::knit_print()` in a chunk with
+`#| results: asis` to actually emit the syntax. This matters in practice
+because the console summary produced by `print()` is written via `cli`,
+which routes through `message()` when not attached to an interactive
+terminal (as during `quarto render`) — and some formats
+(e.g. `revealjs`) suppress `message`/`warning` chunk output by default,
+so a stray `print()` left in a chunk can silently produce nothing under
+those formats even though it evaluated correctly.
+
 ## Related work
 
 It is of course inevitable that the moment you start work on something
