@@ -1,0 +1,161 @@
+# quartose
+
+When analyzing data sets in R, it is often convenient to wrap the
+analysis within a quarto document for reporting purposes: containing all
+the analysis components within a single easy-to-navigate HTML document
+is generally a kindness for the reader. One consequence of this is that
+sometimes you find yourself wanting to write code within an R code chunk
+that will generate parts of the quarto document for you. For instance,
+when iterating over many analyses within a single R chunk, you might
+want to have that chunk generate the quarto section headers, tabsets and
+so on. This is possible because the knitr engine (which evaluates the R
+code chunks) allows you to generate “asis” output that will later be
+captured by the quarto parser; if such output is formatted to look like
+correct quarto syntax, it will be captured and translated to the
+appropriate HTML.
+
+The purpose of the quartose package is to provide some helper functions
+to make this task a little easier. The reason for writing it is that
+while it is conceptually straightforward to generate quarto syntax
+within R, there are some practical issues in juggling knitr, quarto, and
+R all at once if you want the resulting document to look clean. The goal
+in writing the quartose package is to handle some of those niceties,
+making it a little easier to work programmatically within quarto
+documents.
+
+## Installation
+
+You can install the development version of quartose from
+[GitHub](https://github.com/) with:
+
+``` r
+
+# install.packages("pak")
+pak::pak("djnavarro/quartose")
+```
+
+## Example
+
+The core idea is illustrated with this example:
+
+``` r
+
+library(quartose)
+
+# define a quarto tabset
+tabs <- quarto_tabset(
+  content = list(tab1 = 1:5, tab2 = "hello"), 
+  title = "My tabs", 
+  level = 2
+)
+
+# base::print() outputs a simple summary
+print(tabs)
+#> <quarto_tabset>
+#> • content: <list>
+#> • title: My tabs
+#> • names: tab1 tab2
+#> • level: 2
+
+# knitr::knit_print() outputs quarto syntax
+knitr::knit_print(tabs)
+#> 
+#> 
+#> ## My tabs
+#> 
+#>  
+#> 
+#> 
+#> ::: {.panel-tabset}
+#> 
+#>  
+#> 
+#> 
+#> ### tab1
+#> 
+#>  
+#> <pre> 
+#> [1] 1 2 3 4 5 
+#> </pre> 
+#> 
+#> 
+#> ### tab2
+#> 
+#>  
+#> <pre> 
+#> [1] "hello" 
+#> </pre> 
+#> 
+#> 
+#> ::: 
+#> 
+#> 
+```
+
+Note the distinction between the two:
+[`print()`](https://rdrr.io/r/base/print.html) is console-only and never
+writes quarto syntax into a rendered document, even when called from
+inside a code chunk; use
+[`knitr::knit_print()`](https://rdrr.io/pkg/knitr/man/knit_print.html)
+in a chunk with `#| results: asis` to actually emit the syntax. This
+matters in practice because the console summary produced by
+[`print()`](https://rdrr.io/r/base/print.html) is written via `cli`,
+which routes through [`message()`](https://rdrr.io/r/base/message.html)
+when not attached to an interactive terminal (as during `quarto render`)
+— and some formats (e.g. `revealjs`) suppress `message`/`warning` chunk
+output by default, so a stray
+[`print()`](https://rdrr.io/r/base/print.html) left in a chunk can
+silently produce nothing under those formats even though it evaluated
+correctly.
+
+## Related work
+
+It is of course inevitable that the moment you start work on something
+and talk to people about it, it turns out that other people have done
+similar work. So far I’ve discovered two other approaches to the
+problem. They’re not identical or equivalent to what I’m attempting to
+do here, but they’re definitely thinking about the same ideas. To that
+end, I’d encourage anyone thinking about quartose to also look into
+these packages:
+
+- The [quartabs](https://github.com/sayuks/quartabs) package, by Sasaki
+  Yusuke
+- The [qreport](https://hbiostat.org/r/qreport/) package, by Frank
+  Harrell
+
+# Package index
+
+## Specifying quarto objects
+
+- [`quarto_section()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  [`quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  [`quarto_div()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  [`quarto_span()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  [`quarto_group()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  [`quarto_markdown()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  : Dynamically generate quarto syntax
+
+- [`as_quarto_graphic()`](https://quartose.djnavarro.net/reference/as_quarto_graphic.md)
+  :
+
+  Tag an object as a graphic for
+  [`quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+
+## Formatting and printing quarto objects
+
+- [`format(`*`<quarto_section>`*`)`](https://quartose.djnavarro.net/reference/quarto_format.md)
+  [`format(`*`<quarto_tabset>`*`)`](https://quartose.djnavarro.net/reference/quarto_format.md)
+  [`format(`*`<quarto_div>`*`)`](https://quartose.djnavarro.net/reference/quarto_format.md)
+  [`format(`*`<quarto_span>`*`)`](https://quartose.djnavarro.net/reference/quarto_format.md)
+  [`format(`*`<quarto_markdown>`*`)`](https://quartose.djnavarro.net/reference/quarto_format.md)
+  [`format(`*`<quarto_group>`*`)`](https://quartose.djnavarro.net/reference/quarto_format.md)
+  : Format a quarto object
+- [`knit_print(`*`<quarto_object>`*`)`](https://quartose.djnavarro.net/reference/quarto_print.md)
+  [`print(`*`<quarto_object>`*`)`](https://quartose.djnavarro.net/reference/quarto_print.md)
+  : Print a quarto object
+
+# Articles
+
+### All vignettes
+
+- [quartose](https://quartose.djnavarro.net/articles/quartose.md):
