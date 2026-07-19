@@ -31,6 +31,11 @@
   `grDevices` and `grid` to `Imports`; both are base R packages bundled
   with every R installation, so this does not add any new installation
   burden.
+* `quarto_div()` now supports graphics objects in `content` (#3), using the
+  same detection and rendering machinery as `quarto_tabset()`. `format()`
+  returns a single string as before when `content` has no graphics
+  objects, and a list (mixing strings and plot objects, as `quarto_tabset()`
+  already does) when it does.
 
 # quartose 0.1.0
 

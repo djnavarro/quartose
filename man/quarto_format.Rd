@@ -33,9 +33,10 @@ A formatted quarto object. For \code{quarto_section}, \code{quarto_span},
 and \code{quarto_markdown} objects, the formatted output is always a
 string (character vector of length 1). For \code{quarto_tabset} and
 \code{quarto_group} objects, the output is always a list whose elements
-are either strings or plot objects. For \code{quarto_div} objects,
-the output is currently a string, but this may change to list
-output in future if divs are permitted to contain plots.
+are either strings or plot objects. For \code{quarto_div} objects, the
+output is a string unless \code{content} includes a graphics object, in
+which case it is a list whose elements are either strings or plot
+objects, exactly as for \code{quarto_tabset}.
 }
 \description{
 Creates a formatted representation of a quarto object in a
