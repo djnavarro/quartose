@@ -1,11 +1,13 @@
-# Tag an object as a graphic for `quarto_tabset()`
+# Tag an object as a graphic for `quarto_tabset()`/`quarto_div()`
 
 [`quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_object.md)
-auto-detects several kinds of graphics objects (ggplot2/ patchwork, base
-R recorded plots, grid grobs, and lattice/trellis objects) and renders
-them as images rather than as captured text output. If `content`
-includes a graphics object from a package quartose doesn't know about,
-wrap it in `as_quarto_graphic()` to force this treatment.
+and
+[`quarto_div()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+auto-detect several kinds of graphics objects (ggplot2/patchwork, base R
+recorded plots, grid grobs, and lattice/trellis objects) and render them
+as images rather than as captured text output. If `content` includes a
+graphics object from a package quartose doesn't know about, wrap it in
+`as_quarto_graphic()` to force this treatment.
 
 ## Usage
 

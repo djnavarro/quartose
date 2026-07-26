@@ -1,6 +1,6 @@
 # Changelog
 
-## quartose (development version)
+## quartose 0.2.0
 
 - Fixed a bug where
   [`format.quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_format.md)
@@ -72,4 +72,45 @@
 
 CRAN release: 2025-07-09
 
-- Initial CRAN submission.
+- Initial CRAN submission. This release establishes the core design that
+  later versions build on: constructors validate and store their
+  arguments unprocessed (`R/class.R`), `format.<class>()` methods turn a
+  stored object into Quarto syntax on demand (`R/format.R`), and a
+  shared
+  [`print.quarto_object()`](https://quartose.djnavarro.net/reference/quarto_print.md)/[`knit_print.quarto_object()`](https://quartose.djnavarro.net/reference/quarto_print.md)
+  pair (`R/print.R`) gives a human-readable console summary via
+  [`print()`](https://rdrr.io/r/base/print.html) and emits the actual
+  Quarto markup via [`cat()`](https://rdrr.io/r/base/cat.html) when
+  [`knitr::knit_print()`](https://rdrr.io/pkg/knitr/man/knit_print.html)
+  is called inside a `results: asis` chunk.
+- Provides six constructors, all returning an object with parent S3
+  class `quarto_object` plus a class-specific subclass:
+  [`quarto_section()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  for headers;
+  [`quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  for tabsets, with optional section title and manual tab naming via
+  `names`;
+  [`quarto_div()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  and
+  [`quarto_span()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  for divs and spans with CSS classes;
+  [`quarto_markdown()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  for passing raw markdown/character content through untouched; and
+  [`quarto_group()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  for bundling several quarto objects so they print together.
+- [`quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  content can include ggplot2 objects: these are captured and rendered
+  only when
+  [`knit_print()`](https://rdrr.io/pkg/knitr/man/knit_print.html) is
+  called, via an internal `quarto_plot` wrapper.
+  [`quarto_div()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  does not yet support plot content.
+- Basic argument validation (`R/validate.R`) checks types and lengths
+  for each constructor (e.g. `level` must be a whole number between 1
+  and 6;
+  [`quarto_group()`](https://quartose.djnavarro.net/reference/quarto_object.md)/[`quarto_markdown()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  require their `content` elements to all be quarto objects or character
+  vectors, respectively), raising informative errors via
+  [`rlang::abort()`](https://rlang.r-lib.org/reference/abort.html).
+- Imports: cli, knitr, purrr, rlang, utils. Suggests: ggplot2, quarto,
+  rmarkdown, spelling, testthat (\>= 3.0.0).

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">quartose</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="quartose-development-version">quartose (development version)<a class="anchor" aria-label="anchor" href="#quartose-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="quartose-020">quartose 0.2.0<a class="anchor" aria-label="anchor" href="#quartose-020"></a></h2>
 <ul><li>Fixed a bug where <code><a href="../reference/quarto_format.html">format.quarto_tabset()</a></code> did not escape <code>&lt;</code>/<code>&gt;</code> in captured output from arbitrary R objects (e.g. a tibble’s <code>&lt;fct&gt;</code> column-type tag), which could be parsed as an unknown HTML tag by quarto/pandoc (<a href="https://github.com/djnavarro/quartose/issues/1" class="external-link">#1</a>). <code><a href="../reference/quarto_format.html">?quarto_format</a></code> now documents the resulting escaping policy: only <code><a href="../reference/quarto_object.html">quarto_tabset()</a></code>’s captured object output is escaped this way; <code><a href="../reference/quarto_object.html">quarto_span()</a></code>/<code><a href="../reference/quarto_object.html">quarto_div()</a></code> content is validated rather than captured, and <code><a href="../reference/quarto_object.html">quarto_markdown()</a></code> passes raw markup through untouched by design.</li>
 <li>Fixed a bug where the internal <code>quarto_plot</code> wrapper used to capture ggplot2 objects inside <code><a href="../reference/quarto_object.html">quarto_tabset()</a></code> had its class silently stripped by <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code>-based list flattening in <code><a href="../reference/quarto_format.html">format.quarto_tabset()</a></code>. Plot capture now preserves the <code>quarto_plot</code> class and is dispatched via a dedicated <code>knit_print.quarto_plot()</code> method instead of relying on <code>ggplot</code>’s own <code>knit_print</code> method by coincidence.</li>
 <li>
@@ -54,7 +54,12 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="quartose-010">quartose 0.1.0<a class="anchor" aria-label="anchor" href="#quartose-010"></a></h2><p class="text-muted">CRAN release: 2025-07-09</p>
-<ul><li>Initial CRAN submission.</li>
+<ul><li>Initial CRAN submission. This release establishes the core design that later versions build on: constructors validate and store their arguments unprocessed (<code>R/class.R</code>), <code>format.&lt;class&gt;()</code> methods turn a stored object into Quarto syntax on demand (<code>R/format.R</code>), and a shared <code><a href="../reference/quarto_print.html">print.quarto_object()</a></code>/<code><a href="../reference/quarto_print.html">knit_print.quarto_object()</a></code> pair (<code>R/print.R</code>) gives a human-readable console summary via <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and emits the actual Quarto markup via <code><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat()</a></code> when <code><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knitr::knit_print()</a></code> is called inside a <code>results: asis</code> chunk.</li>
+<li>Provides six constructors, all returning an object with parent S3 class <code>quarto_object</code> plus a class-specific subclass: <code><a href="../reference/quarto_object.html">quarto_section()</a></code> for headers; <code><a href="../reference/quarto_object.html">quarto_tabset()</a></code> for tabsets, with optional section title and manual tab naming via <code>names</code>; <code><a href="../reference/quarto_object.html">quarto_div()</a></code> and <code><a href="../reference/quarto_object.html">quarto_span()</a></code> for divs and spans with CSS classes; <code><a href="../reference/quarto_object.html">quarto_markdown()</a></code> for passing raw markdown/character content through untouched; and <code><a href="../reference/quarto_object.html">quarto_group()</a></code> for bundling several quarto objects so they print together.</li>
+<li>
+<code><a href="../reference/quarto_object.html">quarto_tabset()</a></code> content can include ggplot2 objects: these are captured and rendered only when <code><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knit_print()</a></code> is called, via an internal <code>quarto_plot</code> wrapper. <code><a href="../reference/quarto_object.html">quarto_div()</a></code> does not yet support plot content.</li>
+<li>Basic argument validation (<code>R/validate.R</code>) checks types and lengths for each constructor (e.g. <code>level</code> must be a whole number between 1 and 6; <code><a href="../reference/quarto_object.html">quarto_group()</a></code>/<code><a href="../reference/quarto_object.html">quarto_markdown()</a></code> require their <code>content</code> elements to all be quarto objects or character vectors, respectively), raising informative errors via <code><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">rlang::abort()</a></code>.</li>
+<li>Imports: cli, knitr, purrr, rlang, utils. Suggests: ggplot2, quarto, rmarkdown, spelling, testthat (&gt;= 3.0.0).</li>
 </ul></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

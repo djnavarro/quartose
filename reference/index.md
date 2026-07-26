@@ -14,7 +14,7 @@
   :
 
   Tag an object as a graphic for
-  [`quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  [`quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_object.md)/[`quarto_div()`](https://quartose.djnavarro.net/reference/quarto_object.md)
 
 ## Formatting and printing quarto objects
 
