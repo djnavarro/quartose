@@ -3,7 +3,7 @@ pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   articles/quartose: quartose.html
-last_built: 2026-07-26T00:43Z
+last_built: 2026-07-26T00:49Z
 urls:
   reference: https://quartose.djnavarro.net/reference
   article: https://quartose.djnavarro.net/articles

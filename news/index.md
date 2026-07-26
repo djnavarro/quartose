@@ -1,5 +1,7 @@
 # Changelog
 
+## quartose (development version)
+
 ## quartose 0.2.0
 
 - Fixed a bug where

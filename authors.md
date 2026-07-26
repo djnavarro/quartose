@@ -11,12 +11,12 @@ Source:
 [`DESCRIPTION`](https://github.com/djnavarro/quartose/blob/main/DESCRIPTION)
 
 Navarro D (2026). *quartose: Dynamically Generate 'Quarto' Syntax*. R
-package version 0.2.0, <https://github.com/djnavarro/quartose>.
+package version 0.2.0.9000, <https://github.com/djnavarro/quartose>.
 
     @Manual{,
       title = {quartose: Dynamically Generate 'Quarto' Syntax},
       author = {Danielle Navarro},
       year = {2026},
-      note = {R package version 0.2.0},
+      note = {R package version 0.2.0.9000},
       url = {https://github.com/djnavarro/quartose},
     }
