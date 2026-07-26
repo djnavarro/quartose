@@ -55,10 +55,10 @@ submission.
 
 ## Win-builder platforms tested
 
-- `devtools::check_win_devel()`: https://win-builder.r-project.org/ (submitted; results emailed)
-- `devtools::check_win_release()`: https://win-builder.r-project.org/ (submitted; results emailed)
+- `devtools::check_win_release()`: https://win-builder.r-project.org/BFhwIc9VZAK2/ — Status: OK
+- `devtools::check_win_devel()`: https://win-builder.r-project.org/r52kgU91JHRX/ — Status: OK
 
-R CMD check logs look okay locally; win-builder logs to be confirmed once emailed.
+Both checks are clean: 0 errors, 0 warnings, 0 notes.
 
 ## Downstream dependencies
 
