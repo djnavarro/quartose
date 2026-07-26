@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{as_quarto_graphic}
 \alias{as_quarto_graphic}
-\title{Tag an object as a graphic for \code{quarto_tabset()}}
+\title{Tag an object as a graphic for \code{quarto_tabset()}/\code{quarto_div()}}
 \usage{
 as_quarto_graphic(x)
 }
@@ -13,11 +13,12 @@ as_quarto_graphic(x)
 \code{x}, with the additional class \code{"quartose_graphic"} prepended.
 }
 \description{
-\code{quarto_tabset()} auto-detects several kinds of graphics objects (ggplot2/
-patchwork, base R recorded plots, grid grobs, and lattice/trellis objects)
-and renders them as images rather than as captured text output. If
-\code{content} includes a graphics object from a package quartose doesn't
-know about, wrap it in \code{as_quarto_graphic()} to force this treatment.
+\code{quarto_tabset()} and \code{quarto_div()} auto-detect several kinds of graphics
+objects (ggplot2/patchwork, base R recorded plots, grid grobs, and
+lattice/trellis objects) and render them as images rather than as
+captured text output. If \code{content} includes a graphics object from a
+package quartose doesn't know about, wrap it in \code{as_quarto_graphic()} to
+force this treatment.
 }
 \details{
 Objects tagged this way are rendered via a generic fallback: a PNG device

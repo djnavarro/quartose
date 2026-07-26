@@ -1,12 +1,12 @@
 Package: quartose
-Title: Dynamically Generate Quarto Syntax
-Version: 0.1.0.9000
+Title: Dynamically Generate 'Quarto' Syntax
+Version: 0.2.0
 Authors@R: 
     person("Danielle", "Navarro", , "djnavarro@protonmail.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0001-7648-6578"))
 Description: 
-    Provides helper functions to work programmatically within a quarto document. It allows 
+    Provides helper functions to work programmatically within a 'Quarto' document. It allows 
     the user to create section headers, tabsets, divs, and spans, and formats these objects
-    into quarto syntax when printed into a document. 
+    into 'Quarto' syntax when printed into a document. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

@@ -1,4 +1,4 @@
-# quartose (development version)
+# quartose 0.2.0
 
 * Fixed a bug where `format.quarto_tabset()` did not escape `<`/`>` in
   captured output from arbitrary R objects (e.g. a tibble's `<fct>`

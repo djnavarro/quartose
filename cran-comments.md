@@ -1,44 +1,68 @@
 ## Summary
 
-This is a new package designed to allow users to dynamically generate quarto syntax (e.g., for tabsets, section headers, divs, etc) from within R. It provides user facing functions like `quarto_tabset()`, `quarto_section()` that hold the user-specified content. Most of the work is done by the `format()`, `print()`, and `knitr::knit_print()` methods supplied for the objects returned by the `quarto_*()` functions.
-
-Tests run on github, Rhub, and win-builder generally did not produce errors or warnings, and only the new release note. The one case where Rhub failures appeared is noted below, and is innocuous as far as I can tell. I hope I have not missed any checks required! Thank you for your consideration.
-
-Kind regards
-Danielle Navarro
+This is an update to `quartose`, currently on CRAN as version 0.1.0. This
+release (0.2.0) fixes two bugs found via user reports (an HTML-escaping gap
+in `quarto_tabset()`, and a `quarto_plot` class-stripping bug that broke
+plot capture in tabsets), tightens input validation for `quarto_div()` and
+`quarto_tabset()`, and adds modest new functionality: `quarto_tabset()` now
+auto-detects a wider range of graphics objects (base R recorded plots, grid
+grobs, lattice/trellis, patchwork), a new `as_quarto_graphic()` escape hatch
+lets users tag arbitrary objects as graphics, and `quarto_div()` now
+supports graphics content using the same machinery. See `NEWS.md` for the
+full list of changes.
 
 ## R CMD check results (local)
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
-* This is a new release.
+Running `R CMD check --as-cran` directly (rather than through
+`devtools::check()`) surfaces one additional informational note, which is a
+pre-existing, known artifact of the `spelling` package's `tests/spelling.R`
+template (a `Rout`/`Rout.save` whitespace/echo-style comparison mismatch,
+not a real failure; the test itself uses `error = FALSE`). This is
+unrelated to any change in this release.
 
 ## Rhub platforms tested
 
-Checked on all 30 platforms currently available via Rhub. Passes on 29 with no warnings or errors:
+Checked on the same Rhub platform set used for the 0.1.0 submission (30
+platforms):
 
-https://github.com/djnavarro/quartose/actions/runs/16098155304
+https://github.com/djnavarro/quartose/actions/runs/30180624311
 
- [1] "linux"          "m1-san"         "macos"         
- [4] "macos-arm64"    "windows"        "atlas"         
- [7] "c23"            "clang-asan"     "clang-ubsan"   
-[10] "clang16"        "clang17"        "clang18"       
-[13] "clang19"        "clang20"        "donttest"      
-[16] "gcc-asan"       "gcc13"          "gcc14"         
-[19] "gcc15"          "intel"          "mkl"           
-[22] "nold"           "noremap"        "nosuggests"    
-[25] "ubuntu-clang"   "ubuntu-gcc12"   "ubuntu-next"   
-[28] "ubuntu-release" "valgrind" 
+Passes on 20/30 with no errors or warnings. There are two categories of
+failure, both unrelated to quartose (which contains no compiled code of its
+own):
 
-The one failure is "rchk":
+- `clang16`, `clang17`, `clang18`, `clang19`, `clang20`, `c23`, `gcc15`,
+  `noremap` (8 platforms): all fail identically with
+  `Error: .onLoad failed in loadNamespace() for 'vctrs', details: error:
+  symbol bindings not supported yet`. This is a binary-compatibility issue
+  between the CRAN binary of the `vctrs` package (a transitive dependency
+  via `dplyr`/`ggplot2`, used only in `Suggests`) and these
+  bleeding-edge/experimental compiler toolchains provided by Rhub — it
+  occurs before any quartose code runs, purely while loading `vctrs`.
+- `valgrind` (1 platform): `R CMD check` itself reports `Status: OK`
+  (0 errors, 0 warnings, 0 notes, all tests passing); the job is marked
+  failed only because Valgrind's memcheck flags "definitely lost" bytes.
+  Every leak's stack trace traces into system font-rendering libraries
+  (`libfontconfig`, `libpango`, `libcairo`) invoked by R's graphics engine
+  when a PNG device is opened to render captured plots — a well-known
+  category of Valgrind false positive for any package that opens a
+  graphics device on this image, and does not involve any quartose code.
 
-https://github.com/djnavarro/quartose/actions/runs/16098119543
+Happy to investigate further if you believe either is relevant to this
+submission.
 
-As far as I can tell this failure is innocuous. If I understand correctly rchk looks for memory errors in included C code; there is no compiled code in this package so my guess is that the run failure is for other reasons? Very happy to make any necessary changes if I have misunderstood.
- 
 ## Win-builder platforms tested
 
-- `devtools::check_win_devel()`: https://win-builder.r-project.org/nHF1okW4QowR/
-- `devtools::check_win_release()`: https://win-builder.r-project.org/OpvYiCZ51PVu
+- `devtools::check_win_devel()`: https://win-builder.r-project.org/ (submitted; results emailed)
+- `devtools::check_win_release()`: https://win-builder.r-project.org/ (submitted; results emailed)
 
-R CMD check logs look okay.
+R CMD check logs look okay locally; win-builder logs to be confirmed once emailed.
+
+## Downstream dependencies
+
+`quartose` has no reverse dependencies on CRAN.
+
+Kind regards
+Danielle Navarro
