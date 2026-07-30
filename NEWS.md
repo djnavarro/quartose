@@ -1,5 +1,27 @@
 # quartose (development version)
 
+* `quarto_div()` now accepts objects like `knitr::kable(format = "html")`,
+  `flextable`, and `gt` tables as `content` -- previously most of these were
+  either mis-rendered (e.g. `flextable`, coerced through `format()`) or
+  rejected outright, depending on the object. `check_args_div()` detects
+  these via the same `"knit_asis"`-output check used by `quarto_tabset()`
+  (see below), and `format.quarto_div()` extracts and emits their raw
+  markup unescaped, consistent with how `quarto_tabset()` now handles the
+  same kinds of objects. Objects that neither print like ordinary R
+  objects nor return `"knit_asis"` output (a bare list, a model object, a
+  number, etc.) are still rejected at construction time with the existing
+  informative error.
+* Fixed a bug where `format.quarto_tabset()` mishandled content whose
+  `knit_print()` method returns output marked via `knitr::asis_output()`
+  (class `"knit_asis"`) rather than printing it as a side effect — this
+  includes `knitr::kable(format = "html")`, `flextable` objects, and most
+  htmlwidget-like objects. Previously such content was displayed as the
+  literal, quoted R representation of the return value (including its
+  `attr(,"class")` dump) inside a `<pre>` block, rather than as rendered
+  markup. `format.quarto_tabset()` now detects `"knit_asis"` output and
+  emits it as raw, unescaped markup so it renders as intended. `?quarto_format`'s
+  escaping-policy documentation is updated accordingly.
+
 # quartose 0.2.0
 
 * Fixed a bug where `format.quarto_tabset()` did not escape `<`/`>` in

@@ -456,6 +456,61 @@ test_that("quarto_div content accepts graphics objects recognized by is_graphic 
 })
 
 
+# regression tests: quarto_div's handling of table/htmlwidget-like objects
+# (knit_asis investigation and follow-up feature, 2026-07-30) ----------------
+
+test_that("quarto_div accepts knitr::kable() -- both a plain character vector and knit_asis", {
+
+  skip_if_not_installed("knitr")
+  kbl <- knitr::kable(head(iris, 3), format = "html")
+
+  # kable output happens to be a plain character vector under the
+  # "knitr_kable" class, which alone would pass validation; it separately
+  # also satisfies is_knit_asis_content(), so either check accepts it
+  expect_true(is.character(kbl))
+  expect_true(is_knit_asis_content(kbl))
+
+  expect_no_error(check_args_div(content = list(kbl), class = cl, sep = ss))
+  expect_no_error(quarto_div(content = list(kbl), class = cl, sep = ss))
+
+})
+
+test_that("quarto_div accepts flextable content via knit_asis detection", {
+
+  skip_if_not_installed("flextable")
+  ft <- flextable::flextable(head(iris, 3))
+
+  # flextable is not a character vector; it's only accepted because its
+  # knit_print() method returns knit_asis-classed HTML
+  expect_false(is.character(ft))
+  expect_true(is_knit_asis_content(ft))
+
+  expect_no_error(check_args_div(content = list(ft), class = cl, sep = ss))
+  expect_no_error(quarto_div(content = list(ft), class = cl, sep = ss))
+
+})
+
+test_that("quarto_div still rejects content that is neither character/quarto_object/graphic nor knit_asis", {
+
+  # sanity check: extending validation to accept knit_asis content must not
+  # accidentally accept everything -- these objects print via ordinary side
+  # effects (or don't print HTML at all), so is_knit_asis_content() is FALSE
+  expect_false(is_knit_asis_content(data.frame(x = 1)))
+  expect_false(is_knit_asis_content(lm(Sepal.Length ~ Sepal.Width, iris)))
+  expect_false(is_knit_asis_content(2L))
+  expect_false(is_knit_asis_content(list("not a knit_asis object")))
+
+  expect_error(
+    quarto_div(content = list(2L), class = cl, sep = ss),
+    regexp = "character vectors, quarto objects, graphics"
+  )
+  expect_error(
+    quarto_div(content = list(data.frame(x = 1)), class = cl, sep = ss),
+    regexp = "character vectors, quarto objects, graphics"
+  )
+
+})
+
 test_that("invalid quarto_span content arguments throw errors", {
 
   # spans are supposed to take character vectors only

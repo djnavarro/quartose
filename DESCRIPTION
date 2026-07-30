@@ -23,6 +23,7 @@ Imports:
     utils
 Suggests: 
     dplyr,
+    flextable,
     ggplot2,
     lattice,
     patchwork,

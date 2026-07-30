@@ -4,13 +4,26 @@ Living document tracking known issues, weaknesses found during review, and the
 plan for addressing them. Update this file (and `NEWS.md`) as items are
 resolved; don't let it silently go stale.
 
-Last reviewed: 2026-07-19.
+Last reviewed: 2026-07-30.
 
 ## Open items
 
 None currently tracked.
 
+## Resolved issue & finding log (2026-07-30 addendum)
+
+| Item | Resolution |
+|---|---|
+| `quarto_tabset()` mangled `knit_asis` output (e.g. `knitr::kable(format = "html")`, `flextable`) | Discovered during a review of table/HTML-widget rendering inside tabsets: `format.quarto_tabset()`'s `capture.output(knitr::knit_print(x))` idiom only captures *side-effect* printing (as done by `lm`, data frames, etc.); objects that instead *return* `knitr::asis_output()`-marked content (class `"knit_asis"`) produced no captured side-effect text, so `capture.output()` fell back to auto-printing the returned value itself — dumping the quoted, escaped HTML string plus its `attr(,"class")`/`attr(,"knit_cacheable")` attributes inside a `<pre>` block instead of rendering a table/widget. Fixed by capturing the return value of `knit_print()` alongside its side-effect output, detecting `inherits(kp, "knit_asis")`, and emitting that raw markup unescaped and without the `<pre>` wrapper (ordinary side-effect-printed objects are unaffected and still escaped/`<pre>`-wrapped as before). Tests added to `test-format.R` for `knitr::kable()`, `flextable`, and a control case (`lm`) confirming the two paths don't interfere. `?quarto_format`'s escaping-policy `@details` updated to describe both paths. |
+| `quarto_div()` couldn't hold `flextable`/`gt`-style content (and mangled `kable`'s *intent* even when it happened to render, since `kable` only worked because it's secretly a character vector) | Extended `quarto_div()` to reuse the tabset's `knit_asis`-detection path: refactored the `capture.output(knitr::knit_print(x))` + `inherits(kp, "knit_asis")` logic out of `format.quarto_tabset()` into a shared internal `knit_print_capture()` helper (`R/format.R`). `check_args_div()` now accepts content elements via a new `is_knit_asis_content()` predicate (`R/validate.R`) in addition to character/quarto_object/graphic, and `format.quarto_div()` routes non-character/non-quarto/non-graphic elements through a new `format_div_element()` helper that extracts and emits their raw markup unescaped (mirroring the tabset path exactly, rather than incidentally). Objects that neither print via side effect nor return `knit_asis` (bare lists, model objects, numbers, etc.) are still rejected at construction with the pre-existing informative error. `is_knit_asis_content()` wraps the detection call in `tryCatch()` so an object that errors when printed doesn't abort validation with an unrelated error. Verified manually that mixed content (text + `flextable` + a `ggplot`) still correctly returns the list-of-strings-and-`quarto_plot` shape, and that previously-rejected types (bare numbers, data frames) are still rejected. Tests in `test-validate.R`/`test-format.R` updated: the earlier "`flextable` is rejected" tests (added when this asymmetry was first discovered) are now "`flextable`/`kable` are accepted and render correctly" tests. `NEWS.md`, `?quarto_object`'s `content` bullet, and `?quarto_format`'s escaping-policy `@details` updated accordingly. |
+
 ## Housekeeping notes
+
+- Added `flextable` to `Suggests` in `DESCRIPTION`. It was already used
+  (behind `skip_if_not_installed()`) in `tests/testthat/test-validate.R`/
+  `test-format.R` from the earlier `knit_asis` investigation, but wasn't
+  declared, which `devtools::check()` flagged as an "unstated dependency in
+  tests" warning. `devtools::check()` now passes with 0 errors/warnings/notes.
 
 - The `@details` section of `?quarto_format` (`R/format.R`) now documents
   the escaping policy: only `quarto_tabset()`'s captured object output is

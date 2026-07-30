@@ -70,12 +70,16 @@
 #'   not a list.
 #' - For `quarto_div()` the `content` argument is permitted to be a character
 #'   vector or a list, but it will always be stored internally as a list. 
-#'   If the input is a list, it can contain other quarto objects, or 
+#'   If the input is a list, it can contain other quarto objects, 
 #'   graphics objects of the same kinds supported by `quarto_tabset()` 
 #'   (ggplot2/patchwork, base R recorded plots, grid grobs, lattice/trellis 
-#'   objects, or anything tagged via `as_quarto_graphic()`). The intended 
-#'   use for this is a div that contains several spans, but it is not 
-#'   limited to this use case.
+#'   objects, or anything tagged via `as_quarto_graphic()`), or objects whose
+#'   `knitr::knit_print()` output is marked via `knitr::asis_output()` (e.g.
+#'   `knitr::kable(format = "html")`, `flextable`, `gt`) -- these are
+#'   rendered as their raw HTML rather than being coerced through `format()`.
+#'   Anything else (e.g. a bare list, a model object, or a number) is
+#'   rejected at construction time. The intended use for this is a div that
+#'   contains several spans, but it is not limited to this use case.
 #' - For `quarto_tabset()` the `content` argument *must* be a list. The list 
 #'   elements can be any printable R object: each element of the list will
 #'   appear in its own tab. Several kinds of graphics objects are 

@@ -56,21 +56,34 @@ strings, but it may also include plot objects that have not
 yet been rendered. The resulting representation isn't always
 very pretty, though it is generally fairly readable.
 
-\strong{Escaping policy.} \code{quarto_tabset()} is the one constructor that
-accepts arbitrary R objects as \code{content} and captures their default
-printed representation (via \code{knitr::knit_print()}/\code{capture.output()})
-to display inside each tab. That captured text may incidentally contain
-\code{<} or \code{>} (for example, a tibble's \verb{<fct>} column-type tag), which
-would otherwise be parsed as an unrecognized HTML tag by quarto/pandoc
-and silently dropped from the rendered document. To prevent this,
-\code{format.quarto_tabset()} escapes \code{<} and \code{>} to \verb{&lt;}/\verb{&gt;} in that
-captured text before it is written out. This escaping is applied only
-to captured object output, not to markup the user intentionally wrote
-themselves: \code{quarto_span()} and \code{quarto_div()} content is restricted by
-validation to character vectors, quarto objects, or graphics objects
-(never arbitrary captured print output), and \code{quarto_markdown()} is
-explicitly meant to carry raw markdown/HTML through untouched — none of
-these are escaped.
+\strong{Escaping policy.} \code{quarto_tabset()} accepts arbitrary R objects as
+\code{content} and captures their default printed representation (via
+\code{knitr::knit_print()}/\code{capture.output()}) to display inside each tab.
+Most objects' \code{knit_print()}/\code{print()} methods write this representation
+as a side effect (for example, an \code{lm} object's \verb{Call:} summary, or a
+data frame's default print), and that captured text may incidentally
+contain \code{<} or \code{>} (for example, a tibble's \verb{<fct>} column-type tag),
+which would otherwise be parsed as an unrecognized HTML tag by
+quarto/pandoc and silently dropped from the rendered document. To
+prevent this, \code{format.quarto_tabset()} escapes \code{<} and \code{>} to
+\verb{&lt;}/\verb{&gt;} in that captured text before it is written out, and wraps
+it in \verb{<pre>} tags. Some objects instead \emph{return} their output marked
+via \code{knitr::asis_output()} (class \code{"knit_asis"}) rather than printing
+it — this includes \code{knitr::kable(format = "html")}, \code{flextable}
+objects, \code{gt} tables, and most htmlwidget-like objects. For these,
+\code{format.quarto_tabset()} detects the \code{"knit_asis"} class and emits the
+raw markup unescaped and without a \verb{<pre>} wrapper, so it is rendered
+as intended (a table, widget, etc.) rather than displayed as literal
+text. \code{quarto_div()} supports the same \code{"knit_asis"} passthrough for its
+\code{content}, emitted unescaped for the same reason — but unlike
+\code{quarto_tabset()}, it validates content at construction time, so objects
+that neither print like ordinary R objects nor return \code{"knit_asis"}
+output (e.g. a bare list, a model object, or a number) are rejected up
+front rather than falling back to captured/escaped text. \code{quarto_span()}
+content is restricted by validation to character vectors (never
+arbitrary captured print output), and \code{quarto_markdown()} is explicitly
+meant to carry raw markdown/HTML through untouched — neither of these
+is escaped.
 }
 \examples{
 # formatted sections, spans and divs ----------------------------------

@@ -41,9 +41,11 @@ check_args_div <- function(content, class, sep) {
   # be special-cased rather than rejected as "not character/quarto_object"
   is_empty_div <- length(content) == 0 || (length(content) == 1 && rlang::is_null(content[[1]]))
   if (!is_empty_div) {
-    is_valid <- purrr::map_lgl(content, function(x) rlang::is_character(x) || is_quarto(x) || is_graphic(x))
+    is_valid <- purrr::map_lgl(content, function(x) {
+      rlang::is_character(x) || is_quarto(x) || is_graphic(x) || is_knit_asis_content(x)
+    })
     if (!all(is_valid)) {
-      rlang::abort("all elements of content must be character vectors, quarto objects, or graphics objects recognized by is_graphic() (see as_quarto_graphic())")
+      rlang::abort("all elements of content must be character vectors, quarto objects, graphics objects recognized by is_graphic() (see as_quarto_graphic()), or objects whose knitr::knit_print() output is marked via knitr::asis_output() (e.g. knitr::kable(), flextable, gt tables)")
     }
   }
 }
@@ -105,6 +107,20 @@ is_trellis <- function(x) {
 # know about)
 is_tagged_graphic <- function(x) {
   inherits(x, "quartose_graphic")
+}
+
+# detects objects whose knitr::knit_print() output is marked via
+# knitr::asis_output() (class "knit_asis") rather than printed as a side
+# effect -- e.g. knitr::kable(format = "html"), flextable, and gt tables.
+# used by check_args_div() to allow such objects as quarto_div() content;
+# format_div_element() extracts and emits the raw markup via the same
+# knit_print_capture() helper used by format.quarto_tabset(). wrapped in
+# tryCatch so an object that errors when printed/knit_printed is treated
+# as "not recognized" (surfacing check_args_div()'s normal error message)
+# rather than aborting validation with an unrelated error.
+is_knit_asis_content <- function(x) {
+  kpc <- tryCatch(knit_print_capture(x), error = function(e) NULL)
+  !is.null(kpc) && !is.null(kpc$raw)
 }
 
 # dispatch table used by is_graphic(): add new predicates here to extend

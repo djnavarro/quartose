@@ -34,21 +34,34 @@
 #' yet been rendered. The resulting representation isn't always
 #' very pretty, though it is generally fairly readable. 
 #' 
-#' **Escaping policy.** `quarto_tabset()` is the one constructor that
-#' accepts arbitrary R objects as `content` and captures their default
-#' printed representation (via `knitr::knit_print()`/`capture.output()`)
-#' to display inside each tab. That captured text may incidentally contain
-#' `<` or `>` (for example, a tibble's `<fct>` column-type tag), which
-#' would otherwise be parsed as an unrecognized HTML tag by quarto/pandoc
-#' and silently dropped from the rendered document. To prevent this,
-#' `format.quarto_tabset()` escapes `<` and `>` to `&lt;`/`&gt;` in that
-#' captured text before it is written out. This escaping is applied only
-#' to captured object output, not to markup the user intentionally wrote
-#' themselves: `quarto_span()` and `quarto_div()` content is restricted by
-#' validation to character vectors, quarto objects, or graphics objects
-#' (never arbitrary captured print output), and `quarto_markdown()` is
-#' explicitly meant to carry raw markdown/HTML through untouched — none of
-#' these are escaped.
+#' **Escaping policy.** `quarto_tabset()` accepts arbitrary R objects as
+#' `content` and captures their default printed representation (via
+#' `knitr::knit_print()`/`capture.output()`) to display inside each tab.
+#' Most objects' `knit_print()`/`print()` methods write this representation
+#' as a side effect (for example, an `lm` object's `Call:` summary, or a
+#' data frame's default print), and that captured text may incidentally
+#' contain `<` or `>` (for example, a tibble's `<fct>` column-type tag),
+#' which would otherwise be parsed as an unrecognized HTML tag by
+#' quarto/pandoc and silently dropped from the rendered document. To
+#' prevent this, `format.quarto_tabset()` escapes `<` and `>` to
+#' `&lt;`/`&gt;` in that captured text before it is written out, and wraps
+#' it in `<pre>` tags. Some objects instead *return* their output marked
+#' via `knitr::asis_output()` (class `"knit_asis"`) rather than printing
+#' it — this includes `knitr::kable(format = "html")`, `flextable`
+#' objects, `gt` tables, and most htmlwidget-like objects. For these,
+#' `format.quarto_tabset()` detects the `"knit_asis"` class and emits the
+#' raw markup unescaped and without a `<pre>` wrapper, so it is rendered
+#' as intended (a table, widget, etc.) rather than displayed as literal
+#' text. `quarto_div()` supports the same `"knit_asis"` passthrough for its
+#' `content`, emitted unescaped for the same reason — but unlike
+#' `quarto_tabset()`, it validates content at construction time, so objects
+#' that neither print like ordinary R objects nor return `"knit_asis"`
+#' output (e.g. a bare list, a model object, or a number) are rejected up
+#' front rather than falling back to captured/escaped text. `quarto_span()`
+#' content is restricted by validation to character vectors (never
+#' arbitrary captured print output), and `quarto_markdown()` is explicitly
+#' meant to carry raw markdown/HTML through untouched — neither of these
+#' is escaped.
 #' 
 #' @name quarto_format
 #' 
@@ -141,17 +154,21 @@ format.quarto_tabset <- function(x, ...) {
     if (is_graphic(x$content[[i]])) {
       out <- c(out, list(quarto_plot(content = x$content[[i]])))
     
-    # for everything else, call knit_print() now in order to produce 
-    # character strings that can be passed directly to document with
-    # cat(), but don't actually print them yet, just capture and store.
-    # captured output may contain "<" / ">" from the default print
-    # representation of arbitrary R objects (e.g. tibble's "<fct>"
-    # column-type tags); escape these so they aren't parsed as HTML tags.
+    # for everything else, capture knit_print() output via
+    # knit_print_capture(): most objects write their output as a side
+    # effect (e.g. lm's "Call: ..." summary), captured as plain text and
+    # escaped/`<pre>`-wrapped below; some instead *return* asis-marked
+    # HTML (e.g. knitr::kable(format = "html"), flextable), which is
+    # emitted as raw markup instead. See knit_print_capture() for details.
     } else {
-      captured <- utils::capture.output(knitr::knit_print(x$content[[i]]))
-      out <- c(out, pre_open)
-      out <- c(out, protect_angle_brackets(captured))
-      out <- c(out, pre_shut)
+      kpc <- knit_print_capture(x$content[[i]])
+      if (!is.null(kpc$raw)) {
+        out <- c(out, kpc$raw)
+      } else {
+        out <- c(out, pre_open)
+        out <- c(out, protect_angle_brackets(kpc$captured))
+        out <- c(out, pre_shut)
+      }
     }
 
   }
@@ -181,12 +198,12 @@ format.quarto_div <- function(x, ...) {
       if (is_graphic(el)) {
         div_body <- c(div_body, list(quarto_plot(content = el)))
       } else {
-        div_body <- c(div_body, format(el))
+        div_body <- c(div_body, format_div_element(el))
       }
       if (i < n) div_body <- c(div_body, x$sep)
     }
   } else {
-    div_body <- format_elements(x$content)
+    div_body <- purrr::map(x$content, format_div_element)
     div_body <- paste(unlist(div_body), collapse = x$sep)
   }
 
@@ -240,6 +257,45 @@ format.quarto_group <- function(x, ...) {
 
 format_elements <- function(x, ...) {
   purrr::map(x, function(cc) format(cc, ...))
+}
+
+# Runs knitr::knit_print() on `x` exactly once, capturing both any output
+# it writes as a side effect and its return value. Most objects (e.g. lm,
+# data.frame) write their printed representation as a side effect via
+# print()/cat(), returning something other than "knit_asis"-classed
+# content; capturing that side-effect text is what the `captured` element
+# is for. Some objects instead *return* their output marked via
+# knitr::asis_output() (class "knit_asis") rather than printing it --
+# this includes knitr::kable(format = "html"), flextable, gt, and most
+# htmlwidget-like objects -- in which case `captured` is empty and the
+# interesting content is unpacked into `raw` (a character vector, split
+# on newlines, of the raw markup with the "knit_asis" wrapper removed).
+# `raw` is NULL when `x` did not produce knit_asis-classed output.
+# Shared by format.quarto_tabset() and format_div_element() so both
+# handle these objects consistently.
+knit_print_capture <- function(x) {
+  captured <- utils::capture.output(kp <- knitr::knit_print(x))
+  raw <- NULL
+  if (inherits(kp, "knit_asis")) {
+    raw <- unlist(strsplit(unclass(kp), "\n", fixed = TRUE))
+  }
+  list(captured = captured, raw = raw)
+}
+
+# Formats a single quarto_div() content element that is not itself a
+# graphics object (graphics are handled by the caller, wrapped in
+# quarto_plot() so rendering can be deferred). Character vectors and
+# quarto objects are formatted via the format() generic, exactly as
+# before. Anything else must have been validated by check_args_div() as
+# producing knit_asis-classed content from knitr::knit_print() (e.g.
+# knitr::kable(format = "html"), flextable, gt) -- for these, the raw
+# markup is extracted via knit_print_capture() so it renders as intended
+# rather than being coerced through format().
+format_div_element <- function(el) {
+  if (is_quarto(el) || rlang::is_character(el)) {
+    return(format(el))
+  }
+  knit_print_capture(el)$raw
 }
 
 # escape "<" and ">" in captured output so that literal text such as a

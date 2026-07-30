@@ -86,12 +86,16 @@ have titles, but they do not contain content.
 not a list.
 \item For \code{quarto_div()} the \code{content} argument is permitted to be a character
 vector or a list, but it will always be stored internally as a list.
-If the input is a list, it can contain other quarto objects, or
+If the input is a list, it can contain other quarto objects,
 graphics objects of the same kinds supported by \code{quarto_tabset()}
 (ggplot2/patchwork, base R recorded plots, grid grobs, lattice/trellis
-objects, or anything tagged via \code{as_quarto_graphic()}). The intended
-use for this is a div that contains several spans, but it is not
-limited to this use case.
+objects, or anything tagged via \code{as_quarto_graphic()}), or objects whose
+\code{knitr::knit_print()} output is marked via \code{knitr::asis_output()} (e.g.
+\code{knitr::kable(format = "html")}, \code{flextable}, \code{gt}) -- these are
+rendered as their raw HTML rather than being coerced through \code{format()}.
+Anything else (e.g. a bare list, a model object, or a number) is
+rejected at construction time. The intended use for this is a div that
+contains several spans, but it is not limited to this use case.
 \item For \code{quarto_tabset()} the \code{content} argument \emph{must} be a list. The list
 elements can be any printable R object: each element of the list will
 appear in its own tab. Several kinds of graphics objects are

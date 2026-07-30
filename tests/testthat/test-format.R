@@ -336,6 +336,111 @@ test_that("quarto_tabset escapes angle brackets in captured output (#1)", {
   expect_true(any(grepl("&lt;fct&gt;", ff_chr, fixed = TRUE)))
 })
 
+# regression tests: knit_asis content (e.g. kable/flextable) in tabsets ------
+
+test_that("quarto_tabset passes knitr::kable() HTML through unescaped, unwrapped", {
+  kbl <- knitr::kable(head(iris, 3), format = "html")
+
+  tt <- quarto_tabset(content = list(a = kbl), level = 2L)
+  ff <- format(tt)
+  ff_chr <- unlist(ff[purrr::map_lgl(ff, rlang::is_bare_character)])
+  collapsed <- paste(ff_chr, collapse = "\n")
+
+  expect_true(any(grepl("<table>", ff_chr, fixed = TRUE)))
+  expect_false(any(grepl("&lt;table&gt;", ff_chr, fixed = TRUE)))
+  expect_false(grepl("<pre>", collapsed, fixed = TRUE))
+  expect_false(grepl("knit_asis", collapsed, fixed = TRUE))
+})
+
+test_that("quarto_tabset passes flextable HTML through unescaped, unwrapped", {
+  skip_if_not_installed("flextable")
+  ft <- flextable::flextable(head(iris, 3))
+
+  tt <- quarto_tabset(content = list(a = ft), level = 2L)
+  ff <- format(tt)
+  ff_chr <- unlist(ff[purrr::map_lgl(ff, rlang::is_bare_character)])
+  collapsed <- paste(ff_chr, collapse = "\n")
+
+  expect_true(any(grepl("<table", ff_chr, fixed = TRUE)))
+  expect_false(any(grepl("&lt;table", ff_chr, fixed = TRUE)))
+  expect_false(grepl("<pre>", collapsed, fixed = TRUE))
+  expect_false(grepl("knit_asis", collapsed, fixed = TRUE))
+})
+
+test_that("quarto_tabset still captures and escapes objects that print via side effect", {
+  # sanity check: the knit_asis path must not swallow the existing
+  # capture.output()-based path for ordinary printed objects
+  m <- lm(mpg ~ wt, data = mtcars)
+
+  tt <- quarto_tabset(content = list(a = m), level = 2L)
+  ff <- format(tt)
+  ff_chr <- unlist(ff[purrr::map_lgl(ff, rlang::is_bare_character)])
+  collapsed <- paste(ff_chr, collapse = "\n")
+
+  expect_true(grepl("<pre>", collapsed, fixed = TRUE))
+  expect_true(any(grepl("Coefficients", ff_chr, fixed = TRUE)))
+})
+
+# regression tests: quarto_div's handling of table/htmlwidget-like objects
+# (knit_asis investigation and follow-up feature, 2026-07-30) ----------------
+#
+# format.quarto_div() routes content that is neither character nor a
+# quarto object nor a graphic through format_div_element(), which reuses
+# format.quarto_tabset()'s knit_print_capture() helper to detect
+# knit_asis-classed output (e.g. knitr::kable(), flextable, gt) and emit
+# it as raw, unescaped markup rather than coercing it through format().
+
+test_that("quarto_div renders knitr::kable() HTML content as raw, unescaped markup", {
+  kbl <- knitr::kable(head(iris, 3), format = "html")
+
+  dv <- quarto_div(content = list(kbl), class = "my-table")
+  fd <- format(dv)
+
+  expect_true(is.character(fd))
+  expect_true(grepl("<table>", fd, fixed = TRUE))
+  expect_false(grepl("&lt;table&gt;", fd, fixed = TRUE))
+  expect_false(grepl("<pre>", fd, fixed = TRUE))
+})
+
+test_that("quarto_div renders flextable content as raw, unescaped markup", {
+  skip_if_not_installed("flextable")
+  ft <- flextable::flextable(head(iris, 3))
+
+  dv <- quarto_div(content = list(ft), class = "my-table")
+  fd <- format(dv)
+
+  expect_true(is.character(fd))
+  expect_true(grepl("<table", fd, fixed = TRUE))
+  expect_false(grepl("&lt;table", fd, fixed = TRUE))
+  expect_false(grepl("<pre>", fd, fixed = TRUE))
+  expect_false(grepl("knit_asis", fd, fixed = TRUE))
+})
+
+test_that("quarto_div mixes text, knit_asis content, and graphics correctly", {
+  skip_if_not_installed("flextable")
+  skip_if_not_installed("ggplot2")
+  ft <- flextable::flextable(head(iris, 3))
+
+  dv <- quarto_div(content = list("caption", ft, ggplot2::ggplot()), class = "mix")
+  ff <- format(dv)
+
+  expect_true(is.list(ff))
+  is_plot <- purrr::map_lgl(ff, function(x) inherits(x, "quarto_plot"))
+  expect_true(any(is_plot))
+
+  ff_chr <- unlist(ff[purrr::map_lgl(ff, rlang::is_bare_character)])
+  expect_true(any(grepl("caption", ff_chr, fixed = TRUE)))
+  expect_true(any(grepl("<table", ff_chr, fixed = TRUE)))
+  expect_false(any(grepl("<pre>", ff_chr, fixed = TRUE)))
+
+  expect_no_error(purrr::quietly(knitr::knit_print)(dv))
+})
+
+test_that("quarto_div still errors for content that is neither recognized type nor knit_asis", {
+  expect_error(quarto_div(content = list(2L), class = "my-table"))
+  expect_error(quarto_div(content = list(data.frame(x = 1)), class = "my-table"))
+})
+
 # generalized graphics support (issue #2) -----------------------------------
 
 test_that("quarto_tabset wraps recorded plots and grobs in quarto_plot, like ggplot", {
