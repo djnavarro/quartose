@@ -113,21 +113,34 @@ formatted version of a quarto object is a string or a list of
 strings, but it may also include plot objects that have not
 yet been rendered. The resulting representation isn't always
 very pretty, though it is generally fairly readable.</p>
-<p><strong>Escaping policy.</strong> <code><a href="quarto_object.html">quarto_tabset()</a></code> is the one constructor that
-accepts arbitrary R objects as <code>content</code> and captures their default
-printed representation (via <code><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knitr::knit_print()</a></code>/<code><a href="https://rdrr.io/r/utils/capture.output.html" class="external-link">capture.output()</a></code>)
-to display inside each tab. That captured text may incidentally contain
-<code>&lt;</code> or <code>&gt;</code> (for example, a tibble's <code>&lt;fct&gt;</code> column-type tag), which
-would otherwise be parsed as an unrecognized HTML tag by quarto/pandoc
-and silently dropped from the rendered document. To prevent this,
-<code>format.quarto_tabset()</code> escapes <code>&lt;</code> and <code>&gt;</code> to <code>&amp;lt;</code>/<code>&amp;gt;</code> in that
-captured text before it is written out. This escaping is applied only
-to captured object output, not to markup the user intentionally wrote
-themselves: <code><a href="quarto_object.html">quarto_span()</a></code> and <code><a href="quarto_object.html">quarto_div()</a></code> content is restricted by
-validation to character vectors, quarto objects, or graphics objects
-(never arbitrary captured print output), and <code><a href="quarto_object.html">quarto_markdown()</a></code> is
-explicitly meant to carry raw markdown/HTML through untouched — none of
-these are escaped.</p>
+<p><strong>Escaping policy.</strong> <code><a href="quarto_object.html">quarto_tabset()</a></code> accepts arbitrary R objects as
+<code>content</code> and captures their default printed representation (via
+<code><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knitr::knit_print()</a></code>/<code><a href="https://rdrr.io/r/utils/capture.output.html" class="external-link">capture.output()</a></code>) to display inside each tab.
+Most objects' <code>knit_print()</code>/<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> methods write this representation
+as a side effect (for example, an <code>lm</code> object's <code>Call:</code> summary, or a
+data frame's default print), and that captured text may incidentally
+contain <code>&lt;</code> or <code>&gt;</code> (for example, a tibble's <code>&lt;fct&gt;</code> column-type tag),
+which would otherwise be parsed as an unrecognized HTML tag by
+quarto/pandoc and silently dropped from the rendered document. To
+prevent this, <code>format.quarto_tabset()</code> escapes <code>&lt;</code> and <code>&gt;</code> to
+<code>&amp;lt;</code>/<code>&amp;gt;</code> in that captured text before it is written out, and wraps
+it in <code>&lt;pre&gt;</code> tags. Some objects instead <em>return</em> their output marked
+via <code><a href="https://rdrr.io/pkg/knitr/man/asis_output.html" class="external-link">knitr::asis_output()</a></code> (class <code>"knit_asis"</code>) rather than printing
+it — this includes <code>knitr::kable(format = "html")</code>, <code>flextable</code>
+objects, <code>gt</code> tables, and most htmlwidget-like objects. For these,
+<code>format.quarto_tabset()</code> detects the <code>"knit_asis"</code> class and emits the
+raw markup unescaped and without a <code>&lt;pre&gt;</code> wrapper, so it is rendered
+as intended (a table, widget, etc.) rather than displayed as literal
+text. <code><a href="quarto_object.html">quarto_div()</a></code> supports the same <code>"knit_asis"</code> passthrough for its
+<code>content</code>, emitted unescaped for the same reason — but unlike
+<code><a href="quarto_object.html">quarto_tabset()</a></code>, it validates content at construction time, so objects
+that neither print like ordinary R objects nor return <code>"knit_asis"</code>
+output (e.g. a bare list, a model object, or a number) are rejected up
+front rather than falling back to captured/escaped text. <code><a href="quarto_object.html">quarto_span()</a></code>
+content is restricted by validation to character vectors (never
+arbitrary captured print output), and <code><a href="quarto_object.html">quarto_markdown()</a></code> is explicitly
+meant to carry raw markdown/HTML through untouched — neither of these
+is escaped.</p>
     </div>
 
     <div class="section level2">

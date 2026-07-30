@@ -2,7 +2,43 @@
 
 ## quartose (development version)
 
+- [`quarto_div()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  now accepts objects like `knitr::kable(format = "html")`, `flextable`,
+  and `gt` tables as `content` – previously most of these were either
+  mis-rendered (e.g. `flextable`, coerced through
+  [`format()`](https://rdrr.io/r/base/format.html)) or rejected
+  outright, depending on the object. `check_args_div()` detects these
+  via the same `"knit_asis"`-output check used by
+  [`quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  (see below), and
+  [`format.quarto_div()`](https://quartose.djnavarro.net/reference/quarto_format.md)
+  extracts and emits their raw markup unescaped, consistent with how
+  [`quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_object.md)
+  now handles the same kinds of objects. Objects that neither print like
+  ordinary R objects nor return `"knit_asis"` output (a bare list, a
+  model object, a number, etc.) are still rejected at construction time
+  with the existing informative error.
+- Fixed a bug where
+  [`format.quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_format.md)
+  mishandled content whose
+  [`knit_print()`](https://rdrr.io/pkg/knitr/man/knit_print.html) method
+  returns output marked via
+  [`knitr::asis_output()`](https://rdrr.io/pkg/knitr/man/asis_output.html)
+  (class `"knit_asis"`) rather than printing it as a side effect — this
+  includes `knitr::kable(format = "html")`, `flextable` objects, and
+  most htmlwidget-like objects. Previously such content was displayed as
+  the literal, quoted R representation of the return value (including
+  its `attr(,"class")` dump) inside a `<pre>` block, rather than as
+  rendered markup.
+  [`format.quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_format.md)
+  now detects `"knit_asis"` output and emits it as raw, unescaped markup
+  so it renders as intended.
+  [`?quarto_format`](https://quartose.djnavarro.net/reference/quarto_format.md)’s
+  escaping-policy documentation is updated accordingly.
+
 ## quartose 0.2.0
+
+CRAN release: 2026-07-26
 
 - Fixed a bug where
   [`format.quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_format.md)

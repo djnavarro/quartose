@@ -137,12 +137,16 @@ have titles, but they do not contain content.</p></li>
 not a list.</p></li>
 <li><p>For <code>quarto_div()</code> the <code>content</code> argument is permitted to be a character
 vector or a list, but it will always be stored internally as a list.
-If the input is a list, it can contain other quarto objects, or
+If the input is a list, it can contain other quarto objects,
 graphics objects of the same kinds supported by <code>quarto_tabset()</code>
 (ggplot2/patchwork, base R recorded plots, grid grobs, lattice/trellis
-objects, or anything tagged via <code><a href="as_quarto_graphic.html">as_quarto_graphic()</a></code>). The intended
-use for this is a div that contains several spans, but it is not
-limited to this use case.</p></li>
+objects, or anything tagged via <code><a href="as_quarto_graphic.html">as_quarto_graphic()</a></code>), or objects whose
+<code><a href="https://rdrr.io/pkg/knitr/man/knit_print.html" class="external-link">knitr::knit_print()</a></code> output is marked via <code><a href="https://rdrr.io/pkg/knitr/man/asis_output.html" class="external-link">knitr::asis_output()</a></code> (e.g.
+<code>knitr::kable(format = "html")</code>, <code>flextable</code>, <code>gt</code>) – these are
+rendered as their raw HTML rather than being coerced through <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code>.
+Anything else (e.g. a bare list, a model object, or a number) is
+rejected at construction time. The intended use for this is a div that
+contains several spans, but it is not limited to this use case.</p></li>
 <li><p>For <code>quarto_tabset()</code> the <code>content</code> argument <em>must</em> be a list. The list
 elements can be any printable R object: each element of the list will
 appear in its own tab. Several kinds of graphics objects are

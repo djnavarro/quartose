@@ -4,13 +4,27 @@ Living document tracking known issues, weaknesses found during review,
 and the plan for addressing them. Update this file (and `NEWS.md`) as
 items are resolved; don’t let it silently go stale.
 
-Last reviewed: 2026-07-19.
+Last reviewed: 2026-07-30.
 
 ## Open items
 
 None currently tracked.
 
+## Resolved issue & finding log (2026-07-30 addendum)
+
+| Item | Resolution |
+|----|----|
+| [`quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_object.md) mangled `knit_asis` output (e.g. `knitr::kable(format = "html")`, `flextable`) | Discovered during a review of table/HTML-widget rendering inside tabsets: [`format.quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_format.md)’s `capture.output(knitr::knit_print(x))` idiom only captures *side-effect* printing (as done by `lm`, data frames, etc.); objects that instead *return* [`knitr::asis_output()`](https://rdrr.io/pkg/knitr/man/asis_output.html)-marked content (class `"knit_asis"`) produced no captured side-effect text, so [`capture.output()`](https://rdrr.io/r/utils/capture.output.html) fell back to auto-printing the returned value itself — dumping the quoted, escaped HTML string plus its `attr(,"class")`/`attr(,"knit_cacheable")` attributes inside a `<pre>` block instead of rendering a table/widget. Fixed by capturing the return value of `knit_print()` alongside its side-effect output, detecting `inherits(kp, "knit_asis")`, and emitting that raw markup unescaped and without the `<pre>` wrapper (ordinary side-effect-printed objects are unaffected and still escaped/`<pre>`-wrapped as before). Tests added to `test-format.R` for [`knitr::kable()`](https://rdrr.io/pkg/knitr/man/kable.html), `flextable`, and a control case (`lm`) confirming the two paths don’t interfere. [`?quarto_format`](https://quartose.djnavarro.net/reference/quarto_format.md)’s escaping-policy `@details` updated to describe both paths. |
+| [`quarto_div()`](https://quartose.djnavarro.net/reference/quarto_object.md) couldn’t hold `flextable`/`gt`-style content (and mangled `kable`’s *intent* even when it happened to render, since `kable` only worked because it’s secretly a character vector) | Extended [`quarto_div()`](https://quartose.djnavarro.net/reference/quarto_object.md) to reuse the tabset’s `knit_asis`-detection path: refactored the `capture.output(knitr::knit_print(x))` + `inherits(kp, "knit_asis")` logic out of [`format.quarto_tabset()`](https://quartose.djnavarro.net/reference/quarto_format.md) into a shared internal `knit_print_capture()` helper (`R/format.R`). `check_args_div()` now accepts content elements via a new `is_knit_asis_content()` predicate (`R/validate.R`) in addition to character/quarto_object/graphic, and [`format.quarto_div()`](https://quartose.djnavarro.net/reference/quarto_format.md) routes non-character/non-quarto/non-graphic elements through a new `format_div_element()` helper that extracts and emits their raw markup unescaped (mirroring the tabset path exactly, rather than incidentally). Objects that neither print via side effect nor return `knit_asis` (bare lists, model objects, numbers, etc.) are still rejected at construction with the pre-existing informative error. `is_knit_asis_content()` wraps the detection call in [`tryCatch()`](https://rdrr.io/r/base/conditions.html) so an object that errors when printed doesn’t abort validation with an unrelated error. Verified manually that mixed content (text + `flextable` + a `ggplot`) still correctly returns the list-of-strings-and-`quarto_plot` shape, and that previously-rejected types (bare numbers, data frames) are still rejected. Tests in `test-validate.R`/`test-format.R` updated: the earlier “`flextable` is rejected” tests (added when this asymmetry was first discovered) are now “`flextable`/`kable` are accepted and render correctly” tests. `NEWS.md`, [`?quarto_object`](https://quartose.djnavarro.net/reference/quarto_object.md)’s `content` bullet, and [`?quarto_format`](https://quartose.djnavarro.net/reference/quarto_format.md)’s escaping-policy `@details` updated accordingly. |
+
 ## Housekeeping notes
+
+- Added `flextable` to `Suggests` in `DESCRIPTION`. It was already used
+  (behind `skip_if_not_installed()`) in
+  `tests/testthat/test-validate.R`/ `test-format.R` from the earlier
+  `knit_asis` investigation, but wasn’t declared, which
+  `devtools::check()` flagged as an “unstated dependency in tests”
+  warning. `devtools::check()` now passes with 0 errors/warnings/notes.
 
 - The `@details` section of
   [`?quarto_format`](https://quartose.djnavarro.net/reference/quarto_format.md)
@@ -22,9 +36,11 @@ None currently tracked.
   (never arbitrary captured output);
   [`quarto_markdown()`](https://quartose.djnavarro.net/reference/quarto_object.md)
   is untouched by design.
+
 - `Imports` grew only as expected for graphics support (`grDevices`,
   `grid` — both base R, no new installation burden); no other new hard
   dependencies were added.
+
 - Upgraded to roxygen2 8.0.0 (`RoxygenNote` in `DESCRIPTION`), which
   requires `@aliases` to be a single line. Reflowed the three multi-line
   `@aliases` blocks (`class.R`, `format.R`, `print.R`) into single
@@ -36,6 +52,7 @@ None currently tracked.
   for this project) and the spelling test’s informational NOTE (not a
   failure; `error = FALSE`). Full `testthat` suite passes (all files,
   including the integration tests).
+
 - Added `pandoc` and `tibble's` to `inst/WORDLIST` (introduced by the
   new escaping-policy doc paragraph). The remaining pre-existing
   spelling-test hits (`qreport`, `quartabs`, `Sasaki`, `Yusuke` — proper
@@ -44,6 +61,7 @@ None currently tracked.
   markdown code-span tokenization artifact, not a real word) was fixed
   by rewording the README sentence. `spelling::spell_check_package(".")`
   now reports no spelling errors.
+
 - `AGENTS.md`/`PLAN.md` added to `.Rbuildignore`, clearing the
   “Non-standard files/directories found at top level” NOTE.
   `devtools::check()` now passes with 0 errors, 0 warnings, 0 notes.
