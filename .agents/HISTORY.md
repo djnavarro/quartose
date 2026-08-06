@@ -1,0 +1,159 @@
+# quartose design history
+
+This file is a condensed historical record of completed design decisions
+and resolved issues: what was found, what was tried, and why a given fix
+was chosen. It exists for context in future sessions, not as a changelog or
+PR log. Current-state facts that came out of this history (what the API
+looks like today) live in `AGENTS.md`, not here.
+
+## `knit_asis` output mangled by `quarto_tabset()`
+
+Discovered during a review of table/HTML-widget rendering inside tabsets:
+`format.quarto_tabset()`'s `capture.output(knitr::knit_print(x))` idiom only
+captures *side-effect* printing (as done by `lm`, data frames, etc.);
+objects that instead *return* `knitr::asis_output()`-marked content (class
+`"knit_asis"`, e.g. `knitr::kable(format = "html")`, `flextable`) produced
+no captured side-effect text, so `capture.output()` fell back to
+auto-printing the returned value itself -- dumping the quoted, escaped HTML
+string plus its `attr(,"class")`/`attr(,"knit_cacheable")` attributes inside
+a `<pre>` block instead of rendering a table/widget.
+
+Fixed by capturing the return value of `knit_print()` alongside its
+side-effect output, detecting `inherits(kp, "knit_asis")`, and emitting
+that raw markup unescaped and without the `<pre>` wrapper (ordinary
+side-effect-printed objects are unaffected and still escaped/`<pre>`-wrapped
+as before). Tests added to `test-format.R` for `knitr::kable()`,
+`flextable`, and a control case (`lm`) confirming the two paths don't
+interfere. `?quarto_format`'s escaping-policy `@details` updated to describe
+both paths.
+
+## `quarto_div()` couldn't hold `flextable`/`gt`-style content
+
+`quarto_div()` couldn't hold `flextable`/`gt`-style content (and mangled
+`kable`'s *intent* even when it happened to render, since `kable` only
+worked because it's secretly a character vector). Extended `quarto_div()`
+to reuse the tabset's `knit_asis`-detection path: refactored the
+`capture.output(knitr::knit_print(x))` + `inherits(kp, "knit_asis")` logic
+out of `format.quarto_tabset()` into a shared internal
+`knit_print_capture()` helper (`R/format.R`).
+
+`check_args_div()` now accepts content elements via a new
+`is_knit_asis_content()` predicate (`R/validate.R`) in addition to
+character/quarto_object/graphic, and `format.quarto_div()` routes
+non-character/non-quarto/non-graphic elements through a new
+`format_div_element()` helper that extracts and emits their raw markup
+unescaped (mirroring the tabset path exactly, rather than incidentally).
+Objects that neither print via side effect nor return `knit_asis` (bare
+lists, model objects, numbers, etc.) are still rejected at construction with
+the pre-existing informative error. `is_knit_asis_content()` wraps the
+detection call in `tryCatch()` so an object that errors when printed doesn't
+abort validation with an unrelated error.
+
+Verified manually that mixed content (text + `flextable` + a `ggplot`) still
+correctly returns the list-of-strings-and-`quarto_plot` shape, and that
+previously-rejected types (bare numbers, data frames) are still rejected.
+Tests in `test-validate.R`/`test-format.R` updated: the earlier
+"`flextable` is rejected" tests (added when this asymmetry was first
+discovered) are now "`flextable`/`kable` are accepted and render correctly"
+tests. `NEWS.md`, `?quarto_object`'s `content` bullet, and
+`?quarto_format`'s escaping-policy `@details` updated accordingly.
+
+## Housekeeping (2026-07-30 pass)
+
+- Added `flextable` to `Suggests` in `DESCRIPTION`. It was already used
+  (behind `skip_if_not_installed()`) in `tests/testthat/test-validate.R`/
+  `test-format.R` from the `knit_asis` investigation above, but wasn't
+  declared, which `devtools::check()` flagged as an "unstated dependency in
+  tests" warning. `devtools::check()` now passes with 0 errors/warnings/notes.
+- The `@details` section of `?quarto_format` (`R/format.R`) documents the
+  escaping policy: only `quarto_tabset()`'s captured object output is
+  escaped (`<`/`>` -> `&lt;`/`&gt;`); `quarto_span()`/`quarto_div()` content
+  is restricted by validation to character/quarto-object/graphic (never
+  arbitrary captured output); `quarto_markdown()` is untouched by design.
+- `Imports` grew only as expected for graphics support (`grDevices`,
+  `grid` -- both base R, no new installation burden); no other new hard
+  dependencies were added.
+- Upgraded to roxygen2 8.0.0 (`RoxygenNote` in `DESCRIPTION`), which
+  requires `@aliases` to be a single line. Reflowed the three multi-line
+  `@aliases` blocks (`class.R`, `format.R`, `print.R`) into single lines;
+  regenerated `NAMESPACE`/`man/*.Rd` and confirmed `NAMESPACE` and all
+  `.Rd` files other than `man/quarto_format.Rd` (which picked up the new
+  escaping-policy paragraph) are byte-for-byte unchanged. `devtools::check()`
+  ran clean modulo one pre-existing NOTE (top-level `AGENTS.md`/`PLAN.md`
+  being non-standard files, expected for this project at the time) and the
+  spelling test's informational NOTE (not a failure; `error = FALSE`). Full
+  `testthat` suite passed (all files, including the integration tests).
+- Added "pandoc" and "tibble's" to `inst/WORDLIST` (introduced by the new
+  escaping-policy doc paragraph). The remaining pre-existing spelling-test
+  hits (`qreport`, `quartabs`, `Sasaki`, `Yusuke` -- proper nouns/package
+  names in the "Related work" section) were added to `inst/WORDLIST` too,
+  and a stray `'s` hit from `` print()'s `` (a markdown code-span
+  tokenization artifact, not a real word) was fixed by rewording the
+  README sentence. `spelling::spell_check_package(".")` reported no
+  spelling errors afterward.
+- `AGENTS.md`/`PLAN.md` were added to `.Rbuildignore`, clearing the
+  "Non-standard files/directories found at top level" NOTE. `devtools::check()`
+  passed with 0 errors, 0 warnings, 0 notes. (Superseded by the
+  `.agents/`-folder restructuring below -- see "Moving to the `.agents/`
+  folder structure".)
+
+## Original issue resolutions and early findings
+
+All four originally-tracked GitHub issues are closed, along with several
+code-review findings uncovered along the way:
+
+- **[#1](https://github.com/djnavarro/quartose/issues/1) -- protect `<`/`>`
+  in HTML output.** `protect_angle_brackets()` (`R/format.R`) escapes
+  captured output in `format.quarto_tabset()`. Tests in `test-format.R`;
+  documented in `NEWS.md`.
+- **[#2](https://github.com/djnavarro/quartose/issues/2) -- wider range of
+  graphics objects.** `is_graphic()` (`R/validate.R`) generalizes detection
+  to ggplot2/patchwork, base R recorded plots, grid grobs, and
+  lattice/trellis objects, plus the `as_quarto_graphic()` tagging escape
+  hatch. Rendered via `render_graphic_png()` + `knit_print.quarto_plot()`.
+- **[#3](https://github.com/djnavarro/quartose/issues/3) -- graphics within
+  divs.** `check_args_div()`/`format.quarto_div()` reuse the
+  `is_graphic()`/`quarto_plot` path added for #2.
+- **[#4](https://github.com/djnavarro/quartose/issues/4) -- quartose and
+  revealjs.** Diagnosed as not a quartose bug: `print()`'s console summary
+  is routed through `message()` by `cli` off an interactive terminal, and
+  revealjs suppresses `message`/`warning` chunk output by default; the
+  actual `knit_print()` + `results: asis` document-generation path renders
+  correctly under revealjs. Doc clarification added to `?quarto_print` and
+  the README. Issue closed.
+- **`quarto_plot()` class silently stripped by `c()`-flattening.** Fixed by
+  wrapping appended elements in `list(...)` in
+  `format.quarto_tabset()`/`format.quarto_div()`; added a real
+  `knit_print.quarto_plot()` method so dispatch is intentional rather than
+  coincidental (previously relied on `knitr`'s native `knit_print.ggplot`
+  by chance). Test asserts the plot element's *class* in `format()` output.
+- **`quarto_div()` content unvalidated.** `check_args_div()` now requires
+  every content element to be character, `quarto_object`, or a recognized
+  graphic, mirroring `check_args_group()`/`check_args_markdown()`. Empty
+  divs remain a supported edge case. Tests in `test-validate.R`.
+- **Unhelpful error for unnamed tabset content.** `check_args_tabset()` now
+  raises a specific message ("content has no names, and `names` was not
+  supplied...") instead of the generic "names must be a character vector"
+  type error, confirmed with the maintainer as the desired behavior (no
+  auto-generated default labels). Tests in `test-validate.R`.
+- **No end-to-end rendering test.** `tests/testthat/test-integration.R`
+  renders a minimal `.qmd` per constructor (all six) via
+  `quarto::quarto_render()` and asserts on the resulting HTML. Skips
+  cleanly when `quarto`/`rmarkdown` or the Quarto CLI aren't available.
+  Verified against Quarto CLI 1.5.52.
+- **Escaping policy undocumented.** `?quarto_format`'s `@details`
+  (`R/format.R`) now spells out that only `quarto_tabset()`'s captured
+  object output is escaped; `quarto_span()`/`quarto_div()` content is
+  validated rather than captured, and `quarto_markdown()` is untouched by
+  design.
+
+## Moving to the `.agents/` folder structure
+
+Originally, agent-facing documentation lived in two top-level files,
+`AGENTS.md` and `PLAN.md` (both excluded from the built package via
+`.Rbuildignore`). Following the pattern established in the sister package
+`erplots`, this was split three ways: `AGENTS.md` stays a lean,
+current-state architecture reference at the project root; scoped-out future
+work moved to `.agents/PLAN.md`; and the resolved-issue/design-decision
+record (everything above in this file) moved to `.agents/HISTORY.md`.
+`.Rbuildignore`'s `^PLAN\.md$` entry was replaced with `^\.agents$`.

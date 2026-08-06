@@ -61,15 +61,6 @@ devtools::check()        # full R CMD check
   rather than editing `README.md` directly.
 - `NEWS.md` should be updated for user-facing changes.
 
-## Known issues & roadmap
-
-See [PLAN.md](PLAN.md) for the current triage of open GitHub issues, known
-weaknesses found in code review (e.g. HTML-escaping gaps, the
-`quarto_plot`/tabset graphics-capture handling), and the phased plan for
-addressing them. Consult it before starting work in `format.R`'s
-graphics-capture path or the validation logic in `validate.R`, and update it
-as issues are resolved.
-
 ## Conventions
 
 - Use base R pipe `|>`, not magrittr `%>%`.
@@ -79,3 +70,24 @@ as issues are resolved.
 - Plot objects (ggplot2) inside tabsets are captured and rendered specially
   during printing — be careful not to break this path when touching
   `print.R` or `format.R`.
+
+## Keeping this documentation current
+
+This file (`AGENTS.md`) should stay a lean, current-state reference — if a
+change makes something above inaccurate, update it in place rather than
+appending a note about the change.
+
+Two companion files in `.agents/` (also excluded from the built package via
+`.Rbuildignore`) carry the parts that don't belong here:
+
+- **[.agents/HISTORY.md](.agents/HISTORY.md)** — a condensed record of
+  completed design decisions and resolved issues (what was found, tried,
+  and why), for context in future sessions. When you finish a piece of
+  nontrivial design work, add an entry here rather than growing this file
+  with "used to be X, now Y" narrative.
+- **[.agents/PLAN.md](.agents/PLAN.md)** — scoped-out future work, open
+  GitHub issues, and deferred items. Consult it before starting work in
+  `format.R`'s graphics-capture path or the validation logic in
+  `validate.R`. When you finish something listed there, move its write-up
+  into `HISTORY.md` and remove it from `PLAN.md` rather than marking it
+  "done" in place.
