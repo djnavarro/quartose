@@ -10,8 +10,10 @@ cli
 divs
 djnavarro
 ggplot
+htmlwidget
 knitr
 pandoc
+passthrough
 pkgdown
 purrr
 qreport
@@ -25,4 +27,5 @@ tabset
 tabsets
 testthat
 tibble's
+unescaped
 untagged
