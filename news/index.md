@@ -1,11 +1,11 @@
 # Changelog
 
-## quartose (development version)
+## quartose 0.2.1
 
 - [`quarto_div()`](https://quartose.djnavarro.net/reference/quarto_object.md)
   now accepts objects like `knitr::kable(format = "html")`, `flextable`,
   and `gt` tables as `content` – previously most of these were either
-  mis-rendered (e.g. `flextable`, coerced through
+  incorrectly rendered (e.g. `flextable`, coerced through
   [`format()`](https://rdrr.io/r/base/format.html)) or rejected
   outright, depending on the object. `check_args_div()` detects these
   via the same `"knit_asis"`-output check used by
