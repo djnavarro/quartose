@@ -8,15 +8,15 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/djnavarro/quartose/blob/v0.2.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/djnavarro/quartose/blob/v0.2.1/DESCRIPTION)
 
 Navarro D (2026). *quartose: Dynamically Generate 'Quarto' Syntax*. R
-package version 0.2.0, <https://github.com/djnavarro/quartose>.
+package version 0.2.1, <https://github.com/djnavarro/quartose>.
 
     @Manual{,
       title = {quartose: Dynamically Generate 'Quarto' Syntax},
       author = {Danielle Navarro},
       year = {2026},
-      note = {R package version 0.2.0},
+      note = {R package version 0.2.1},
       url = {https://github.com/djnavarro/quartose},
     }
